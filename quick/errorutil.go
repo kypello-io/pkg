@@ -23,7 +23,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/cheggaaa/pb"
+	"github.com/cheggaaa/pb/v3/termutil"
 )
 
 const errorFmt = "%5d: %s  <<<<"
@@ -48,7 +48,7 @@ func FormatJSONSyntaxError(data io.Reader, offset int64) (highlight string) {
 	// dynamically to avoid an eventual bug after modifying errorFmt
 	errorShift := len(fmt.Sprintf(errorFmt, 1, ""))
 
-	if width, err := pb.GetTerminalWidth(); err == nil {
+	if width, err := termutil.TerminalWidth(); err == nil {
 		termWidth = width
 	}
 
