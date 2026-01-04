@@ -211,6 +211,7 @@ func TestParseHost(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run("", func(t *testing.T) {
 			t.Parallel()
+
 			host, err := ParseHost(testCase.s)
 			expectErr := (err != nil)
 

@@ -73,6 +73,7 @@ func TestManager2_CloseMultipleTimes(t *testing.T) {
 
 func TestManager2_ReloadOnSIGHUP(t *testing.T) {
 	t.Parallel()
+
 	callCount := 0
 	loadCerts := func() ([]*Certificate2, error) {
 		certFile, keyFile := "public.crt", "private.key"
@@ -223,6 +224,7 @@ func TestManager2_GetClientCertificateNilReqInfo(t *testing.T) {
 // TestManager2_ConcurrentGetCertificate tests concurrent calls to GetCertificate.
 func TestManager2_ConcurrentGetCertificate(t *testing.T) {
 	t.Parallel()
+
 	loadCerts := func() ([]*Certificate2, error) {
 		cert, err := NewCertificate2("public.crt", "private.key")
 		if err != nil {

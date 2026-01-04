@@ -254,6 +254,8 @@ func TestBucketPolicyIsEmpty(t *testing.T) {
 }
 
 func TestBucketPolicyIsValid(t *testing.T) {
+	t.Parallel()
+
 	case1Policy := BucketPolicy{
 		Version: DefaultVersion,
 		Statements: []BPStatement{
@@ -442,6 +444,8 @@ func TestBucketPolicyIsValid(t *testing.T) {
 }
 
 func TestBucketPolicyMarshalJSON(t *testing.T) {
+	t.Parallel()
+
 	case1Policy := BucketPolicy{
 		ID:      "MyPolicyForMyBucket1",
 		Version: DefaultVersion,
@@ -1126,6 +1130,8 @@ func TestBucketPolicyUnmarshalJSON(t *testing.T) {
 }
 
 func TestBucketPolicyValidate(t *testing.T) {
+	t.Parallel()
+
 	case1Policy := BucketPolicy{
 		Version: DefaultVersion,
 		Statements: []BPStatement{

@@ -70,6 +70,7 @@ func TestURLHostnameAndPort(t *testing.T) {
 
 func TestURLIsEmpty(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		url            URL
 		expectedResult bool
@@ -90,6 +91,7 @@ func TestURLIsEmpty(t *testing.T) {
 
 func TestURLString(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		url         URL
 		expectedStr string
@@ -116,6 +118,7 @@ func TestURLString(t *testing.T) {
 
 func TestURLMarshalJSON(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		url          URL
 		expectedData []byte
@@ -148,6 +151,7 @@ func TestURLMarshalJSON(t *testing.T) {
 
 func TestURLUnmarshalJSON(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		data        []byte
 		expectedURL *URL
@@ -187,6 +191,7 @@ func TestURLUnmarshalJSON(t *testing.T) {
 
 func TestParseHTTPURL(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		s           string
 		expectedURL *URL
@@ -208,6 +213,7 @@ func TestParseHTTPURL(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.s, func(t *testing.T) {
 			t.Parallel()
+
 			url, err := ParseHTTPURL(testCase.s)
 
 			expectErr := (err != nil)
@@ -226,6 +232,7 @@ func TestParseHTTPURL(t *testing.T) {
 
 func TestParseURL(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		s           string
 		expectedURL *URL
