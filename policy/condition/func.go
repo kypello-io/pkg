@@ -104,6 +104,7 @@ func (functions Functions) Equals(funcs Functions) bool {
 		for _, fj := range funcs {
 			if fistr == fj.String() {
 				found = true
+
 				break
 			}
 		}

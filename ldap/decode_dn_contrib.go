@@ -49,6 +49,7 @@ func DecodeDN(str string) (string, error) {
 		// builder and continue
 		if char != '\\' {
 			builder.WriteRune(char)
+
 			continue
 		}
 

@@ -43,6 +43,7 @@ func TestConfigValidator(t *testing.T) {
 		{
 			cfg: func() Config {
 				v := Config{Enabled: true}
+
 				return v
 			}(),
 			expectedResult: ConnectionParamMisconfigured,

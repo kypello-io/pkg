@@ -273,6 +273,7 @@ func (r *Reader) Reset() error {
 // as well as setting a new size.
 func (r *Reader) ResetSize(size int64) error {
 	r.o.size = size
+
 	return r.init()
 }
 
@@ -281,6 +282,7 @@ func (r *Reader) ResetSize(size int64) error {
 func WithRNG(rng io.Reader) ReaderOption {
 	return func(o *readerOptions) error {
 		o.rng = rng
+
 		return nil
 	}
 }
@@ -289,6 +291,7 @@ func WithRNG(rng io.Reader) ReaderOption {
 func WithSize(size int64) ReaderOption {
 	return func(o *readerOptions) error {
 		o.size = size
+
 		return nil
 	}
 }
@@ -300,6 +303,7 @@ func WithSize(size int64) ReaderOption {
 func WithFullReset(b bool) ReaderOption {
 	return func(o *readerOptions) error {
 		o.fullReset = b
+
 		return nil
 	}
 }

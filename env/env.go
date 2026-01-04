@@ -34,6 +34,7 @@ var (
 // Call returned function to unlock.
 func LockSetEnv() func() {
 	lockEnvMutex.Lock()
+
 	return lockEnvMutex.Unlock
 }
 

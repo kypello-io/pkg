@@ -250,6 +250,7 @@ func (m *Manager) ReloadOnSignal(sig ...os.Signal) {
 			select {
 			case <-m.done:
 				signal.Stop(ch)
+
 				return
 			case <-ch:
 				m.ReloadCerts()
@@ -390,6 +391,7 @@ func (m *Manager) GetCertificate(hello *tls.ClientHelloInfo) (*tls.Certificate, 
 	// when creating a Manager instance.
 	if hello.ServerName == "" {
 		certificate := m.certificates[m.defaultCert]
+
 		return certificate, nil
 	}
 

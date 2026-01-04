@@ -86,12 +86,14 @@ func NewCallbackServer(ctx context.Context) (*CallbackServer, error) {
 		code := r.URL.Query().Get("code")
 		if code == "" {
 			http.Error(w, "Missing code parameter", http.StatusBadRequest)
+
 			return
 		}
 
 		creds, err := ParseSignedCredentials(code, reqID)
 		if err != nil {
 			http.Error(w, "Invalid code parameter: "+err.Error(), http.StatusBadRequest)
+
 			return
 		}
 

@@ -106,6 +106,7 @@ func NewManager2(loadCerts func() ([]*Certificate2, error)) (*Manager2, error) {
 			case <-closeCh:
 				// clear certificates on close
 				replaceCerts([]*Certificate2{})
+
 				return
 			case cert := <-certUpdateCh:
 				// certificates are updated

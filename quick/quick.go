@@ -58,6 +58,7 @@ func (d config) Version() string {
 // String converts JSON config to printable string
 func (d config) String() string {
 	configBytes, _ := json.MarshalIndent(d.data, "", "\t")
+
 	return string(configBytes)
 }
 

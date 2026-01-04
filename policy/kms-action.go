@@ -96,5 +96,6 @@ var supportedKMSActions = map[KMSAction]struct{}{
 // IsValid - checks if action is valid or not.
 func (action KMSAction) IsValid() bool {
 	_, ok := supportedKMSActions[action]
+
 	return ok
 }

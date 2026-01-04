@@ -147,18 +147,21 @@ func (v *Value) UnmarshalJSON(data []byte) error {
 	var b bool
 	if err := json.Unmarshal(data, &b); err == nil {
 		v.StoreBool(b)
+
 		return nil
 	}
 
 	var i int
 	if err := json.Unmarshal(data, &i); err == nil {
 		v.StoreInt(i)
+
 		return nil
 	}
 
 	var s string
 	if err := json.Unmarshal(data, &s); err == nil {
 		v.StoreString(s)
+
 		return nil
 	}
 
