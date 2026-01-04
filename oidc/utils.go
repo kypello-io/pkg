@@ -19,6 +19,7 @@ package oidc
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -179,17 +180,17 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 
 	rawIDToken, ok := oauth2Token.Extra("id_token").(string)
 	if !ok {
-		return "", "", "", fmt.Errorf("id_token not found")
+		return "", "", "", errors.New("id_token not found")
 	}
 
 	accessIDToken, ok := oauth2Token.Extra("access_token").(string)
 	if !ok {
-		return "", "", "", fmt.Errorf("access_token not found")
+		return "", "", "", errors.New("access_token not found")
 	}
 
 	refreshToken, ok := oauth2Token.Extra("refresh_token").(string)
 	if !ok {
-		return "", "", "", fmt.Errorf("refresh_token not found")
+		return "", "", "", errors.New("refresh_token not found")
 	}
 
 	return rawIDToken, accessIDToken, refreshToken, nil

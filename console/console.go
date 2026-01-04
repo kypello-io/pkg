@@ -19,6 +19,7 @@
 package console
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -387,7 +388,7 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 
 	numCols := len(rows[0])
 	if numRows != len(t.RowColors) {
-		return fmt.Errorf("row count and row-colors mismatch")
+		return errors.New("row count and row-colors mismatch")
 	}
 
 	// Compute max. column widths
@@ -395,7 +396,7 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 
 	for _, row := range rows {
 		if len(row) != len(t.AlignRight) {
-			return fmt.Errorf("col count and align-right mismatch")
+			return errors.New("col count and align-right mismatch")
 		}
 
 		for i, v := range row {
@@ -466,7 +467,7 @@ func (t *Table) DisplayTable(rows [][]string) error {
 
 	numCols := len(rows[0])
 	if numRows != len(t.RowColors) {
-		return fmt.Errorf("row count and row-colors mismatch")
+		return errors.New("row count and row-colors mismatch")
 	}
 
 	// Compute max. column widths
@@ -474,7 +475,7 @@ func (t *Table) DisplayTable(rows [][]string) error {
 
 	for _, row := range rows {
 		if len(row) != len(t.AlignRight) {
-			return fmt.Errorf("col count and align-right mismatch")
+			return errors.New("col count and align-right mismatch")
 		}
 
 		for i, v := range row {

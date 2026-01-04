@@ -23,6 +23,14 @@ linters:
     - usetesting
     - thelper
     - tparallel
+    - testifylint
+    - testableexamples
+    - spancheck
+    - predeclared
+    - nosprintfhostport
+    - perfsprint
+    - paralleltest
+    #- recvcheck
   settings:
     misspell:
       locale: US

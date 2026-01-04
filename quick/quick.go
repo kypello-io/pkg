@@ -19,6 +19,7 @@ package quick
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -165,7 +166,7 @@ func (d config) DeepDiff(c Config) ([]structs.Field, error) {
 // type struct and contain a string type field called "Version".
 func CheckData(data any) error {
 	if !structs.IsStruct(data) {
-		return fmt.Errorf("interface must be struct type")
+		return errors.New("interface must be struct type")
 	}
 
 	st := structs.New(data)

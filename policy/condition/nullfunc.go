@@ -18,6 +18,7 @@
 package condition
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -82,7 +83,7 @@ func (f nullFunc) clone() Function {
 
 func newNullFunc(key Key, values ValueSet, _ string) (Function, error) {
 	if len(values) != 1 {
-		return nil, fmt.Errorf("only one value is allowed for Null condition")
+		return nil, errors.New("only one value is allowed for Null condition")
 	}
 
 	var value bool
@@ -96,10 +97,10 @@ func newNullFunc(key Key, values ValueSet, _ string) (Function, error) {
 
 			s, _ := v.GetString()
 			if value, err = strconv.ParseBool(s); err != nil {
-				return nil, fmt.Errorf("value must be a boolean string for Null condition")
+				return nil, errors.New("value must be a boolean string for Null condition")
 			}
 		default:
-			return nil, fmt.Errorf("value must be a boolean for Null condition")
+			return nil, errors.New("value must be a boolean for Null condition")
 		}
 	}
 

@@ -19,6 +19,7 @@ package condition
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -66,7 +67,7 @@ func (v Value) GetBool() (bool, error) {
 	var err error
 
 	if v.t != reflect.Bool {
-		err = fmt.Errorf("not a bool Value")
+		err = errors.New("not a bool Value")
 	}
 
 	return v.b, err
@@ -77,7 +78,7 @@ func (v Value) GetInt() (int, error) {
 	var err error
 
 	if v.t != reflect.Int {
-		err = fmt.Errorf("not a int Value")
+		err = errors.New("not a int Value")
 	}
 
 	return v.i, err
@@ -88,7 +89,7 @@ func (v Value) GetString() (string, error) {
 	var err error
 
 	if v.t != reflect.String {
-		err = fmt.Errorf("not a string Value")
+		err = errors.New("not a string Value")
 	}
 
 	return v.s, err

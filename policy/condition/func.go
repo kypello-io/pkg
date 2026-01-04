@@ -19,6 +19,7 @@ package condition
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sort"
 )
@@ -191,7 +192,7 @@ func (functions *Functions) UnmarshalJSON(data []byte) error {
 	}
 
 	if len(nm) == 0 {
-		return fmt.Errorf("condition must not be empty")
+		return errors.New("condition must not be empty")
 	}
 
 	funcs := []Function{}

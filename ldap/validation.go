@@ -67,15 +67,15 @@ func (v Validation) FormatError() string {
 	}
 
 	messages := []string{
-		fmt.Sprintf("Result: %s", string(v.Result)),
-		fmt.Sprintf("Detail: %s", v.Detail),
+		"Result: " + string(v.Result),
+		"Detail: " + v.Detail,
 	}
 	if v.Suggestion != "" {
-		messages = append(messages, fmt.Sprintf("Suggestion: %s", v.Suggestion))
+		messages = append(messages, "Suggestion: "+v.Suggestion)
 	}
 
 	if v.ErrCause != nil {
-		messages = append(messages, fmt.Sprintf("Due to: %s", v.ErrCause.Error()))
+		messages = append(messages, "Due to: "+v.ErrCause.Error())
 	}
 
 	return strings.Join(messages, "\n")
