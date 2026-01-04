@@ -186,7 +186,7 @@ var ErrInvalidEllipsesFormatFn = func(arg string) error {
 // FindEllipsesPatterns - finds all ellipses patterns, recursively and parses the ranges numerically.
 func FindEllipsesPatterns(arg string) (ArgPattern, error) {
 	v, err := findPatterns(arg, regexpEllipses, parseEllipsesRange)
-	if err == errFormat {
+	if errors.Is(err, errFormat) {
 		err = ErrInvalidEllipsesFormatFn(arg)
 	}
 
