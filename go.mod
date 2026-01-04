@@ -1,6 +1,6 @@
-module github.com/minio/pkg/v3
+module github.com/kypello-io/pkg/v3
 
-go 1.24.0
+go 1.25.0
 
 toolchain go1.25.5
 
@@ -10,28 +10,28 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/fatih/structs v1.1.0
 	github.com/go-ldap/ldap/v3 v3.4.12
-	github.com/go-openapi/swag/conv v0.24.0
+	github.com/go-openapi/swag/conv v0.25.4
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/lestrrat-go/jwx/v2 v2.1.6
 	github.com/mattn/go-colorable v0.1.14
 	github.com/mattn/go-isatty v0.0.20
 	github.com/minio/minio-go/v7 v7.0.97
-	github.com/minio/mux v1.8.2
+	github.com/minio/mux v1.9.2
 	github.com/rjeczalik/notify v0.9.3
-	github.com/tinylib/msgp v1.5.0
+	github.com/tinylib/msgp v1.6.3
 	github.com/zeebo/xxh3 v1.0.2
-	go.etcd.io/etcd/client/v3 v3.6.6
+	go.etcd.io/etcd/client/v3 v3.6.7
 	go.yaml.in/yaml/v3 v3.0.4
-	golang.org/x/crypto v0.45.0
-	golang.org/x/oauth2 v0.33.0
-	golang.org/x/sys v0.38.0
+	golang.org/x/crypto v0.46.0
+	golang.org/x/oauth2 v0.34.0
+	golang.org/x/sys v0.39.0
 )
 
 require (
 	github.com/clipperhouse/stringish v0.1.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
-	github.com/go-openapi/swag/typeutils v0.24.0 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
 	github.com/stretchr/testify v1.11.1 // indirect
 )
@@ -60,12 +60,12 @@ require (
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/segmentio/asm v1.2.1 // indirect
-	go.etcd.io/etcd/api/v3 v3.6.6 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.6.6 // indirect
+	go.etcd.io/etcd/api/v3 v3.6.7 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.6.7 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.1 // indirect
 	golang.org/x/net v0.47.0 // indirect
-	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/text v0.32.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20251124214823-79d6a2a48846 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251124214823-79d6a2a48846 // indirect
 	google.golang.org/grpc v1.77.0 // indirect

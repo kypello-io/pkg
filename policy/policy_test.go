@@ -27,8 +27,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/kypello-io/pkg/v3/policy/condition"
 	"github.com/minio/minio-go/v7/pkg/set"
-	"github.com/minio/pkg/v3/policy/condition"
 )
 
 func TestGetPoliciesFromClaims(t *testing.T) {
