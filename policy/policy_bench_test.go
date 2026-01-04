@@ -130,7 +130,7 @@ func BenchmarkIsAllowed(b *testing.B) {
 			b.ResetTimer()
 			b.ReportAllocs()
 
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				scenario.policy.IsAllowed(scenario.args)
 			}
 		})
@@ -210,7 +210,7 @@ func BenchmarkMergePolicies(b *testing.B) {
 			b.ResetTimer()
 			b.ReportAllocs()
 
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_ = MergePolicies(policies...)
 			}
 		})
@@ -239,7 +239,7 @@ func BenchmarkDropDuplicateStatements(b *testing.B) {
 			b.ResetTimer()
 			b.ReportAllocs()
 
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				p := *policy
 				p.Statements = make([]Statement, len(policy.Statements))
 				copy(p.Statements, policy.Statements)
@@ -256,7 +256,7 @@ func BenchmarkDropDuplicateStatements(b *testing.B) {
 			b.ResetTimer()
 			b.ReportAllocs()
 
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				p := *policy
 				p.Statements = make([]Statement, len(policy.Statements))
 				copy(p.Statements, policy.Statements)
@@ -378,7 +378,7 @@ func BenchmarkDedupe(b *testing.B) {
 			b.ResetTimer()
 			b.ReportAllocs()
 
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				shallow := merged
 				shallow.dropDuplicateStatements()
 			}
@@ -520,7 +520,7 @@ func BenchmarkSerialEvalVsParEval(b *testing.B) {
 				b.ResetTimer()
 				b.ReportAllocs()
 
-				for j := 0; j < b.N; j++ {
+				for range b.N {
 					parallelEval(testCase.policies, testCase.args, testCase.expected)
 				}
 			})
@@ -529,7 +529,7 @@ func BenchmarkSerialEvalVsParEval(b *testing.B) {
 				b.ResetTimer()
 				b.ReportAllocs()
 
-				for j := 0; j < b.N; j++ {
+				for range b.N {
 					serialEval(testCase.policies, testCase.args, testCase.expected)
 				}
 			})

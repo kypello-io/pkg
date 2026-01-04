@@ -722,14 +722,14 @@ func BenchmarkMatchSimple(b *testing.B) {
 	}
 	// Iterating over the test cases, call the function under test and assert the output.
 	b.Run("0-prefix-reference", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
+		for range b.N {
 			_ = strings.HasPrefix(testCases[0].text, "a")
 		}
 	})
 
 	for i, testCase := range testCases {
 		b.Run(fmt.Sprintf("bench-%d", i), func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_ = MatchSimple(testCase.pattern, testCase.text)
 			}
 		})

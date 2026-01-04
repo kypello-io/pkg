@@ -13,6 +13,10 @@ linters:
     - modernize
     - wsl_v5
     - nlreturn
+    - mirror
+    - nakedret
+    - intrange
+    - iface
   settings:
     misspell:
       locale: US
