@@ -108,8 +108,8 @@ func (c *CLILoginClaims) SignCredentials(creds credentials.Value) (string, error
 type credentialsClaims struct {
 	AccessKeyID     string    `json:"access_key_id"`
 	SecretAccessKey string    `json:"secret_access_key"`
-	SessionToken    string    `json:"session_token,omitempty"`
-	Expiration      time.Time `json:"expiration,omitempty"`
+	SessionToken    string    `json:"session_token,omitzero"`
+	Expiration      time.Time `json:"expiration,omitzero"`
 }
 
 func (c *credentialsClaims) Valid() error {
