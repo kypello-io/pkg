@@ -23,6 +23,8 @@ import (
 
 // Simply make sure creating a new tree works.
 func TestNewTrie(t *testing.T) {
+	t.Parallel()
+
 	trie := NewTrie()
 
 	if trie.size != 0 {
@@ -32,6 +34,8 @@ func TestNewTrie(t *testing.T) {
 
 // Ensure that we can insert new keys into the tree, then check the size.
 func TestInsert(t *testing.T) {
+	t.Parallel()
+
 	trie := NewTrie()
 
 	// We need to have an empty tree to begin with.
@@ -50,6 +54,8 @@ func TestInsert(t *testing.T) {
 
 // Ensure that PrefixMatch gives us the correct two keys in the tree.
 func TestPrefixMatch(t *testing.T) {
+	t.Parallel()
+
 	trie := NewTrie()
 
 	// Feed it some fodder: only 'minio' and 'miny-os' should trip the matcher.

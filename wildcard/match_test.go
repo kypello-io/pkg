@@ -27,6 +27,8 @@ import (
 // `Match` supports '*' and '?' wildcards.
 // Sample usage: In resource matching for bucket policy validation.
 func TestMatch(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		pattern string
 		text    string
@@ -388,6 +390,8 @@ func TestMatch(t *testing.T) {
 // TestMatchSimple - Tests validate the logic of wild card matching.
 // `MatchSimple` supports matching for only '*' in the pattern string.
 func TestMatchSimple(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		pattern string
 		text    string
@@ -737,6 +741,8 @@ func BenchmarkMatchSimple(b *testing.B) {
 }
 
 func TestMatchAsPatternPrefix(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		pattern string
 		text    string
