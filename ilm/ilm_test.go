@@ -286,6 +286,7 @@ func TestToILMRule(t *testing.T) {
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("ToILMRule() expected error but got none")
+
 					return
 				}
 
@@ -298,6 +299,7 @@ func TestToILMRule(t *testing.T) {
 
 			if err != nil {
 				t.Errorf("ToILMRule() unexpected error = %v", err)
+
 				return
 			}
 
@@ -646,6 +648,7 @@ func TestExtractILMTags(t *testing.T) {
 
 			if len(result) != len(tt.expected) {
 				t.Errorf("extractILMTags() returned %d tags, expected %d", len(result), len(tt.expected))
+
 				return
 			}
 

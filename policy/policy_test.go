@@ -2652,6 +2652,7 @@ func TestPolicyParseS3VectorsExamples(t *testing.T) {
 				for r := range stmt.Resources {
 					if r.String() == expectedResource {
 						found = true
+
 						break
 					}
 				}

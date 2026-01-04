@@ -272,6 +272,7 @@ func IsAllowedPar(policies []Policy, args Args) bool {
 					decision := policies[j].Decide(&args)
 					if decision == DenyDecision {
 						res = DenyDecision
+
 						break
 					} else if decision == AllowDecision {
 						res = AllowDecision
@@ -509,6 +510,7 @@ func (iamp *Policy) dropDuplicateStatementsOriginal() {
 func (iamp *Policy) dropDuplicateStatements() {
 	if len(iamp.Statements) <= 10 {
 		iamp.dropDuplicateStatementsOriginal()
+
 		return
 	}
 
@@ -546,6 +548,7 @@ func (iamp *Policy) updateActionIndex() {
 		stmt := &iamp.Statements[i]
 		if stmt.Effect == Deny {
 			iamp.hasDeny = true
+
 			continue
 		}
 

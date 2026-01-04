@@ -164,6 +164,7 @@ func (c *Certificate) Watch(ctx context.Context, interval time.Duration, signals
 
 			if err := notify.Watch(filepath.Dir(c.keyFile), events, eventWrite...); err != nil {
 				notify.Stop(events)
+
 				return
 			}
 			defer notify.Stop(events)

@@ -82,6 +82,7 @@ func splitHostPort(hostPort string) (host, port string) {
 // the square brackets are removed from the result.
 func (u URL) Hostname() string {
 	host, _ := splitHostPort(u.Host)
+
 	return host
 }
 
@@ -90,6 +91,7 @@ func (u URL) Hostname() string {
 // If u.Host doesn't contain a valid numeric port, Port returns an empty string.
 func (u URL) Port() string {
 	_, port := splitHostPort(u.Host)
+
 	return port
 }
 
@@ -130,6 +132,7 @@ func (u *URL) UnmarshalJSON(data []byte) (err error) {
 	// Allow empty string
 	if s == "" {
 		*u = URL{}
+
 		return nil
 	}
 

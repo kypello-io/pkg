@@ -123,6 +123,7 @@ func (f stringFunc) copy() stringFunc {
 
 func (f stringFunc) clone() Function {
 	c := f.copy()
+
 	return &c
 }
 

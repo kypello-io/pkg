@@ -12,6 +12,7 @@ linters:
     - unused
     - modernize
     - wsl_v5
+    - nlreturn
   settings:
     misspell:
       locale: US

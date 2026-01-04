@@ -61,6 +61,7 @@ var supportedSTSActions = map[STSAction]struct{}{
 // IsValid - checks if action is valid or not.
 func (action STSAction) IsValid() bool {
 	_, ok := supportedSTSActions[action]
+
 	return ok
 }
 

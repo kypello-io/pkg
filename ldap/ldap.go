@@ -87,6 +87,7 @@ type Config struct {
 // Clone creates a copy of the config.
 func (l *Config) Clone() (cloned Config) {
 	cloned = *l
+
 	return cloned
 }
 
@@ -336,6 +337,7 @@ func (l *Config) SearchForUserGroups(conn *ldap.Conn, username, bindDN string) (
 			newGroups, err := getGroups(conn, searchRequest)
 			if err != nil {
 				errRet := fmt.Errorf("error finding groups of %s: %w", bindDN, err)
+
 				return nil, errRet
 			}
 

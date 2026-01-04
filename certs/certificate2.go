@@ -100,11 +100,13 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 
 	if err := watchFile(ctx, certFile, ch, &wg); err != nil {
 		c.close()
+
 		return nil, err
 	}
 
 	if err := watchFile(ctx, keyFile, ch, &wg); err != nil {
 		c.close()
+
 		return nil, err
 	}
 

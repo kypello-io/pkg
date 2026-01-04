@@ -269,6 +269,7 @@ var SupportedTableActions = map[TableAction]struct{}{
 // IsValid - checks if action is valid or not.
 func (action TableAction) IsValid() bool {
 	_, ok := SupportedTableActions[action]
+
 	return ok
 }
 

@@ -132,6 +132,7 @@ var (
 				return colorized.SprintFunc()(data)
 			} // else: No theme found. Return as string.
 		}
+
 		return fmt.Sprint(data)
 	}
 
@@ -354,6 +355,7 @@ func Unlock() {
 // ProgramName - return the name of the executable program.
 func ProgramName() string {
 	_, progName := filepath.Split(os.Args[0])
+
 	return progName
 }
 

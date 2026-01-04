@@ -220,6 +220,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 	sconn, chans, reqs, err := ssh.NewServerConn(conn, &s.sshConfig)
 	if err != nil {
 		s.logger.Error(SSHKeyExchangeError, err)
+
 		return
 	}
 

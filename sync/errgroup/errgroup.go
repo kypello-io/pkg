@@ -80,6 +80,7 @@ func (g *Group) WaitErr() error {
 func (g *Group) WithConcurrency(n int) *Group {
 	if n <= 0 {
 		g.bucket = nil
+
 		return g
 	}
 

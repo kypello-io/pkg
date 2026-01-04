@@ -35,11 +35,13 @@ type File struct {
 func (file *File) Write(b []byte) (n int, err error) {
 	if file.closed {
 		err = errors.New("write on closed file")
+
 		return n, err
 	}
 
 	if file.aborted {
 		err = errors.New("write on aborted file")
+
 		return n, err
 	}
 
@@ -66,11 +68,13 @@ func (file *File) Close() (err error) {
 
 	if file.closed {
 		err = errors.New("close on closed file")
+
 		return err
 	}
 
 	if file.aborted {
 		err = errors.New("close on aborted file")
+
 		return err
 	}
 
@@ -89,11 +93,13 @@ func (file *File) Close() (err error) {
 func (file *File) Abort() (err error) {
 	if file.closed {
 		err = errors.New("abort on closed file")
+
 		return err
 	}
 
 	if file.aborted {
 		err = errors.New("abort on aborted file")
+
 		return err
 	}
 

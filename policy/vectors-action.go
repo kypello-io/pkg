@@ -89,6 +89,7 @@ var SupportedVectorsActions = map[VectorsAction]struct{}{
 // IsValid - checks if action is valid or not.
 func (action VectorsAction) IsValid() bool {
 	_, ok := SupportedVectorsActions[action]
+
 	return ok
 }
 

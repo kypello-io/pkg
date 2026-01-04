@@ -172,12 +172,14 @@ func leadingFraction(s string) (x int64, scale float64, rem string) {
 		if x > (1<<63-1)/10 {
 			// It's possible for overflow to give a positive number, so take care.
 			overflow = true
+
 			continue
 		}
 
 		y := x*10 + int64(c) - '0'
 		if y < 0 {
 			overflow = true
+
 			continue
 		}
 

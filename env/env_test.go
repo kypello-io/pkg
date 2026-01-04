@@ -32,16 +32,19 @@ func GetenvHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	if vars["namespace"] != "default" {
 		http.Error(w, "namespace not found", http.StatusNotFound)
+
 		return
 	}
 
 	if vars["name"] != "minio" {
 		http.Error(w, "tenant not found", http.StatusNotFound)
+
 		return
 	}
 
 	if vars["key"] != "MINIO_ARGS" {
 		http.Error(w, "key not found", http.StatusNotFound)
+
 		return
 	}
 
