@@ -99,6 +99,7 @@ func (n name) String() string {
 	if n.qualifier != "" {
 		return n.qualifier + ":" + n.name
 	}
+
 	return n.name
 }
 
@@ -111,6 +112,7 @@ func (n name) IsValid() bool {
 	}
 
 	_, found := Names[n.name]
+
 	return found
 }
 
@@ -136,12 +138,15 @@ func (n *name) UnmarshalJSON(data []byte) error {
 	}
 
 	*n = parsedName
+
 	return nil
 }
 
 func parseName(s string) (name, error) {
 	tokens := strings.Split(s, ":")
+
 	var n name
+
 	switch len(tokens) {
 	case 0, 1:
 		n = name{name: s}

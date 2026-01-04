@@ -39,6 +39,7 @@ type ipaddrFunc struct {
 func (f ipaddrFunc) eval(values map[string][]string) bool {
 	rvalues := getValuesByKey(values, f.k)
 	IPs := []net.IP{}
+
 	for _, s := range rvalues {
 		IP := net.ParseIP(s)
 		if IP == nil {
@@ -66,6 +67,7 @@ func (f ipaddrFunc) evaluate(values map[string][]string) bool {
 	if f.negate {
 		return !result
 	}
+
 	return result
 }
 
@@ -85,6 +87,7 @@ func (f ipaddrFunc) String() string {
 	for _, value := range f.values {
 		valueStrings = append(valueStrings, value.String())
 	}
+
 	sort.Strings(valueStrings)
 
 	return fmt.Sprintf("%v:%v:%v", f.n, f.k, valueStrings)
@@ -112,6 +115,7 @@ func (f ipaddrFunc) clone() Function {
 		_, IPNet, _ := net.ParseCIDR(value.String())
 		values = append(values, IPNet)
 	}
+
 	return &ipaddrFunc{
 		n:      f.n,
 		k:      f.k,
@@ -122,6 +126,7 @@ func (f ipaddrFunc) clone() Function {
 
 func valuesToIPNets(n string, values ValueSet) ([]*net.IPNet, error) {
 	IPNets := []*net.IPNet{}
+
 	for v := range values {
 		s, err := v.GetString()
 		if err != nil {
@@ -135,6 +140,7 @@ func valuesToIPNets(n string, values ValueSet) ([]*net.IPNet, error) {
 		}
 
 		var IPNet *net.IPNet
+
 		_, IPNet, err = net.ParseCIDR(s)
 		if err != nil {
 			return nil, fmt.Errorf("value %v must be CIDR string for %v condition", s, n)

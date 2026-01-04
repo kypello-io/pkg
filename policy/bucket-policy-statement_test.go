@@ -47,6 +47,7 @@ func TestBPStatementIsAllowed(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func1, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet1,
@@ -270,6 +271,7 @@ func TestBPStatementIsValid(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func1, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet1,
@@ -409,6 +411,7 @@ func TestBPStatementUnmarshalJSONAndValidate(t *testing.T) {
         }
     }
 }`)
+
 	func1, err := condition.NewNullFunc(
 		condition.S3XAmzCopySource.ToKey(),
 		true,
@@ -416,6 +419,7 @@ func TestBPStatementUnmarshalJSONAndValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	case2Statement := NewBPStatement("",
 		Allow,
 		NewPrincipal("*"),
@@ -440,6 +444,7 @@ func TestBPStatementUnmarshalJSONAndValidate(t *testing.T) {
         }
     }
 }`)
+
 	func2, err := condition.NewNullFunc(
 		condition.S3XAmzServerSideEncryption.ToKey(),
 		false,
@@ -447,6 +452,7 @@ func TestBPStatementUnmarshalJSONAndValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	case3Statement := NewBPStatement("",
 		Deny,
 		NewPrincipal("*"),
@@ -572,6 +578,7 @@ func TestBPStatementUnmarshalJSONAndValidate(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var result BPStatement
+
 		expectErr := (json.Unmarshal(testCase.data, &result) != nil)
 
 		if expectErr != testCase.expectUnmarshalErr {
@@ -607,6 +614,7 @@ func TestBPStatementValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewNullFunc(
 		condition.S3XAmzServerSideEncryption.ToKey(),
 		false,
@@ -614,6 +622,7 @@ func TestBPStatementValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	case2Statement := NewBPStatement("",
 		Allow,
 		NewPrincipal("*"),

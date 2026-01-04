@@ -51,6 +51,7 @@ type config struct {
 func (d config) Version() string {
 	st := structs.New(d.data)
 	f := st.Field("Version")
+
 	return f.Value().(string)
 }
 
@@ -96,9 +97,11 @@ func (d config) Save(filename string) error {
 func (d config) Load(filename string) error {
 	d.lock.Lock()
 	defer d.lock.Unlock()
+
 	if d.clnt != nil {
 		return loadFileConfigEtcd(filename, d.clnt, d.data)
 	}
+
 	return loadFileConfig(filename, d.data)
 }
 
@@ -117,15 +120,18 @@ func (d config) Diff(c Config) ([]structs.Field, error) {
 	var found bool
 	for _, currField := range currFields {
 		found = false
+
 		for _, newField := range newFields {
 			if reflect.DeepEqual(currField.Name(), newField.Name()) {
 				found = true
 			}
 		}
+
 		if !found {
 			fields = append(fields, *currField)
 		}
 	}
+
 	return fields, nil
 }
 
@@ -139,15 +145,18 @@ func (d config) DeepDiff(c Config) ([]structs.Field, error) {
 	var found bool
 	for _, currField := range currFields {
 		found = false
+
 		for _, newField := range newFields {
 			if reflect.DeepEqual(currField.Value(), newField.Value()) {
 				found = true
 			}
 		}
+
 		if !found {
 			fields = append(fields, *currField)
 		}
 	}
+
 	return fields, nil
 }
 
@@ -159,6 +168,7 @@ func CheckData(data any) error {
 	}
 
 	st := structs.New(data)
+
 	f, ok := st.FieldOk("Version")
 	if !ok {
 		return fmt.Errorf("struct ‘%s’ must have field ‘Version’", st.Name())
@@ -179,22 +189,26 @@ func writeFile(filename string, data []byte) error {
 	if err != nil {
 		return err
 	}
+
 	_, err = safeFile.Write(data)
 	if err != nil {
 		return err
 	}
+
 	return safeFile.Close()
 }
 
 // GetVersion - extracts the version information.
 func GetVersion(filename string, clnt *etcd.Client) (version string, err error) {
 	var qc Config
+
 	qc, err = LoadConfig(filename, clnt, &struct {
 		Version string
 	}{})
 	if err != nil {
 		return "", err
 	}
+
 	return qc.Version(), nil
 }
 
@@ -204,6 +218,7 @@ func LoadConfig(filename string, clnt *etcd.Client, data any) (qc Config, err er
 	if err != nil {
 		return nil, err
 	}
+
 	return qc, qc.Load(filename)
 }
 
@@ -212,11 +227,14 @@ func SaveConfig(data any, filename string, clnt *etcd.Client) (err error) {
 	if err = CheckData(data); err != nil {
 		return err
 	}
+
 	var qc Config
+
 	qc, err = NewConfig(data, clnt)
 	if err != nil {
 		return err
 	}
+
 	return qc.Save(filename)
 }
 
@@ -231,5 +249,6 @@ func NewConfig(data any, clnt *etcd.Client) (cfg Config, err error) {
 	d.data = data
 	d.clnt = clnt
 	d.lock = new(sync.RWMutex)
+
 	return d, nil
 }

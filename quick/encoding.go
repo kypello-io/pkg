@@ -65,8 +65,10 @@ func (j jsonEncoding) Unmarshal(b []byte, v any) error {
 			return fmt.Errorf("unable to parse JSON, type '%v' cannot be converted into the Go '%v' type",
 				jerr.Value, jerr.Type)
 		}
+
 		return err
 	}
+
 	return nil
 }
 
@@ -115,6 +117,7 @@ func saveFileConfig(filename string, v any) error {
 	if err != nil {
 		return err
 	}
+
 	if runtime.GOOS == "windows" {
 		dataBytes = []byte(strings.ReplaceAll(string(dataBytes), "\n", "\r\n"))
 	}
@@ -130,31 +133,37 @@ func saveFileConfigEtcd(filename string, clnt *etcd.Client, v any) error {
 	if err != nil {
 		return err
 	}
+
 	if runtime.GOOS == "windows" {
 		dataBytes = []byte(strings.ReplaceAll(string(dataBytes), "\n", "\r\n"))
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+
 	_, err = clnt.Put(ctx, filename, string(dataBytes))
 	if err == context.DeadlineExceeded {
 		return fmt.Errorf("etcd setup is unreachable, please check your endpoints %s", clnt.Endpoints())
 	} else if err != nil {
 		return fmt.Errorf("unexpected error %w returned by etcd setup, please check your endpoints %s", err, clnt.Endpoints())
 	}
+
 	return nil
 }
 
 func loadFileConfigEtcd(filename string, clnt *etcd.Client, v any) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+
 	resp, err := clnt.Get(ctx, filename)
 	if err != nil {
 		if err == context.DeadlineExceeded {
 			return fmt.Errorf("etcd setup is unreachable, please check your endpoints %s", clnt.Endpoints())
 		}
+
 		return fmt.Errorf("unexpected error %w returned by etcd setup, please check your endpoints %s", err, clnt.Endpoints())
 	}
+
 	if resp.Count == 0 {
 		return os.ErrNotExist
 	}
@@ -169,6 +178,7 @@ func loadFileConfigEtcd(filename string, clnt *etcd.Client, v any) error {
 			return toUnmarshaller(filepath.Ext(filename))(fileData, v)
 		}
 	}
+
 	return os.ErrNotExist
 }
 
@@ -180,6 +190,7 @@ func loadFileConfig(filename string, v any) error {
 	if err != nil {
 		return err
 	}
+
 	if runtime.GOOS == "windows" {
 		fileData = []byte(strings.ReplaceAll(string(fileData), "\r\n", "\n"))
 	}

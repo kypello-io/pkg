@@ -154,8 +154,10 @@ func consolePrint(tag string, c *color.Color, a ...any) {
 		if len(a) == 0 {
 			return
 		}
+
 		output := color.Output
 		color.Output = stderrColoredOutput
+
 		if isatty.IsTerminal(os.Stderr.Fd()) {
 			c.Print(ProgramName() + ": <DEBUG> ")
 			c.Print(a...)
@@ -163,6 +165,7 @@ func consolePrint(tag string, c *color.Color, a ...any) {
 			fmt.Fprint(color.Output, ProgramName()+": <DEBUG> ")
 			fmt.Fprint(color.Output, a...)
 		}
+
 		color.Output = output
 	case "Fatal":
 		fallthrough
@@ -171,8 +174,10 @@ func consolePrint(tag string, c *color.Color, a ...any) {
 		if len(a) == 0 {
 			return
 		}
+
 		output := color.Output
 		color.Output = stderrColoredOutput
+
 		if isatty.IsTerminal(os.Stderr.Fd()) {
 			c.Print(ProgramName() + ": <ERROR> ")
 			c.Print(a...)
@@ -180,12 +185,14 @@ func consolePrint(tag string, c *color.Color, a ...any) {
 			fmt.Fprint(color.Output, ProgramName()+": <ERROR> ")
 			fmt.Fprint(color.Output, a...)
 		}
+
 		color.Output = output
 	case "Info":
 		// if no arguments are given do not invoke info printer.
 		if len(a) == 0 {
 			return
 		}
+
 		if isatty.IsTerminal(os.Stdout.Fd()) {
 			c.Print(ProgramName() + ": ")
 			c.Print(a...)
@@ -213,8 +220,10 @@ func consolePrintf(tag string, c *color.Color, format string, a ...any) {
 		if len(a) == 0 {
 			return
 		}
+
 		output := color.Output
 		color.Output = stderrColoredOutput
+
 		if isatty.IsTerminal(os.Stderr.Fd()) {
 			c.Print(ProgramName() + ": <DEBUG> ")
 			c.Printf(format, a...)
@@ -222,6 +231,7 @@ func consolePrintf(tag string, c *color.Color, format string, a ...any) {
 			fmt.Fprint(color.Output, ProgramName()+": <DEBUG> ")
 			fmt.Fprintf(color.Output, format, a...)
 		}
+
 		color.Output = output
 	case "Fatal":
 		fallthrough
@@ -230,8 +240,10 @@ func consolePrintf(tag string, c *color.Color, format string, a ...any) {
 		if len(a) == 0 {
 			return
 		}
+
 		output := color.Output
 		color.Output = stderrColoredOutput
+
 		if isatty.IsTerminal(os.Stderr.Fd()) {
 			c.Print(ProgramName() + ": <ERROR> ")
 			c.Printf(format, a...)
@@ -239,12 +251,14 @@ func consolePrintf(tag string, c *color.Color, format string, a ...any) {
 			fmt.Fprint(color.Output, ProgramName()+": <ERROR> ")
 			fmt.Fprintf(color.Output, format, a...)
 		}
+
 		color.Output = output
 	case "Info":
 		// if no arguments are given do not invoke info printer.
 		if len(a) == 0 {
 			return
 		}
+
 		if isatty.IsTerminal(os.Stdout.Fd()) {
 			c.Print(ProgramName() + ": ")
 			c.Printf(format, a...)
@@ -272,8 +286,10 @@ func consolePrintln(tag string, c *color.Color, a ...any) {
 		if len(a) == 0 {
 			return
 		}
+
 		output := color.Output
 		color.Output = stderrColoredOutput
+
 		if isatty.IsTerminal(os.Stderr.Fd()) {
 			c.Print(ProgramName() + ": <DEBUG> ")
 			c.Println(a...)
@@ -281,6 +297,7 @@ func consolePrintln(tag string, c *color.Color, a ...any) {
 			fmt.Fprint(color.Output, ProgramName()+": <DEBUG> ")
 			fmt.Fprintln(color.Output, a...)
 		}
+
 		color.Output = output
 	case "Fatal":
 		fallthrough
@@ -289,8 +306,10 @@ func consolePrintln(tag string, c *color.Color, a ...any) {
 		if len(a) == 0 {
 			return
 		}
+
 		output := color.Output
 		color.Output = stderrColoredOutput
+
 		if isatty.IsTerminal(os.Stderr.Fd()) {
 			c.Print(ProgramName() + ": <ERROR> ")
 			c.Println(a...)
@@ -298,12 +317,14 @@ func consolePrintln(tag string, c *color.Color, a ...any) {
 			fmt.Fprint(color.Output, ProgramName()+": <ERROR> ")
 			fmt.Fprintln(color.Output, a...)
 		}
+
 		color.Output = output
 	case "Info":
 		// if no arguments are given do not invoke info printer.
 		if len(a) == 0 {
 			return
 		}
+
 		if isatty.IsTerminal(os.Stdout.Fd()) {
 			c.Print(ProgramName() + ": ")
 			c.Println(a...)
@@ -361,6 +382,7 @@ func NewTable(rowColors []*color.Color, alignRight []bool, indentWidth int) *Tab
 // PopulateTable - writes to the custom output
 func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 	numRows := len(rows)
+
 	numCols := len(rows[0])
 	if numRows != len(t.RowColors) {
 		return fmt.Errorf("row count and row-colors mismatch")
@@ -368,10 +390,12 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 
 	// Compute max. column widths
 	maxColWidths := make([]int, numCols)
+
 	for _, row := range rows {
 		if len(row) != len(t.AlignRight) {
 			return fmt.Errorf("col count and align-right mismatch")
 		}
+
 		for i, v := range row {
 			if len([]rune(v)) > maxColWidths[i] {
 				maxColWidths[i] = len([]rune(v))
@@ -383,6 +407,7 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 	paddedText := make([][]string, numRows)
 	for r, row := range rows {
 		paddedText[r] = make([]string, numCols)
+
 		for c, cell := range row {
 			if t.AlignRight[c] {
 				fmtStr := fmt.Sprintf("%%%ds", maxColWidths[c])
@@ -400,6 +425,7 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 	for i, c := range maxColWidths {
 		segments[i] = strings.Repeat("─", c+2)
 	}
+
 	indentText := strings.Repeat(" ", t.TableIndentWidth)
 	border := fmt.Sprintf("%s┌%s┐", indentText, strings.Join(segments, "┬"))
 	fmt.Fprintln(out, border)
@@ -411,13 +437,17 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 			border = fmt.Sprintf("%s├%s┤", indentText, strings.Join(segments, "┼"))
 			fmt.Println(border)
 		}
+
 		fmt.Fprint(out, indentText+"│ ")
+
 		for c, text := range row {
 			t.RowColors[r].Fprint(out, text)
+
 			if c != numCols-1 {
 				fmt.Fprint(out, " │ ")
 			}
 		}
+
 		fmt.Fprintln(out, " │")
 	}
 
@@ -431,6 +461,7 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 // DisplayTable - prints the table
 func (t *Table) DisplayTable(rows [][]string) error {
 	numRows := len(rows)
+
 	numCols := len(rows[0])
 	if numRows != len(t.RowColors) {
 		return fmt.Errorf("row count and row-colors mismatch")
@@ -438,10 +469,12 @@ func (t *Table) DisplayTable(rows [][]string) error {
 
 	// Compute max. column widths
 	maxColWidths := make([]int, numCols)
+
 	for _, row := range rows {
 		if len(row) != len(t.AlignRight) {
 			return fmt.Errorf("col count and align-right mismatch")
 		}
+
 		for i, v := range row {
 			if len([]rune(v)) > maxColWidths[i] {
 				maxColWidths[i] = len([]rune(v))
@@ -453,6 +486,7 @@ func (t *Table) DisplayTable(rows [][]string) error {
 	paddedText := make([][]string, numRows)
 	for r, row := range rows {
 		paddedText[r] = make([]string, numCols)
+
 		for c, cell := range row {
 			if t.AlignRight[c] {
 				fmtStr := fmt.Sprintf("%%%ds", maxColWidths[c])
@@ -470,6 +504,7 @@ func (t *Table) DisplayTable(rows [][]string) error {
 	for i, c := range maxColWidths {
 		segments[i] = strings.Repeat("─", c+2)
 	}
+
 	indentText := strings.Repeat(" ", t.TableIndentWidth)
 	border := fmt.Sprintf("%s┌%s┐", indentText, strings.Join(segments, "┬"))
 	fmt.Println(border)
@@ -481,13 +516,17 @@ func (t *Table) DisplayTable(rows [][]string) error {
 			border = fmt.Sprintf("%s├%s┤", indentText, strings.Join(segments, "┼"))
 			fmt.Println(border)
 		}
+
 		fmt.Print(indentText + "│ ")
+
 		for c, text := range row {
 			t.RowColors[r].Print(text)
+
 			if c != numCols-1 {
 				fmt.Print(" │ ")
 			}
 		}
+
 		fmt.Println(" │")
 	}
 

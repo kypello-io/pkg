@@ -44,6 +44,8 @@ func SetMaxOpenFileLimit(curLimit, maxLimit uint64) error {
 		// refer https://github.com/golang/go/issues/30401
 		curLimit = 10240
 	}
+
 	rlimit := syscall.Rlimit{Cur: curLimit, Max: maxLimit}
+
 	return syscall.Setrlimit(syscall.RLIMIT_NOFILE, &rlimit)
 }

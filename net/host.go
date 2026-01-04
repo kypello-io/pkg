@@ -77,6 +77,7 @@ func (host *Host) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*host = *h
+
 	return nil
 }
 
@@ -85,6 +86,7 @@ func ParseHost(s string) (*Host, error) {
 	if s == "" {
 		return nil, errors.New("invalid argument")
 	}
+
 	isValidHost := func(host string) bool {
 		if host == "" {
 			return true
@@ -110,6 +112,7 @@ func ParseHost(s string) (*Host, error) {
 				// treated similar to 'test.example.com'
 				continue
 			}
+
 			if len(label) < 1 || len(label) > 63 {
 				return false
 			}
@@ -122,13 +125,17 @@ func ParseHost(s string) (*Host, error) {
 		return true
 	}
 
-	var port Port
-	var isPortSet bool
+	var (
+		port      Port
+		isPortSet bool
+	)
+
 	host, portStr, err := net.SplitHostPort(s)
 	if err != nil {
 		if !strings.Contains(err.Error(), "missing port in address") {
 			return nil, err
 		}
+
 		host = s
 	} else {
 		if port, err = ParsePort(portStr); err != nil {
@@ -172,7 +179,9 @@ func trimIPv6(host string) (string, error) {
 		if host[0] != '[' {
 			return "", errors.New("missing '[' in host")
 		}
+
 		return host[1:][:len(host)-2], nil
 	}
+
 	return host, nil
 }

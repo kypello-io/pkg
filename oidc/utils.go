@@ -50,6 +50,7 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 	if pro.Debug {
 		debug = true
 	}
+
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
@@ -79,6 +80,7 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 	authCodeURL := oauth2Config.AuthCodeURL(state)
 
 	var lastReq *http.Request
+
 	checkRedirect := func(req *http.Request, _ []*http.Request) error {
 		// Save the last request in a redirect chain.
 		lastReq = req
@@ -86,6 +88,7 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 		if req.URL.Path == "/oauth_callback" {
 			return http.ErrUseLastResponse
 		}
+
 		return nil
 	}
 
@@ -105,10 +108,12 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 	if err != nil {
 		return "", "", "", fmt.Errorf("new request err: %v", err)
 	}
+
 	resp, err := dexClient.Do(req)
 	if err != nil {
 		return "", "", "", fmt.Errorf("auth url request err: %v", err)
 	}
+
 	if resp.StatusCode != http.StatusOK {
 		return "", "", "", fmt.Errorf("auth url request returned HTTP status: %d", resp.StatusCode)
 	}
@@ -123,10 +128,12 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 	if err != nil {
 		return "", "", "", fmt.Errorf("new request err (/ldap): %v", err)
 	}
+
 	resp, err = dexClient.Do(req)
 	if err != nil {
 		return "", "", "", fmt.Errorf("request err: %v", err)
 	}
+
 	if resp.StatusCode != http.StatusOK {
 		return "", "", "", fmt.Errorf("ew request (/ldap) returned HTTP status: %d", resp.StatusCode)
 	}
@@ -135,11 +142,14 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 	formData := url.Values{}
 	formData.Set("login", username)
 	formData.Set("password", password)
+
 	req, err = http.NewRequestWithContext(ctx, http.MethodPost, lastReq.URL.String(), strings.NewReader(formData.Encode()))
 	if err != nil {
 		return "", "", "", fmt.Errorf("new request err (/login): %v", err)
 	}
+
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
 	_, err = dexClient.Do(req)
 	if err != nil {
 		return "", "", "", fmt.Errorf("post form err: %v", err)
@@ -147,10 +157,12 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 
 	if debug {
 		fmt.Printf("resp: %#v %#v\n", resp.StatusCode, resp.Header)
+
 		bodyBuf, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return "", "", "", fmt.Errorf("Error reading body: %v", err)
 		}
+
 		fmt.Printf("resp body: %s\n", string(bodyBuf))
 		fmt.Printf("lastReq: %#v\n", lastReq.URL.String())
 	}
@@ -159,6 +171,7 @@ func MockOpenIDTestUserInteraction(ctx context.Context, pro OpenIDClientAppParam
 	// code, which we now have in `lastReq`. Exchange it for a JWT id_token.
 	q := lastReq.URL.Query()
 	code := q.Get("code")
+
 	oauth2Token, err := oauth2Config.Exchange(ctx, code)
 	if err != nil {
 		return "", "", "", fmt.Errorf("unable to exchange code for id token: %v", err)

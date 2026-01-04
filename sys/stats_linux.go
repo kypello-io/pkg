@@ -77,11 +77,13 @@ func getSysinfoMemoryLimit() (limit uint64, err error) {
 // supported value is TotalRAM.
 func GetStats() (stats Stats, err error) {
 	var limit uint64
+
 	limit, err = getMemoryLimit()
 	if err != nil {
 		return Stats{}, err
 	}
 
 	stats.TotalRAM = limit
+
 	return stats, nil
 }

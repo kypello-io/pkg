@@ -35,6 +35,7 @@ func (f dateFunc) evaluate(values map[string][]string) bool {
 	if len(rvalues) == 0 {
 		return false
 	}
+
 	t, err := time.Parse(time.RFC3339, rvalues[0])
 	if err != nil {
 		return false
@@ -105,6 +106,7 @@ func valueToTime(n string, values ValueSet) (v time.Time, err error) {
 			if err != nil {
 				return v, err
 			}
+
 			if v, err = time.Parse(time.RFC3339, s); err != nil {
 				return v, fmt.Errorf("value %s must be a time.Time string for %s condition: %w", vs, n, err)
 			}

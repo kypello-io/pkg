@@ -15,7 +15,9 @@ import (
 func parseDuration(s string) (time.Duration, error) {
 	// [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
 	orig := s
+
 	var d int64
+
 	neg := false
 
 	// Consume [-+]?
@@ -30,9 +32,11 @@ func parseDuration(s string) (time.Duration, error) {
 	if s == "0" {
 		return 0, nil
 	}
+
 	if s == "" {
 		return 0, errors.New("invalid duration " + strconv.Quote(orig))
 	}
+
 	for s != "" {
 		var (
 			v, f  int64       // integers before, after decimal point
@@ -47,20 +51,24 @@ func parseDuration(s string) (time.Duration, error) {
 		}
 		// Consume [0-9]*
 		pl := len(s)
+
 		v, s, err = leadingInt(s)
 		if err != nil {
 			return 0, errors.New("invalid duration " + strconv.Quote(orig))
 		}
+
 		pre := pl != len(s) // whether we consumed anything before a period
 
 		// Consume (\.[0-9]*)?
 		post := false
+
 		if s != "" && s[0] == '.' {
 			s = s[1:]
 			pl := len(s)
 			f, scale, s = leadingFraction(s)
 			post = pl != len(s)
 		}
+
 		if !pre && !post {
 			// no digits (e.g. ".s" or "-.s")
 			return 0, errors.New("invalid duration " + strconv.Quote(orig))
@@ -74,19 +82,24 @@ func parseDuration(s string) (time.Duration, error) {
 				break
 			}
 		}
+
 		if i == 0 {
 			return 0, errors.New("missing unit in duration " + strconv.Quote(orig))
 		}
+
 		u := s[:i]
 		s = s[i:]
+
 		unit, ok := unitMap[u]
 		if !ok {
 			return 0, errors.New("unknown unit " + strconv.Quote(u) + " in duration " + strconv.Quote(orig))
 		}
+
 		if v > (1<<63-1)/unit {
 			// overflow
 			return 0, errors.New("invalid duration " + strconv.Quote(orig))
 		}
+
 		v *= unit
 		if f > 0 {
 			// float64 is needed to be nanosecond accurate for fractions of hours.
@@ -97,6 +110,7 @@ func parseDuration(s string) (time.Duration, error) {
 				return 0, errors.New("invalid duration " + strconv.Quote(orig))
 			}
 		}
+
 		d += v
 		if d < 0 {
 			// overflow
@@ -107,6 +121,7 @@ func parseDuration(s string) (time.Duration, error) {
 	if neg {
 		d = -d
 	}
+
 	return time.Duration(d), nil
 }
 
@@ -120,16 +135,19 @@ func leadingInt(s string) (x int64, rem string, err error) {
 		if c < '0' || c > '9' {
 			break
 		}
+
 		if x > (1<<63-1)/10 {
 			// overflow
 			return 0, "", errLeadingInt
 		}
+
 		x = x*10 + int64(c) - '0'
 		if x < 0 {
 			// overflow
 			return 0, "", errLeadingInt
 		}
 	}
+
 	return x, s[i:], nil
 }
 
@@ -140,26 +158,32 @@ func leadingFraction(s string) (x int64, scale float64, rem string) {
 	i := 0
 	scale = 1
 	overflow := false
+
 	for ; i < len(s); i++ {
 		c := s[i]
 		if c < '0' || c > '9' {
 			break
 		}
+
 		if overflow {
 			continue
 		}
+
 		if x > (1<<63-1)/10 {
 			// It's possible for overflow to give a positive number, so take care.
 			overflow = true
 			continue
 		}
+
 		y := x*10 + int64(c) - '0'
 		if y < 0 {
 			overflow = true
 			continue
 		}
+
 		x = y
 		scale *= 10
 	}
+
 	return x, scale, s[i:]
 }

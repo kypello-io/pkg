@@ -97,6 +97,7 @@ func TestNameUnmarshalJSON(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var result name
+
 		err := json.Unmarshal(testCase.data, &result)
 		expectErr := (err != nil)
 

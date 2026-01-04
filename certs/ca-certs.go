@@ -52,12 +52,15 @@ func GetRootCAs(path string) (*x509.CertPool, error) {
 	if errors.Is(err, os.ErrNotExist) {
 		return rootCAs, nil
 	}
+
 	if errors.Is(err, os.ErrPermission) {
 		return rootCAs, nil
 	}
+
 	if err != nil {
 		return rootCAs, err
 	}
+
 	defer f.Close()
 
 	stat, err := f.Stat()
@@ -71,9 +74,11 @@ func GetRootCAs(path string) (*x509.CertPool, error) {
 		if err != nil {
 			return rootCAs, err
 		}
+
 		if !rootCAs.AppendCertsFromPEM(bytes) {
 			return rootCAs, fmt.Errorf("cert: %q does not contain a valid X.509 PEM-encoded certificate", path)
 		}
+
 		return rootCAs, nil
 	}
 
@@ -83,11 +88,13 @@ func GetRootCAs(path string) (*x509.CertPool, error) {
 	if err != nil {
 		return rootCAs, err
 	}
+
 	for _, file := range files {
 		bytes, err := os.ReadFile(filepath.Join(path, file))
 		if err == nil { // ignore files which are not readable.
 			rootCAs.AppendCertsFromPEM(bytes)
 		}
 	}
+
 	return rootCAs, nil
 }

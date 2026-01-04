@@ -44,14 +44,17 @@ func validOptionalPort(port string) bool {
 	if port == "" {
 		return true
 	}
+
 	if port[0] != ':' {
 		return false
 	}
+
 	for _, b := range port[1:] {
 		if b < '0' || b > '9' {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -98,6 +101,7 @@ func (u URL) String() string {
 		if err != nil {
 			panic(err)
 		}
+
 		switch {
 		case u.Scheme == "http" && host.Port == 80:
 			fallthrough
@@ -107,6 +111,7 @@ func (u URL) String() string {
 	}
 
 	uu := url.URL(u)
+
 	return uu.String()
 }
 
@@ -134,6 +139,7 @@ func (u *URL) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*u = *ru
+
 	return nil
 }
 
@@ -144,6 +150,7 @@ func ParseHTTPURL(s string) (u *URL, err error) {
 	if err != nil {
 		return nil, err
 	}
+
 	switch u.Scheme {
 	default:
 		return nil, fmt.Errorf("unexpected scheme found %s", u.Scheme)
@@ -173,6 +180,7 @@ func ParseURL(s string) (u *URL, err error) {
 				portStr = "443"
 			}
 		}
+
 		if _, err = ParseHost(net.JoinHostPort(uu.Hostname(), portStr)); err != nil {
 			return nil, err
 		}
@@ -192,6 +200,7 @@ func ParseURL(s string) (u *URL, err error) {
 
 	v := URL(*uu)
 	u = &v
+
 	return u, nil
 }
 

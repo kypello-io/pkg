@@ -101,6 +101,7 @@ func (statement BPStatement) isValid() error {
 			if len(statement.Resources) > 0 && !statement.Resources.ObjectResourceExists() {
 				return Errorf("unsupported Resource found %v for action %v", statement.Resources, action)
 			}
+
 			if len(statement.NotResources) > 0 && !statement.NotResources.ObjectResourceExists() {
 				return Errorf("unsupported Resource found %v for action %v", statement.NotResources, action)
 			}
@@ -108,12 +109,14 @@ func (statement BPStatement) isValid() error {
 			if len(statement.Resources) > 0 && !statement.Resources.BucketResourceExists() {
 				return Errorf("unsupported Resource found %v for action %v", statement.Resources, action)
 			}
+
 			if len(statement.NotResources) > 0 && !statement.NotResources.BucketResourceExists() {
 				return Errorf("unsupported Resource found %v for action %v", statement.NotResources, action)
 			}
 		}
 
 		keys := statement.Conditions.Keys()
+
 		keyDiff := keys.Difference(IAMActionConditionKeyMap.Lookup(action))
 		if !keyDiff.IsEmpty() {
 			return Errorf("unsupported condition keys '%v' used for action '%v'", keyDiff, action)
@@ -149,24 +152,31 @@ func (statement BPStatement) Equals(st BPStatement) bool {
 	if statement.Effect != st.Effect {
 		return false
 	}
+
 	if !statement.Principal.Equals(st.Principal) {
 		return false
 	}
+
 	if !statement.Actions.Equals(st.Actions) {
 		return false
 	}
+
 	if !statement.NotActions.Equals(st.NotActions) {
 		return false
 	}
+
 	if !statement.Resources.Equals(st.Resources) {
 		return false
 	}
+
 	if !statement.NotResources.Equals(st.NotResources) {
 		return false
 	}
+
 	if !statement.Conditions.Equals(st.Conditions) {
 		return false
 	}
+
 	return true
 }
 

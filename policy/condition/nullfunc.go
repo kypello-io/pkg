@@ -44,6 +44,7 @@ func (f nullFunc) evaluate(values map[string][]string) bool {
 	if f.value {
 		return len(rvalues) == 0
 	}
+
 	return len(rvalues) != 0
 }
 
@@ -85,12 +86,14 @@ func newNullFunc(key Key, values ValueSet, _ string) (Function, error) {
 	}
 
 	var value bool
+
 	for v := range values {
 		switch v.GetType() {
 		case reflect.Bool:
 			value, _ = v.GetBool()
 		case reflect.String:
 			var err error
+
 			s, _ := v.GetString()
 			if value, err = strconv.ParseBool(s); err != nil {
 				return nil, fmt.Errorf("value must be a boolean string for Null condition")

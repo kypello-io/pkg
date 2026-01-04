@@ -223,6 +223,7 @@ func TestResourceSetMatch(t *testing.T) {
 			if result != testCase.expectedResult {
 				t.Fatalf("case %v: expected: %v, got: %v", i+1, testCase.expectedResult, result)
 			}
+
 			t.Logf("allocs: %.1f per run", testing.AllocsPerRun(100, func() {
 				result = testCase.resourceSet.Match(testCase.resource, testCase.cond)
 			}))
@@ -250,6 +251,7 @@ func TestResourceSetUnmarshalJSON(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var result ResourceSet
+
 		err := json.Unmarshal(testCase.data, &result)
 		expectErr := (err != nil)
 

@@ -35,6 +35,7 @@ func TestConfigValidator(t *testing.T) {
 		t.Logf("Skipping test as %s is not set", EnvTestLDAPServer)
 		t.Skip()
 	}
+
 	testCases := []struct {
 		cfg            Config
 		expectedResult Result
@@ -50,6 +51,7 @@ func TestConfigValidator(t *testing.T) {
 			cfg: func() Config {
 				v := Config{Enabled: true}
 				v.ServerAddr = ldapServer
+
 				return v
 			}(),
 			expectedResult: ConnectivityError,
@@ -59,6 +61,7 @@ func TestConfigValidator(t *testing.T) {
 				v := Config{Enabled: true}
 				v.ServerAddr = ldapServer
 				v.ServerInsecure = true
+
 				return v
 			}(),
 			expectedResult: LookupBindError,
@@ -70,6 +73,7 @@ func TestConfigValidator(t *testing.T) {
 				v.ServerInsecure = true
 				v.LookupBindDN = "cn=admin,dc=min,dc=io"
 				v.LookupBindPassword = "admin1"
+
 				return v
 			}(),
 			expectedResult: LookupBindError,
@@ -81,6 +85,7 @@ func TestConfigValidator(t *testing.T) {
 				v.ServerInsecure = true
 				v.LookupBindDN = "cn=admin,dc=min,dc=io"
 				v.LookupBindPassword = "admin"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -94,6 +99,7 @@ func TestConfigValidator(t *testing.T) {
 				v.LookupBindPassword = "admin"
 				v.UserDNSearchFilter = "(uid=x)"
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -107,6 +113,7 @@ func TestConfigValidator(t *testing.T) {
 				v.LookupBindPassword = "admin"
 				v.UserDNSearchFilter = "(uid=%s)"
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
+
 				return v
 			}(),
 			expectedResult: ConfigOk,
@@ -122,6 +129,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=x))"
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -136,6 +144,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchFilter = "(uid=%s)"
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=x))"
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -151,6 +160,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: ConfigOk,
@@ -166,6 +176,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "min,dc=io" // not a valid DN
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -181,6 +192,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -196,6 +208,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "a" // Not a valid DN
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -211,6 +224,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "member=%d" // Invalid search filter
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -226,6 +240,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io;adcio" // Invalid DN (multiple)
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -241,6 +256,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io;dc=io" // Overlapping subtrees
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -257,6 +273,7 @@ func TestConfigValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: ConnectionParamMisconfigured,
@@ -276,11 +293,13 @@ func TestConfigValidator(t *testing.T) {
 			fmt.Printf("Result: %#v\n", result)
 			t.Fatalf("Case %d: Got `%s` expected `%s`", i, result.Result, string(test.expectedResult))
 		}
+
 		if result.IsOk() {
 			lookupResult, validationResult := test.cfg.ValidateLookup("dillon")
 			if !validationResult.IsOk() {
 				t.Fatalf("Case %d: Got unexpected validation failure: %#v\n", i, validationResult)
 			}
+
 			if lookupResult.DN != expectedDN {
 				t.Fatalf("Case %d: Got unexpected DN: %v", i, lookupResult.DN)
 			}
@@ -309,6 +328,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.ServerInsecure = true
 				v.LookupBindDN = "cn=admin,dc=min,dc=io"
 				v.LookupBindPassword = "admin"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -322,6 +342,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.LookupBindPassword = "admin"
 				v.UserDNSearchFilter = "(uid=x)"
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -335,6 +356,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.LookupBindPassword = "admin"
 				v.UserDNSearchFilter = "(uid=%s)"
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
+
 				return v
 			}(),
 			expectedResult: ConfigOk,
@@ -350,6 +372,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=x))"
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -364,6 +387,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchFilter = "(uid=%s)"
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=x))"
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -379,6 +403,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: ConfigOk,
@@ -394,6 +419,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "min,dc=io" // not a valid DN
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -409,6 +435,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -424,6 +451,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "a" // Not a valid DN
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -439,6 +467,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "member=%d" // Invalid search filter
+
 				return v
 			}(),
 			expectedResult: GroupSearchParamsMisconfigured,
@@ -454,6 +483,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io;adcio" // Invalid DN (multiple)
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -469,6 +499,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io;dc=io" // Overlapping subtrees
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: UserSearchParamsMisconfigured,
@@ -485,6 +516,7 @@ func TestOfflineValidator(t *testing.T) {
 				v.UserDNSearchBaseDistName = "dc=min,dc=io"
 				v.GroupSearchBaseDistName = "ou=swengg,dc=min,dc=io"
 				v.GroupSearchFilter = "(&(objectclass=groupofnames)(member=%d))"
+
 				return v
 			}(),
 			expectedResult: ConnectionParamMisconfigured,

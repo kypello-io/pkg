@@ -56,6 +56,7 @@ func (v Validation) Error() string {
 	if v.Result == ConfigOk {
 		return ""
 	}
+
 	return fmt.Sprintf("%s: %s", string(v.Result), v.Detail)
 }
 
@@ -64,6 +65,7 @@ func (v Validation) FormatError() string {
 	if v.Result == ConfigOk {
 		return ""
 	}
+
 	messages := []string{
 		fmt.Sprintf("Result: %s", string(v.Result)),
 		fmt.Sprintf("Detail: %s", v.Detail),
@@ -71,9 +73,11 @@ func (v Validation) FormatError() string {
 	if v.Suggestion != "" {
 		messages = append(messages, fmt.Sprintf("Suggestion: %s", v.Suggestion))
 	}
+
 	if v.ErrCause != nil {
 		messages = append(messages, fmt.Sprintf("Due to: %s", v.ErrCause.Error()))
 	}
+
 	return strings.Join(messages, "\n")
 }
 
@@ -162,6 +166,7 @@ func (l *Config) validate(offline bool) Validation {
 			Suggestion: "Specify LDAP service account credentials for performing lookups.",
 		}
 	}
+
 	if !offline {
 		if err := l.LookupBind(conn); err != nil {
 			return Validation{
@@ -180,6 +185,7 @@ func (l *Config) validate(offline bool) Validation {
 	} else {
 		l.userDNSearchBaseDistNames, err = validateAndParseBaseDNList(conn, userBaseDNList)
 	}
+
 	if err != nil {
 		return Validation{
 			Result:     UserSearchParamsMisconfigured,
@@ -187,6 +193,7 @@ func (l *Config) validate(offline bool) Validation {
 			Suggestion: "Set the UserDN search base to a valid DN - e.g. as returned by an LDAP search",
 		}
 	}
+
 	if len(l.userDNSearchBaseDistNames) == 0 {
 		return Validation{
 			Result:     UserSearchParamsMisconfigured,
@@ -215,6 +222,7 @@ func (l *Config) validate(offline bool) Validation {
 			}
 		}
 	}
+
 	l.userDNAttributesList = userDNAttributes
 
 	if l.UserDNSearchFilter == "" {
@@ -226,6 +234,7 @@ func (l *Config) validate(offline bool) Validation {
     For example: "(uid=%s)"`,
 		}
 	}
+
 	if strings.Contains(l.UserDNSearchFilter, "%d") {
 		return Validation{
 			Result: UserSearchParamsMisconfigured,
@@ -235,6 +244,7 @@ func (l *Config) validate(offline bool) Validation {
     Please provide a search filter containing "%s"`,
 		}
 	}
+
 	if !strings.Contains(l.UserDNSearchFilter, "%s") {
 		return Validation{
 			Result: UserSearchParamsMisconfigured,
@@ -256,7 +266,6 @@ func (l *Config) validate(offline bool) Validation {
 
 	// If group lookup is not configured, it's ok.
 	if l.GroupSearchBaseDistName != "" || l.GroupSearchFilter != "" {
-
 		// Validate Group Search parameters.
 		groupBaseDNList := splitAndTrim(l.GroupSearchBaseDistName, dnDelimiter)
 		if offline {
@@ -264,6 +273,7 @@ func (l *Config) validate(offline bool) Validation {
 		} else {
 			l.groupSearchBaseDistNames, err = validateAndParseBaseDNList(conn, groupBaseDNList)
 		}
+
 		if err != nil {
 			return Validation{
 				Result:     GroupSearchParamsMisconfigured,
@@ -271,6 +281,7 @@ func (l *Config) validate(offline bool) Validation {
 				Suggestion: "Set the Group Search Base DN to a valid DN - e.g. as returned by an LDAP search",
 			}
 		}
+
 		if len(l.groupSearchBaseDistNames) == 0 {
 			return Validation{
 				Result: GroupSearchParamsMisconfigured,
@@ -320,7 +331,6 @@ func (l *Config) validate(offline bool) Validation {
 				Suggestion: `Ensure that the Group DN search filter is valid`,
 			}
 		}
-
 	}
 
 	return Validation{
@@ -411,41 +421,52 @@ func splitAndTrim(s, sep string) (res []string) {
 		if len(v) == 0 {
 			continue
 		}
+
 		res = append(res, v)
 	}
+
 	return res
 }
 
 // Validates that the given DNs are present in the LDAP server.
 func validateAndParseBaseDNList(conn *ldap.Conn, baseDNList []string) ([]BaseDNInfo, error) {
 	var res []BaseDNInfo
+
 	for _, dn := range baseDNList {
 		lookupResult, err := LookupDN(conn, dn, nil)
 		if err != nil {
 			return nil, fmt.Errorf("base DN `%s` lookup failed: %w", dn, err)
 		}
+
 		if lookupResult == nil {
 			return nil, fmt.Errorf("base DN `%s` not found in the LDAP server", dn)
 		}
+
 		serverDN := lookupResult.NormDN
+
 		parsed, err := ldap.ParseDN(serverDN)
 		if err != nil {
 			return nil, fmt.Errorf("unexpectedly failed to parse DN `%s`: %w", serverDN, err)
 		}
+
 		res = append(res, BaseDNInfo{Original: dn, ServerDN: serverDN, Parsed: parsed})
 	}
+
 	return res, nil
 }
 
 func parseBaseDNListOffline(baseDNList []string) ([]BaseDNInfo, error) {
 	var res []BaseDNInfo
+
 	for _, dn := range baseDNList {
 		parsed, err := ldap.ParseDN(dn)
 		if err != nil {
 			return nil, fmt.Errorf("unexpectedly failed to parse DN `%s`: %w", dn, err)
 		}
+
 		res = append(res, BaseDNInfo{Original: dn, Parsed: parsed})
 	}
+
 	return res, nil
 }
 
@@ -459,6 +480,7 @@ func validateAttributes(attrs []string) error {
 			return fmt.Errorf("attribute name `%s` is invalid", attr)
 		}
 	}
+
 	return nil
 }
 
@@ -475,6 +497,7 @@ func checkForDNOverlaps(s []BaseDNInfo) (string, string) {
 			}
 		}
 	}
+
 	return "", ""
 }
 
@@ -487,5 +510,6 @@ func compileFilter(s string) error {
 	s1 := strings.ReplaceAll(s, "%s", dummyUser)
 	s2 := strings.ReplaceAll(s1, "%d", dummyDN)
 	_, err := ldap.CompileFilter(s2)
+
 	return err
 }

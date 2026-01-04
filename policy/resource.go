@@ -111,16 +111,19 @@ func (r Resource) IsValid() bool {
 	if r.Type == unknownARN {
 		return false
 	}
+
 	if r.isS3() {
 		if strings.HasPrefix(r.Pattern, "/") {
 			return false
 		}
 	}
+
 	if r.isTable() {
 		if strings.HasPrefix(r.Pattern, "/") {
 			return false
 		}
 	}
+
 	if r.isKMS() {
 		if strings.IndexFunc(r.Pattern, func(c rune) bool {
 			return c == '/' || c == '\\' || c == '.'
@@ -145,30 +148,38 @@ func (r Resource) Match(resource string, conditionValues map[string][]string) bo
 		if cp := path.Clean(resource); cp != "." && cp == r.Pattern {
 			return true
 		}
+
 		return wildcard.Match(r.Pattern, resource)
 	}
 
 	// Use a small buffer
 	pat := smallBufPool.Get().(*bytes.Buffer)
 	defer smallBufPool.Put(pat)
+
 	pat.Reset()
 
 	// Do replacement of known keys.
 	pat.WriteString(r.Pattern[:idx])
+
 	remain := r.Pattern[idx:]
 	for len(remain) > 0 {
 		val := remain[0]
 		if val != '$' || len(remain) < 3 {
 			pat.WriteByte(val)
+
 			remain = remain[1:]
+
 			continue
 		}
+
 		keyEnds := strings.IndexByte(remain, '}')
 
 		// If no curly brackets, emit as-is.
 		if remain[1] != '{' || keyEnds < 0 {
 			pat.WriteByte('$')
+
 			remain = remain[1:]
+
 			continue
 		}
 
@@ -183,12 +194,15 @@ func (r Resource) Match(resource string, conditionValues map[string][]string) bo
 			pat.WriteString(string(ckey))
 			pat.WriteString("}")
 		}
+
 		remain = remain[keyEnds+1:]
 	}
+
 	pattern := pat.String()
 	if cp := path.Clean(resource); cp != "." && cp == pattern {
 		return true
 	}
+
 	return wildcard.Match(pattern, resource)
 }
 
@@ -227,6 +241,7 @@ func (r Resource) Validate() error {
 	if !r.IsValid() {
 		return Errorf("invalid resource")
 	}
+
 	return nil
 }
 
@@ -246,7 +261,6 @@ func (r Resource) ValidateBucket(bucketName string) error {
 	//   for example the object `example22/2023/a` is matched by this resource).
 	if !wildcard.Match(r.Pattern, bucketName) &&
 		!wildcard.MatchAsPatternPrefix(r.Pattern, bucketName+"/") {
-
 		return Errorf("bucket name does not match")
 	}
 
@@ -256,19 +270,24 @@ func (r Resource) ValidateBucket(bucketName string) error {
 // ParseResource - parses string to Resource.
 func ParseResource(s string) (Resource, error) {
 	r := Resource{}
+
 	for k, v := range ARNPrefixToType {
 		if s == k {
 			// all pattern
 			r.Type = ResourceARNAll
 			r.Pattern = k
+
 			continue
 		}
+
 		if rem, ok := strings.CutPrefix(s, k); ok {
 			r.Type = v
 			r.Pattern = rem
+
 			break
 		}
 	}
+
 	if r.Type == unknownARN {
 		return r, Errorf("invalid resource '%v'", s)
 	}
@@ -302,17 +321,22 @@ func isTableResourceString(s string) bool {
 	if !strings.HasPrefix(s, "bucket/") {
 		return false
 	}
+
 	rest := strings.TrimPrefix(s, "bucket/")
+
 	parts := strings.Split(rest, "/")
 	if len(parts) < 2 || len(parts) > 3 {
 		return false
 	}
+
 	if parts[0] == "" {
 		return false
 	}
+
 	if parts[1] != "table" && parts[1] != "view" {
 		return false
 	}
+
 	return true
 }
 

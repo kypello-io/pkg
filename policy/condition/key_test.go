@@ -117,6 +117,7 @@ func TestKeyUnmarshalJSON(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var key Key
+
 		err := json.Unmarshal(testCase.data, &key)
 		expectErr := (err != nil)
 

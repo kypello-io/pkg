@@ -202,6 +202,7 @@ func TestResourceUnmarshalJSON(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var result Resource
+
 		err := json.Unmarshal(testCase.data, &result)
 		expectErr := (err != nil)
 

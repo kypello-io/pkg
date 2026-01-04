@@ -58,12 +58,15 @@ func (statement Statement) IsAllowedPtr(args *Args) bool {
 
 		resource := smallBufPool.Get().(*bytes.Buffer)
 		defer smallBufPool.Put(resource)
+
 		resource.Reset()
 		resource.WriteString(args.BucketName)
+
 		if args.ObjectName != "" {
 			if !strings.HasPrefix(args.ObjectName, "/") {
 				resource.WriteByte('/')
 			}
+
 			resource.WriteString(args.ObjectName)
 		} else {
 			resource.WriteByte('/')
@@ -91,15 +94,18 @@ func (statement Statement) IsAllowedPtr(args *Args) bool {
 				if args.BucketName == "" || args.ObjectName == "" {
 					return false
 				}
+
 				objectName := args.ObjectName
 				if idx := strings.IndexByte(objectName, '/'); idx >= 0 {
 					objectName = objectName[:idx]
 				}
+
 				resource.Reset()
 				resource.WriteString("bucket/")
 				resource.WriteString(args.BucketName)
 				resource.WriteString("/table/")
 				resource.WriteString(objectName)
+
 				if !isTableResourceString(resource.String()) {
 					return false
 				}
@@ -141,6 +147,7 @@ func (statement Statement) isAdmin() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -150,6 +157,7 @@ func (statement Statement) isSTS() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -159,6 +167,7 @@ func (statement Statement) isKMS() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -168,6 +177,7 @@ func (statement Statement) isTable() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -177,6 +187,7 @@ func (statement Statement) isVectors() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -198,13 +209,16 @@ func (statement Statement) isValid() error {
 		if err := statement.Actions.ValidateAdmin(); err != nil {
 			return err
 		}
+
 		for action := range statement.Actions {
 			keys := statement.Conditions.Keys()
+
 			keyDiff := keys.Difference(adminActionConditionKeyMap[action])
 			if !keyDiff.IsEmpty() {
 				return Errorf("unsupported condition keys '%v' used for action '%v'", keyDiff, action)
 			}
 		}
+
 		return nil
 	}
 
@@ -212,13 +226,16 @@ func (statement Statement) isValid() error {
 		if err := statement.Actions.ValidateSTS(); err != nil {
 			return err
 		}
+
 		for action := range statement.Actions {
 			keys := statement.Conditions.Keys()
+
 			keyDiff := keys.Difference(stsActionConditionKeyMap[action])
 			if !keyDiff.IsEmpty() {
 				return Errorf("unsupported condition keys '%v' used for action '%v'", keyDiff, action)
 			}
 		}
+
 		return nil
 	}
 
@@ -226,12 +243,15 @@ func (statement Statement) isValid() error {
 		if err := statement.Actions.ValidateKMS(); err != nil {
 			return err
 		}
+
 		if err := statement.Resources.ValidateKMS(); err != nil {
 			return err
 		}
+
 		if err := statement.NotResources.ValidateKMS(); err != nil {
 			return err
 		}
+
 		return nil
 	}
 
@@ -239,8 +259,10 @@ func (statement Statement) isValid() error {
 		if err := statement.Actions.ValidateTable(); err != nil {
 			return err
 		}
+
 		for action := range statement.Actions {
 			keys := statement.Conditions.Keys()
+
 			keyDiff := keys.Difference(tableActionConditionKeyMap[action])
 			if !keyDiff.IsEmpty() {
 				return Errorf("unsupported condition keys '%v' used for action '%v'", keyDiff, action)
@@ -267,6 +289,7 @@ func (statement Statement) isValid() error {
 			if len(statement.Resources) > 0 && !statement.Resources.ObjectResourceExists() && !statement.Resources.BucketResourceExists() {
 				return Errorf("unsupported Resource found %v for action %v", statement.Resources, action)
 			}
+
 			if len(statement.NotResources) > 0 && !statement.NotResources.ObjectResourceExists() && !statement.NotResources.BucketResourceExists() {
 				return Errorf("unsupported NotResource found %v for action %v", statement.NotResources, action)
 			}
@@ -279,8 +302,10 @@ func (statement Statement) isValid() error {
 		if err := statement.Actions.ValidateVectors(); err != nil {
 			return err
 		}
+
 		for action := range statement.Actions {
 			keys := statement.Conditions.Keys()
+
 			keyDiff := keys.Difference(VectorsActionConditionKeyMap[action])
 			if !keyDiff.IsEmpty() {
 				return Errorf("unsupported condition keys '%v' used for action '%v'", keyDiff, action)
@@ -307,6 +332,7 @@ func (statement Statement) isValid() error {
 			if len(statement.Resources) > 0 && !statement.Resources.ObjectResourceExists() && !statement.Resources.BucketResourceExists() {
 				return Errorf("unsupported Resource found %v for action %v", statement.Resources, action)
 			}
+
 			if len(statement.NotResources) > 0 && !statement.NotResources.ObjectResourceExists() && !statement.NotResources.BucketResourceExists() {
 				return Errorf("unsupported NotResource found %v for action %v", statement.NotResources, action)
 			}
@@ -343,11 +369,13 @@ func (statement Statement) isValid() error {
 		if len(statement.Resources) > 0 && !statement.Resources.ObjectResourceExists() && !statement.Resources.BucketResourceExists() {
 			return Errorf("unsupported Resource found %v for action %v", statement.Resources, action)
 		}
+
 		if len(statement.NotResources) > 0 && !statement.NotResources.ObjectResourceExists() && !statement.NotResources.BucketResourceExists() {
 			return Errorf("unsupported NotResource found %v for action %v", statement.NotResources, action)
 		}
 
 		keys := statement.Conditions.Keys()
+
 		keyDiff := keys.Difference(IAMActionConditionKeyMap.Lookup(action))
 		if !keyDiff.IsEmpty() {
 			return Errorf("unsupported condition keys '%v' used for action '%v'", keyDiff, action)
@@ -367,21 +395,27 @@ func (statement Statement) Equals(st Statement) bool {
 	if statement.Effect != st.Effect {
 		return false
 	}
+
 	if !statement.Actions.Equals(st.Actions) {
 		return false
 	}
+
 	if !statement.NotActions.Equals(st.NotActions) {
 		return false
 	}
+
 	if !statement.Resources.Equals(st.Resources) {
 		return false
 	}
+
 	if !statement.NotResources.Equals(st.NotResources) {
 		return false
 	}
+
 	if !statement.Conditions.Equals(st.Conditions) {
 		return false
 	}
+
 	return true
 }
 
@@ -448,23 +482,28 @@ func (statement Statement) hash(seed uint64) [16]byte {
 	h := xxh3.HashString128Seed(string(statement.Effect), seed)
 
 	xorInt(&h, len(statement.Actions), seed+1)
+
 	for action := range statement.Actions {
 		xorTo(&h, xxh3.HashString128Seed(string(action), seed+2))
 	}
 
 	xorInt(&h, len(statement.NotActions), seed+3)
+
 	for action := range statement.NotActions {
 		xorTo(&h, xxh3.HashString128Seed(string(action), seed+4))
 	}
 
 	xorInt(&h, len(statement.Resources), seed+5)
+
 	for res := range statement.Resources {
 		xorTo(&h, xxh3.HashString128Seed(res.Pattern+res.Type.String(), seed+6))
 	}
 
 	xorInt(&h, len(statement.Conditions), seed+7)
+
 	for _, cond := range statement.Conditions {
 		xorTo(&h, xxh3.HashString128Seed(cond.String(), seed+8))
 	}
+
 	return h.Bytes()
 }

@@ -84,6 +84,7 @@ func TestCORSFilterHeaders(t *testing.T) {
 				if ok != test.wantOk {
 					t.Errorf("got: %v, want: %v", ok, test.wantOk)
 				}
+
 				if !reflect.DeepEqual(headers, test.wantHeaders) {
 					t.Errorf("got: %v, want: %v", headers, test.wantHeaders)
 				}
@@ -194,6 +195,7 @@ func TestCORSInvalid(t *testing.T) {
 			if err == nil {
 				t.Fatal("expected error")
 			}
+
 			if !strings.Contains(err.Error(), test.wantErrContains) {
 				t.Errorf("got: %v, want contains: %v", err, test.wantErrContains)
 			}
@@ -255,13 +257,16 @@ func TestCORSXMLValid(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			c, err := ParseBucketCorsConfig(bytes.NewReader(fileContents))
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			if !reflect.DeepEqual(c, test.wantCORSConfig) {
 				t.Errorf("got: %v, want: %v", c, test.wantCORSConfig)
 			}
+
 			err = c.Validate()
 			if err != nil {
 				t.Errorf("unexpected error: %v", err)
@@ -275,14 +280,17 @@ func TestCORSXMLMarshal(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	c, err := ParseBucketCorsConfig(bytes.NewReader(fileContents))
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	remarshalled, err := c.ToXML()
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	trimmedFileContents := bytes.TrimSpace(fileContents)
 	if !bytes.Equal(trimmedFileContents, remarshalled) {
 		t.Errorf("got: %s, want: %s", string(remarshalled), string(trimmedFileContents))

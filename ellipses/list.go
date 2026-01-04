@@ -39,8 +39,10 @@ func HasList(args ...string) bool {
 		if !ok {
 			break
 		}
+
 		ok = ok && regexpList.MatchString(arg)
 	}
+
 	return ok
 }
 
@@ -55,6 +57,7 @@ func FindListPatterns(arg string) (ArgPattern, error) {
 	if err == errFormat {
 		err = ErrInvalidListFormatFn(arg)
 	}
+
 	return v, err
 }
 
@@ -63,6 +66,7 @@ func parseListRange(pattern string) (seq []string, err error) {
 	if !strings.HasPrefix(pattern, openBraces) {
 		return nil, errors.New("invalid argument")
 	}
+
 	if !strings.HasSuffix(pattern, closeBraces) {
 		return nil, errors.New("invalid argument")
 	}

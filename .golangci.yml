@@ -11,6 +11,7 @@ linters:
     - unconvert
     - unused
     - modernize
+    - wsl_v5
   settings:
     misspell:
       locale: US

@@ -62,14 +62,17 @@ func (c *Config) Validate() error {
 	if len(c.CORSRules) == 0 {
 		return fmt.Errorf("no CORS rules found, %w", ErrMalformedXML{})
 	}
+
 	if len(c.CORSRules) > 100 {
 		return fmt.Errorf("too many CORS rules, max 100 allowed, got: %d, %w", len(c.CORSRules), ErrTooManyRules{})
 	}
+
 	for _, rule := range c.CORSRules {
 		// Origin validation
 		if len(rule.AllowedOrigin) == 0 {
 			return fmt.Errorf("no AllowedOrigin found in CORS rule, id: %s, %w", rule.ID, ErrMalformedXML{})
 		}
+
 		for _, origin := range rule.AllowedOrigin {
 			if strings.Count(origin, "*") > 1 {
 				return fmt.Errorf("origin %s in CORS rule, id: %s, %w", origin, rule.ID, ErrAllowedOriginWildcards{Origin: origin})
@@ -80,6 +83,7 @@ func (c *Config) Validate() error {
 		if len(rule.AllowedMethod) == 0 {
 			return fmt.Errorf("no AllowedMethod found in CORS rule, id: %s, %w", rule.ID, ErrMalformedXML{})
 		}
+
 		for _, method := range rule.AllowedMethod {
 			if !allowedCORSRuleMethods[method] {
 				return fmt.Errorf("method %s in CORS rule, id: %s, %w", method, rule.ID, ErrInvalidMethod{Method: method})
@@ -108,6 +112,7 @@ func (c *Rule) HasAllowedOrigin(origin string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -123,9 +128,11 @@ func (c *Rule) FilterAllowedHeaders(headers []string) ([]string, bool) {
 	// It's inefficient to store the CORS config verbatim and run ToLower here, but S3 essentially
 	// behaves this way, and will return the XML config verbatim when you GET it.
 	filtered := []string{}
+
 	for _, header := range headers {
 		header = strings.ToLower(header)
 		found := false
+
 		for _, allowedHeader := range c.AllowedHeader {
 			// Case insensitive comparison for headers
 			if wildcard.Match(strings.ToLower(allowedHeader), header) {
@@ -133,31 +140,38 @@ func (c *Rule) FilterAllowedHeaders(headers []string) ([]string, bool) {
 				// not enforce that, it's done by rule.Validate() function.
 				filtered = append(filtered, header)
 				found = true
+
 				break
 			}
 		}
+
 		if !found {
 			return nil, false
 		}
 	}
+
 	return filtered, true
 }
 
 // ParseBucketCorsConfig parses a CORS configuration in XML from an io.Reader.
 func ParseBucketCorsConfig(reader io.Reader) (*Config, error) {
 	var c Config
+
 	err := xml.NewDecoder(reader).Decode(&c)
 	if err != nil {
 		return nil, fmt.Errorf("decoding xml: %w", err)
 	}
+
 	if c.XMLNS == "" {
 		c.XMLNS = defaultXMLNS
 	}
+
 	for i, rule := range c.CORSRules {
 		for j, method := range rule.AllowedMethod {
 			c.CORSRules[i].AllowedMethod[j] = strings.ToUpper(method)
 		}
 	}
+
 	return &c, nil
 }
 
@@ -166,9 +180,11 @@ func (c Config) ToXML() ([]byte, error) {
 	if c.XMLNS == "" {
 		c.XMLNS = defaultXMLNS
 	}
+
 	data, err := xml.Marshal(&c)
 	if err != nil {
 		return nil, fmt.Errorf("marshaling xml: %w", err)
 	}
+
 	return append([]byte(xml.Header), data...), nil
 }

@@ -38,10 +38,12 @@ func TestDuration_Unmarshal(t *testing.T) {
 	yamlData := []byte(`a: 1s
 dur: 1w1s
 durationPointer: 7d1s`)
+
 	yamlTest := testDuration{}
 	if err := yaml.Unmarshal(yamlData, &yamlTest); err != nil {
 		t.Fatal(err)
 	}
+
 	jsonTest := testDuration{}
 	if err := json.Unmarshal(jsonData, &jsonTest); err != nil {
 		t.Fatal(err)
@@ -54,6 +56,7 @@ dur: 1w1s`)
 	if err := yaml.Unmarshal(yamlData, &yamlTest); err != nil {
 		t.Fatal(err)
 	}
+
 	if err := json.Unmarshal(jsonData, &jsonTest); err != nil {
 		t.Fatal(err)
 	}
@@ -61,18 +64,23 @@ dur: 1w1s`)
 
 func TestMarshalUnmarshalDuration(t *testing.T) {
 	v := Duration(time.Hour)
+
 	var vn Duration
+
 	bts, err := v.MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	left, err := vn.UnmarshalMsg(bts)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if len(left) > 0 {
 		t.Errorf("%d bytes left over after UnmarshalMsg(): %q", len(left), left)
 	}
+
 	if vn != v {
 		t.Errorf("v=%#v; want=%#v", vn, v)
 	}
@@ -81,6 +89,7 @@ func TestMarshalUnmarshalDuration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if len(left) > 0 {
 		t.Errorf("%d bytes left over after Skip(): %q", len(left), left)
 	}
@@ -88,6 +97,7 @@ func TestMarshalUnmarshalDuration(t *testing.T) {
 
 func TestEncodeDecodeDuration(t *testing.T) {
 	v := Duration(time.Hour)
+
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
@@ -97,15 +107,19 @@ func TestEncodeDecodeDuration(t *testing.T) {
 	}
 
 	var vn Duration
+
 	err := msgp.Decode(&buf, &vn)
 	if err != nil {
 		t.Error(err)
 	}
+
 	if vn != v {
 		t.Errorf("v=%#v; want=%#v", vn, v)
 	}
+
 	buf.Reset()
 	msgp.Encode(&buf, &v)
+
 	err = msgp.NewReader(&buf).Skip()
 	if err != nil {
 		t.Error(err)

@@ -52,7 +52,9 @@ func (p Principal) MarshalJSON() ([]byte, error) {
 
 	// subtype to avoid recursive call to MarshalJSON()
 	type subPrincipal Principal
+
 	sp := subPrincipal(p)
+
 	return json.Marshal(sp)
 }
 
@@ -71,6 +73,7 @@ func (p Principal) Match(principal string) bool {
 func (p *Principal) UnmarshalJSON(data []byte) error {
 	// subtype to avoid recursive call to UnmarshalJSON()
 	type subPrincipal Principal
+
 	var sp subPrincipal
 
 	if err := json.Unmarshal(data, &sp); err != nil {

@@ -334,6 +334,7 @@ func (action Action) IsObjectAction() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -349,6 +350,7 @@ func (action Action) IsValid() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -363,11 +365,13 @@ func (a ActionConditionKeyMap) Lookup(action Action) condition.KeySet {
 	}
 
 	ckeysMerged := condition.NewKeySet(commonKeys...)
+
 	for act, ckey := range a {
 		if action.Match(act) {
 			ckeysMerged.Merge(ckey)
 		}
 	}
+
 	return ckeysMerged
 }
 

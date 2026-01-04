@@ -76,6 +76,7 @@ func (resourceSet ResourceSet) Equals(sresourceSet ResourceSet) bool {
 // Intersection - returns resources available in both ResourceSet.
 func (resourceSet ResourceSet) Intersection(sset ResourceSet) ResourceSet {
 	nset := NewResourceSet()
+
 	for k := range resourceSet {
 		if _, ok := sset[k]; ok {
 			nset.Add(k)
@@ -102,6 +103,7 @@ func (resourceSet ResourceSet) MatchResource(resource string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -121,6 +123,7 @@ func (resourceSet ResourceSet) String() string {
 	for resource := range resourceSet {
 		resources = append(resources, resource.String())
 	}
+
 	sort.Strings(resources)
 
 	return fmt.Sprintf("%v", resources)
@@ -134,6 +137,7 @@ func (resourceSet *ResourceSet) UnmarshalJSON(data []byte) error {
 	}
 
 	*resourceSet = make(ResourceSet)
+
 	for _, s := range sset.ToSlice() {
 		resource, err := ParseResource(s)
 		if err != nil {
@@ -156,6 +160,7 @@ func (resourceSet ResourceSet) ValidateS3() error {
 		if !resource.isS3() {
 			return Errorf("resource '%v' type is not S3", resource)
 		}
+
 		if err := resource.Validate(); err != nil {
 			return err
 		}
@@ -170,6 +175,7 @@ func (resourceSet ResourceSet) ValidateKMS() error {
 		if !resource.isKMS() {
 			return Errorf("resource '%v' type is not KMS", resource)
 		}
+
 		if err := resource.Validate(); err != nil {
 			return err
 		}
@@ -184,6 +190,7 @@ func (resourceSet ResourceSet) ValidateTable() error {
 		if !resource.isTable() {
 			return Errorf("resource '%v' type is not S3 Tables", resource)
 		}
+
 		if err := resource.Validate(); err != nil {
 			return err
 		}
@@ -199,6 +206,7 @@ func (resourceSet ResourceSet) ValidateVectors() error {
 		if !resource.isS3() {
 			return Errorf("resource '%v' type is not S3", resource)
 		}
+
 		if err := resource.Validate(); err != nil {
 			return err
 		}

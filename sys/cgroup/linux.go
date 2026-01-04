@@ -62,6 +62,7 @@ func GetEntries(pid int) (CGEntries, error) {
 		return nil, err
 	}
 	defer r.Close()
+
 	return parseProcCGroup(r)
 }
 
@@ -111,7 +112,9 @@ func parseProcCGroup(r io.Reader) (CGEntries, error) {
 // to fetch all the values for us.
 func getManagerKernValue(cname, path, kernParam string) (limit uint64, err error) {
 	cmd := exec.Command("cgm", "getvalue", cname, path, kernParam)
+
 	var out bytes.Buffer
+
 	cmd.Stdout = &out
 	if err = cmd.Run(); err != nil {
 		return 0, err
@@ -119,6 +122,7 @@ func getManagerKernValue(cname, path, kernParam string) (limit uint64, err error
 
 	// Parse the cgm output.
 	limit, err = strconv.ParseUint(strings.TrimSpace(out.String()), 10, 64)
+
 	return limit, err
 }
 
@@ -151,6 +155,7 @@ func getMemoryLimitFilePath(cgPath string) string {
 // fallback to querying cgroup manager.
 func GetMemoryLimit(pid int) (limit uint64, err error) {
 	var cg CGEntries
+
 	cg, err = GetEntries(pid)
 	if err != nil {
 		return 0, err
@@ -160,11 +165,11 @@ func GetMemoryLimit(pid int) (limit uint64, err error) {
 
 	limit, err = getManagerKernValue("memory", path, memoryLimitKernelParam)
 	if err != nil {
-
 		// Upon any failure returned from `cgm`, on some systems cgm
 		// might not be installed. We fallback to using the the sysfs
 		// path instead to lookup memory limits.
 		var b []byte
+
 		b, err = os.ReadFile(getMemoryLimitFilePath(path))
 		if err != nil {
 			return 0, err

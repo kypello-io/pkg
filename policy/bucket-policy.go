@@ -96,6 +96,7 @@ func (policy BucketPolicy) MarshalJSON() ([]byte, error) {
 
 	// subtype to avoid recursive call to MarshalJSON()
 	type subPolicy BucketPolicy
+
 	return json.Marshal(subPolicy(policy))
 }
 
@@ -107,6 +108,7 @@ func (policy *BucketPolicy) dropDuplicateStatements() {
 			// compare with it.
 			continue
 		}
+
 		for j := i + 1; j < len(policy.Statements); j++ {
 			if !policy.Statements[i].Equals(policy.Statements[j]) {
 				continue
@@ -119,13 +121,16 @@ func (policy *BucketPolicy) dropDuplicateStatements() {
 
 	// remove duplicate items from the slice.
 	var c int
+
 	for i := range policy.Statements {
 		if _, ok := dups[i]; ok {
 			continue
 		}
+
 		policy.Statements[c] = policy.Statements[i]
 		c++
 	}
+
 	policy.Statements = policy.Statements[:c]
 }
 
@@ -133,6 +138,7 @@ func (policy *BucketPolicy) dropDuplicateStatements() {
 func (policy *BucketPolicy) UnmarshalJSON(data []byte) error {
 	// subtype to avoid recursive call to UnmarshalJSON()
 	type subPolicy BucketPolicy
+
 	var sp subPolicy
 	if err := json.Unmarshal(data, &sp); err != nil {
 		return err
@@ -171,11 +177,13 @@ func ParseBucketPolicyConfig(reader io.Reader, bucketName string) (*BucketPolicy
 
 	decoder := json.NewDecoder(reader)
 	decoder.DisallowUnknownFields()
+
 	if err := decoder.Decode(&policy); err != nil {
 		return nil, Errorf("%w", err)
 	}
 
 	err := policy.Validate(bucketName)
+
 	return &policy, err
 }
 
@@ -184,13 +192,16 @@ func (policy *BucketPolicy) Equals(p BucketPolicy) bool {
 	if policy.ID != p.ID || policy.Version != p.Version {
 		return false
 	}
+
 	if len(policy.Statements) != len(p.Statements) {
 		return false
 	}
+
 	for i, st := range policy.Statements {
 		if !p.Statements[i].Equals(st) {
 			return false
 		}
 	}
+
 	return true
 }

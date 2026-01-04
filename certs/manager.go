@@ -74,6 +74,7 @@ func NewManager(ctx context.Context, certFile, keyFile string, loadX509KeyPair L
 	if err != nil {
 		return nil, err
 	}
+
 	keyFile, err = filepath.Abs(keyFile)
 	if err != nil {
 		return nil, err
@@ -92,9 +93,11 @@ func NewManager(ctx context.Context, certFile, keyFile string, loadX509KeyPair L
 	for _, opt := range opts {
 		opt(manager)
 	}
+
 	if err := manager.AddCertificate(certFile, keyFile); err != nil {
 		return nil, err
 	}
+
 	return manager, nil
 }
 
@@ -135,21 +138,26 @@ func (m *Manager) AddCertificate(certFile, keyFile string) (err error) {
 	if err != nil {
 		return err
 	}
+
 	keyFile, err = filepath.Abs(keyFile)
 	if err != nil {
 		return err
 	}
+
 	certFileIsLink, err := isSymlink(certFile)
 	if err != nil {
 		return err
 	}
+
 	keyFileIsLink, err := isSymlink(keyFile)
 	if err != nil {
 		return err
 	}
+
 	if certFileIsLink && !keyFileIsLink {
 		return fmt.Errorf("certs: '%s' is a symlink but '%s' is a regular file", certFile, keyFile)
 	}
+
 	if keyFileIsLink && !certFileIsLink {
 		return fmt.Errorf("certs: '%s' is a symlink but '%s' is a regular file", keyFile, certFile)
 	}
@@ -172,6 +180,7 @@ func (m *Manager) AddCertificate(certFile, keyFile string) (err error) {
 		CertFile: certFile,
 		KeyFile:  keyFile,
 	}
+
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
@@ -185,6 +194,7 @@ func (m *Manager) AddCertificate(certFile, keyFile string) (err error) {
 	if len(m.certificates) > 0 && len(certificate.Leaf.IPAddresses) > 0 {
 		return errors.New("cert: certificate must not contain any IP SANs: only the default certificate may contain IP SANs")
 	}
+
 	m.certificates[p] = &certificate
 
 	if !m.DisableAutoReload() {
@@ -200,12 +210,15 @@ func (m *Manager) AddCertificate(certFile, keyFile string) (err error) {
 			if err = notify.Watch(filepath.Dir(certFile), events, eventWrite...); err != nil {
 				return err
 			}
+
 			if err = notify.Watch(filepath.Dir(keyFile), events, eventWrite...); err != nil {
 				return err
 			}
+
 			go m.watchFileEvents(p, events, m.reloader())
 		}
 	}
+
 	return nil
 }
 
@@ -214,6 +227,7 @@ func (m *Manager) AddCertificate(certFile, keyFile string) (err error) {
 func (m *Manager) reloader() <-chan struct{} {
 	ch := make(chan struct{}, 1)
 	m.reloadCerts = append(m.reloadCerts, ch)
+
 	return ch
 }
 
@@ -227,8 +241,10 @@ func (m *Manager) ReloadOnSignal(sig ...os.Signal) {
 	if len(sig) == 0 {
 		return
 	}
+
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, sig...)
+
 	go func() {
 		for {
 			select {
@@ -250,6 +266,7 @@ func (m *Manager) ReloadCerts() {
 
 	m.lock.RLock()
 	defer m.lock.RUnlock()
+
 	for _, ch := range m.reloadCerts {
 		// Non-blocking
 		select {
@@ -313,6 +330,7 @@ func (m *Manager) watchFileEvents(watch pair, events chan notify.EventInfo, relo
 			if !isWriteEvent(event.Event()) {
 				continue
 			}
+
 			p := event.Path()
 			if watch.KeyFile != p && watch.CertFile != p {
 				continue
@@ -324,12 +342,14 @@ func (m *Manager) watchFileEvents(watch pair, events chan notify.EventInfo, relo
 		if err != nil {
 			continue
 		}
+
 		if certificate.Leaf == nil { // This is performance optimisation
 			certificate.Leaf, err = x509.ParseCertificate(certificate.Certificate[0])
 			if err != nil {
 				continue
 			}
 		}
+
 		m.lock.Lock()
 		m.certificates[watch] = &certificate
 		m.lock.Unlock()
@@ -441,6 +461,7 @@ func (m *Manager) GetClientCertificate(reqInfo *tls.CertificateRequestInfo) (*tl
 			return certificate, nil
 		}
 	}
+
 	return nil, errors.New("certs: no client certificate is supported by peer")
 }
 
@@ -451,6 +472,7 @@ func isSymlink(file string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
 	return st.Mode()&os.ModeSymlink == os.ModeSymlink, nil
 }
 
@@ -464,14 +486,17 @@ func (m *Manager) GetAllCertificates() []*x509.Certificate {
 	defer m.lock.RUnlock()
 
 	certs := []*x509.Certificate{}
+
 	for _, c := range m.certificates {
 		if c.Leaf != nil {
 			// marshal and parse to create a deep copy
 			cBytes := c.Leaf.Raw
+
 			copyCert, err := x509.ParseCertificate(cBytes)
 			if err != nil {
 				continue
 			}
+
 			certs = append(certs, copyCert)
 		}
 	}

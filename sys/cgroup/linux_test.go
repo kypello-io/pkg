@@ -47,6 +47,7 @@ func TestProcCGroup(t *testing.T) {
 2:freezer:/
 1:name=systemd:/user.slice/user-1000.slice/session-1.scope
 `
+
 	_, err = tmpPath.WriteString(cgroup)
 	if err != nil {
 		t.Fatal(err)

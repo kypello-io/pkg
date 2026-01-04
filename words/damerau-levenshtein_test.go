@@ -28,6 +28,7 @@ func TestMinimum(t *testing.T) {
 		listval  []int
 		expected int
 	}
+
 	testCases := []testCase{
 		{listval: []int{3, 4, 15}, expected: 3},
 		{listval: []int{}, expected: math.MaxInt32},
@@ -48,6 +49,7 @@ func TestDamerauLevenshtein(t *testing.T) {
 		word2    string
 		distance int
 	}
+
 	testCases := []testCase{
 		{word1: "", word2: "", distance: 0},
 		{word1: "a", word2: "a", distance: 0},

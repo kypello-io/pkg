@@ -56,6 +56,7 @@ func ParseCLILoginClaims(tokenString, secret string) (*CLILoginClaims, error) {
 	}
 
 	claims := &cliLoginClaims{}
+
 	_, err = jwt.ParseWithClaims(string(decodedToken), claims, func(_ *jwt.Token) (any, error) {
 		return []byte(secret), nil
 	})
@@ -70,6 +71,7 @@ func (c *cliLoginClaims) Valid() error {
 	if time.Now().UTC().After(c.Expiry) {
 		return errors.New("token is expired")
 	}
+
 	return nil
 }
 
@@ -81,10 +83,12 @@ func (c *CLILoginClaims) Port() int {
 // ToTokenString serializes the CLILoginClaims to a base64-encoded JWT token string signed with the given secret.
 func (c *CLILoginClaims) ToTokenString(secret string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, c.c)
+
 	sString, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}
+
 	return base64.RawURLEncoding.EncodeToString([]byte(sString)), nil
 }
 
@@ -98,10 +102,12 @@ func (c *CLILoginClaims) SignCredentials(creds credentials.Value) (string, error
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
+
 	sString, err := token.SignedString([]byte(c.c.ReqID))
 	if err != nil {
 		return "", err
 	}
+
 	return base64.RawURLEncoding.EncodeToString([]byte(sString)), nil
 }
 
@@ -116,6 +122,7 @@ func (c *credentialsClaims) Valid() error {
 	if !c.Expiration.IsZero() && time.Now().UTC().After(c.Expiration) {
 		return errors.New("credentials token is expired")
 	}
+
 	return nil
 }
 
@@ -127,6 +134,7 @@ func ParseSignedCredentials(tokenString, reqID string) (credentials.Value, error
 	}
 
 	claims := &credentialsClaims{}
+
 	_, err = jwt.ParseWithClaims(string(decodedToken), claims, func(_ *jwt.Token) (any, error) {
 		return []byte(reqID), nil
 	})

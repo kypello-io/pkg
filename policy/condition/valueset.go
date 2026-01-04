@@ -36,6 +36,7 @@ func (set ValueSet) ToSlice() []Value {
 	for k := range set {
 		values = append(values, k)
 	}
+
 	return values
 }
 
@@ -59,6 +60,7 @@ func (set *ValueSet) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &v); err == nil {
 		*set = make(ValueSet)
 		set.Add(v)
+
 		return nil
 	}
 

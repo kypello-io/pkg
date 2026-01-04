@@ -37,6 +37,7 @@ func (f booleanFunc) evaluate(values map[string][]string) bool {
 	if len(rvalues) == 0 {
 		return false
 	}
+
 	return f.value == rvalues[0]
 }
 
@@ -94,6 +95,7 @@ func newBooleanFunc(key Key, values ValueSet, _ string) (Function, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			if _, err = strconv.ParseBool(s); err != nil {
 				return nil, fmt.Errorf("value must be a boolean string for boolean condition")
 			}

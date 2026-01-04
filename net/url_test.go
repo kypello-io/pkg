@@ -56,10 +56,12 @@ func TestURLHostnameAndPort(t *testing.T) {
 	}
 	for _, tt := range tests {
 		u := URL{Host: tt.in}
+
 		host, port := u.Hostname(), u.Port()
 		if host != tt.host {
 			t.Errorf("Hostname for Host %q = %q; want %q", tt.in, host, tt.host)
 		}
+
 		if port != tt.port {
 			t.Errorf("Port for Host %q = %q; want %q", tt.in, port, tt.port)
 		}
@@ -163,6 +165,7 @@ func TestURLUnmarshalJSON(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var url URL
+
 		err := url.UnmarshalJSON(testCase.data)
 		expectErr := (err != nil)
 
@@ -200,10 +203,12 @@ func TestParseHTTPURL(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.s, func(t *testing.T) {
 			url, err := ParseHTTPURL(testCase.s)
+
 			expectErr := (err != nil)
 			if expectErr != testCase.expectErr {
 				t.Fatalf("error: expected: %v, got: %v", testCase.expectErr, expectErr)
 			}
+
 			if !testCase.expectErr {
 				if !reflect.DeepEqual(url, testCase.expectedURL) {
 					t.Fatalf("host: expected: %#v, got: %#v", testCase.expectedURL, url)

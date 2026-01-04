@@ -25,6 +25,7 @@ func TestMimeLookup(t *testing.T) {
 	if contentType != "text/plain" {
 		t.Fatalf("Invalid content type are found expected \"application/x-msdownload\", got %s", contentType)
 	}
+
 	compressible := DB["txt"].Compressible
 	if compressible {
 		t.Fatalf("Invalid content type are found expected \"false\", got %t", compressible)

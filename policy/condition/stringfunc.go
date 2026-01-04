@@ -36,6 +36,7 @@ func substitute(values map[string][]string) func(string) string {
 				v = strings.ReplaceAll(v, key.VarName(), rvalues[0])
 			}
 		}
+
 		return v
 	}
 }
@@ -51,15 +52,18 @@ type stringFunc struct {
 
 func (f stringFunc) eval(values map[string][]string) bool {
 	rvalues := set.CreateStringSet(getValuesByKey(values, f.k)...)
+
 	fvalues := f.values.ApplyFunc(substitute(values))
 	if f.ignoreCase {
 		rvalues = rvalues.ApplyFunc(strings.ToLower)
 		fvalues = fvalues.ApplyFunc(strings.ToLower)
 	}
+
 	ivalues := rvalues.Intersection(fvalues)
 	if f.n.qualifier == forAllValues {
 		return rvalues.IsEmpty() || rvalues.Equals(ivalues)
 	}
+
 	return !ivalues.IsEmpty()
 }
 
@@ -68,6 +72,7 @@ func (f stringFunc) evaluate(values map[string][]string) bool {
 	if f.negate {
 		return !result
 	}
+
 	return result
 }
 
@@ -82,6 +87,7 @@ func (f stringFunc) name() name {
 func (f stringFunc) String() string {
 	valueStrings := f.values.ToSlice()
 	sort.Strings(valueStrings)
+
 	return fmt.Sprintf("%v:%v:%v", f.n, f.k, valueStrings)
 }
 
@@ -131,6 +137,7 @@ type stringLikeFunc struct {
 
 func (f stringLikeFunc) eval(values map[string][]string) bool {
 	rvalues := getValuesByKey(values, f.k)
+
 	fvalues := f.values.ApplyFunc(substitute(values))
 	for _, v := range rvalues {
 		matched := !fvalues.FuncMatch(wildcard.Match, v).IsEmpty()
@@ -142,6 +149,7 @@ func (f stringLikeFunc) eval(values map[string][]string) bool {
 			return true
 		}
 	}
+
 	return f.n.qualifier == forAllValues
 }
 
@@ -152,6 +160,7 @@ func (f stringLikeFunc) evaluate(values map[string][]string) bool {
 	if f.negate {
 		return !result
 	}
+
 	return result
 }
 
@@ -182,6 +191,7 @@ func validateStringValues(n string, key Key, values set.StringSet) error {
 			if object == "" {
 				return fmt.Errorf("invalid value '%v' for '%v' for %v condition", s, S3XAmzCopySource, n)
 			}
+
 			if err := s3utils.CheckValidBucketName(bucket); err != nil {
 				return err
 			}
@@ -250,6 +260,7 @@ func NewStringEqualsFunc(qualifier string, key Key, values ...string) (Function,
 	for _, value := range values {
 		vset.Add(NewStringValue(value))
 	}
+
 	return newStringFunc(stringEquals, key, vset, qualifier, false, false, false)
 }
 
@@ -264,6 +275,7 @@ func NewStringNotEqualsFunc(qualifier string, key Key, values ...string) (Functi
 	for _, value := range values {
 		vset.Add(NewStringValue(value))
 	}
+
 	return newStringFunc(stringNotEquals, key, vset, qualifier, false, false, true)
 }
 
@@ -278,6 +290,7 @@ func NewStringEqualsIgnoreCaseFunc(qualifier string, key Key, values ...string) 
 	for _, value := range values {
 		vset.Add(NewStringValue(value))
 	}
+
 	return newStringFunc(stringEqualsIgnoreCase, key, vset, qualifier, true, false, false)
 }
 
@@ -292,6 +305,7 @@ func NewStringNotEqualsIgnoreCaseFunc(qualifier string, key Key, values ...strin
 	for _, value := range values {
 		vset.Add(NewStringValue(value))
 	}
+
 	return newStringFunc(stringNotEqualsIgnoreCase, key, vset, qualifier, true, false, true)
 }
 
@@ -308,13 +322,16 @@ func newBinaryEqualsFunc(key Key, values ValueSet, qualifier string) (Function, 
 // NewBinaryEqualsFunc - returns new BinaryEquals function.
 func NewBinaryEqualsFunc(qualifier string, key Key, values ...string) (Function, error) {
 	vset := NewValueSet()
+
 	for _, value := range values {
 		data, err := base64.StdEncoding.DecodeString(value)
 		if err != nil {
 			return nil, err
 		}
+
 		vset.Add(NewStringValue(string(data)))
 	}
+
 	return newStringFunc(binaryEquals, key, vset, qualifier, false, true, false)
 }
 
@@ -334,6 +351,7 @@ func NewStringLikeFunc(qualifier string, key Key, values ...string) (Function, e
 	for _, value := range values {
 		vset.Add(NewStringValue(value))
 	}
+
 	return newStringLikeFunc(key, vset, qualifier)
 }
 
@@ -353,5 +371,6 @@ func NewStringNotLikeFunc(qualifier string, key Key, values ...string) (Function
 	for _, value := range values {
 		vset.Add(NewStringValue(value))
 	}
+
 	return newStringNotLikeFunc(key, vset, qualifier)
 }

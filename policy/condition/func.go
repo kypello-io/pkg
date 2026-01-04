@@ -87,6 +87,7 @@ func (functions Functions) Clone() Functions {
 	for _, f := range functions {
 		funcs = append(funcs, f.clone())
 	}
+
 	return funcs
 }
 
@@ -95,19 +96,23 @@ func (functions Functions) Equals(funcs Functions) bool {
 	if len(functions) != len(funcs) {
 		return false
 	}
+
 	for _, fi := range functions {
 		fistr := fi.String()
 		found := false
+
 		for _, fj := range funcs {
 			if fistr == fj.String() {
 				found = true
 				break
 			}
 		}
+
 		if !found {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -120,6 +125,7 @@ func (functions Functions) MarshalJSON() ([]byte, error) {
 		if _, ok := nm[fname]; !ok {
 			nm[fname] = map[string]ValueSet{}
 		}
+
 		for k, v := range f.toMap() {
 			nm[fname][k.String()] = v
 		}
@@ -130,10 +136,12 @@ func (functions Functions) MarshalJSON() ([]byte, error) {
 
 func (functions Functions) String() string {
 	funcStrings := []string{}
+
 	for _, f := range functions {
 		s := fmt.Sprintf("%v", f)
 		funcStrings = append(funcStrings, s)
 	}
+
 	sort.Strings(funcStrings)
 
 	return fmt.Sprintf("%v", funcStrings)
@@ -186,6 +194,7 @@ func (functions *Functions) UnmarshalJSON(data []byte) error {
 	}
 
 	funcs := []Function{}
+
 	for nameString, args := range nm {
 		n, err := parseName(nameString)
 		if err != nil {

@@ -28,5 +28,6 @@ func isWriteEvent(event notify.Event) bool {
 			return true
 		}
 	}
+
 	return false
 }

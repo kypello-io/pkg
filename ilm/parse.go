@@ -39,12 +39,15 @@ var (
 
 func extractILMTags(tagLabelVal string) []lifecycle.Tag {
 	var ilmTagKVList []lifecycle.Tag
+
 	for tag := range strings.SplitSeq(tagLabelVal, tagSeparator) {
 		if tag == "" {
 			// split returns empty for empty tagLabelVal, skip it.
 			continue
 		}
+
 		lfcTag := lifecycle.Tag{}
+
 		kvs := strings.SplitN(tag, keyValSeparator, 2)
 		if len(kvs) == 2 {
 			lfcTag.Key = kvs[0]
@@ -52,8 +55,10 @@ func extractILMTags(tagLabelVal string) []lifecycle.Tag {
 		} else {
 			lfcTag.Key = kvs[0]
 		}
+
 		ilmTagKVList = append(ilmTagKVList, lfcTag)
 	}
+
 	return ilmTagKVList
 }
 
@@ -63,15 +68,18 @@ func extractILMTags(tagLabelVal string) []lifecycle.Tag {
 func validateTranExpDate(rule lifecycle.Rule) error {
 	expiryDateSet := !rule.Expiration.IsDateNull()
 	transitionSet := !rule.Transition.IsNull()
+
 	transitionDateSet := transitionSet && !rule.Transition.IsDateNull()
 	if transitionDateSet && expiryDateSet {
 		if rule.Expiration.Date.Before(rule.Transition.Date.Time) {
 			return errors.New("transition should apply before expiration")
 		}
 	}
+
 	if transitionDateSet && rule.Transition.StorageClass == "" {
 		return errors.New("missing transition storage-class")
 	}
+
 	return nil
 }
 
@@ -79,9 +87,11 @@ func validateTranDays(rule lifecycle.Rule) error {
 	if rule.Transition.Days < 0 {
 		return errors.New("number of days to transition can't be negative")
 	}
+
 	if rule.Transition.Days < 30 && strings.ToLower(rule.Transition.StorageClass) == "standard_ia" {
 		return errors.New("number of days to transition should be >= 30 with STANDARD_IA storage-class")
 	}
+
 	return nil
 }
 
@@ -93,11 +103,13 @@ func validateRuleAction(rule lifecycle.Rule) error {
 	noncurrentExpirySet := !rule.NoncurrentVersionExpiration.IsDaysNull()
 	newerNoncurrentVersionsExpiry := rule.NoncurrentVersionExpiration.NewerNoncurrentVersions > 0
 	noncurrentTransitionSet := rule.NoncurrentVersionTransition.StorageClass != ""
+
 	newerNoncurrentVersionsTransition := rule.NoncurrentVersionTransition.NewerNoncurrentVersions > 0
 	if !expirySet && !allVersExpirySet && !transitionSet && !noncurrentExpirySet && !noncurrentTransitionSet &&
 		!newerNoncurrentVersionsExpiry && !newerNoncurrentVersionsTransition {
 		return errRuleAction
 	}
+
 	return nil
 }
 
@@ -106,15 +118,19 @@ func validateExpiration(rule lifecycle.Rule) error {
 	if !rule.Expiration.IsDaysNull() {
 		i++
 	}
+
 	if !rule.Expiration.IsDateNull() {
 		i++
 	}
+
 	if rule.Expiration.IsDeleteMarkerExpirationEnabled() {
 		i++
 	}
+
 	if i > 1 {
 		return errors.New("only one parameter under Expiration can be specified")
 	}
+
 	return nil
 }
 
@@ -122,6 +138,7 @@ func validateTransition(rule lifecycle.Rule) error {
 	if !rule.Transition.IsDaysNull() && !rule.Transition.IsDateNull() {
 		return errors.New("only one parameter under Transition can be specified")
 	}
+
 	return nil
 }
 
@@ -129,6 +146,7 @@ func validateAllVersionsExpiration(rule lifecycle.Rule) error {
 	if rule.AllVersionsExpiration.Days < 0 {
 		return errors.New("AllVersionsExpiration.Days is not a positive integer")
 	}
+
 	return nil
 }
 
@@ -137,39 +155,47 @@ func validateNoncurrentExpiration(rule lifecycle.Rule) error {
 	if days < 0 {
 		return errors.New("NoncurrentVersionExpiration.NoncurrentDays is not a positive integer")
 	}
+
 	return nil
 }
 
 func validateNoncurrentTransition(rule lifecycle.Rule) error {
 	days := rule.NoncurrentVersionTransition.NoncurrentDays
 	storageClass := rule.NoncurrentVersionTransition.StorageClass
+
 	if days < 0 {
 		return errors.New("NoncurrentVersionTransition.NoncurrentDays is not a positive integer")
 	}
+
 	if days > 0 && storageClass == "" {
 		return errors.New("both NoncurrentVersionTransition NoncurrentDays and StorageClass need to be specified")
 	}
+
 	return nil
 }
 
 // Check if any date is before than cur date
 func validateTranExpCurdate(rule lifecycle.Rule) error {
 	var e error
+
 	expirySet := !rule.Expiration.IsNull()
 	transitionSet := !rule.Transition.IsNull()
 	transitionDateSet := transitionSet && !rule.Transition.IsDateNull()
 	expiryDateSet := expirySet && !rule.Expiration.IsDateNull()
 	currentTime := time.Now()
 	curTimeStr := currentTime.Format(defaultILMDateFormat)
+
 	currentTime, e = time.Parse(defaultILMDateFormat, curTimeStr)
 	if e != nil {
 		return e
 	}
+
 	if expirySet && expiryDateSet && rule.Expiration.Date.Before(currentTime) {
 		e = errors.New("expiry date falls before or on today's date")
 	} else if transitionSet && transitionDateSet && rule.Transition.Date.Before(currentTime) {
 		e = errors.New("transition date falls before or on today's date")
 	}
+
 	return e
 }
 
@@ -177,27 +203,35 @@ func validateILMRule(rule lifecycle.Rule) error {
 	if e := validateRuleAction(rule); e != nil {
 		return e
 	}
+
 	if e := validateExpiration(rule); e != nil {
 		return e
 	}
+
 	if e := validateTransition(rule); e != nil {
 		return e
 	}
+
 	if e := validateAllVersionsExpiration(rule); e != nil {
 		return e
 	}
+
 	if e := validateTranExpCurdate(rule); e != nil {
 		return e
 	}
+
 	if e := validateTranExpDate(rule); e != nil {
 		return e
 	}
+
 	if e := validateTranDays(rule); e != nil {
 		return e
 	}
+
 	if e := validateNoncurrentExpiration(rule); e != nil {
 		return e
 	}
+
 	if e := validateNoncurrentTransition(rule); e != nil {
 		return e
 	}
@@ -210,6 +244,7 @@ func parseTransitionDate(transitionDateStr string) (lifecycle.ExpirationDate, er
 	if e != nil {
 		return lifecycle.ExpirationDate{}, e
 	}
+
 	return lifecycle.ExpirationDate{Time: transitionDate}, nil
 }
 
@@ -218,28 +253,35 @@ func parseTransitionDays(transitionDaysStr string) (lifecycle.ExpirationDays, er
 	if e != nil {
 		return lifecycle.ExpirationDays(0), e
 	}
+
 	return lifecycle.ExpirationDays(transitionDays), nil
 }
 
 func parseTransition(storageClass, transitionDateStr, transitionDaysStr *string) (lifecycle.Transition, error) {
 	var transition lifecycle.Transition
+
 	if transitionDateStr != nil {
 		transitionDate, err := parseTransitionDate(*transitionDateStr)
 		if err != nil {
 			return lifecycle.Transition{}, err
 		}
+
 		transition.Date = transitionDate
 	}
+
 	if transitionDaysStr != nil {
 		transitionDays, err := parseTransitionDays(*transitionDaysStr)
 		if err != nil {
 			return lifecycle.Transition{}, err
 		}
+
 		transition.Days = transitionDays
 	}
+
 	if storageClass != nil {
 		transition.StorageClass = *storageClass
 	}
+
 	return transition, nil
 }
 
@@ -248,9 +290,11 @@ func parseExpiryDate(expiryDateStr string) (lifecycle.ExpirationDate, error) {
 	if e != nil {
 		return lifecycle.ExpirationDate{}, e
 	}
+
 	if date.IsZero() {
 		return lifecycle.ExpirationDate{}, errors.New("expiration date cannot be set to zero")
 	}
+
 	return lifecycle.ExpirationDate{Time: date}, nil
 }
 
@@ -259,9 +303,11 @@ func parseExpiryDays(expiryDayStr string) (lifecycle.ExpirationDays, error) {
 	if e != nil {
 		return lifecycle.ExpirationDays(0), e
 	}
+
 	if days == 0 {
 		return lifecycle.ExpirationDays(0), errZeroExpiryDays
 	}
+
 	return lifecycle.ExpirationDays(days), nil
 }
 
@@ -271,6 +317,7 @@ func parseExpiry(expiryDate, expiryDays *string, expiredDeleteMarker *bool) (lfc
 		if err != nil {
 			return lifecycle.Expiration{}, err
 		}
+
 		lfcExp.Date = date
 	}
 
@@ -279,6 +326,7 @@ func parseExpiry(expiryDate, expiryDays *string, expiredDeleteMarker *bool) (lfc
 		if err != nil {
 			return lifecycle.Expiration{}, err
 		}
+
 		lfcExp.Days = days
 	}
 
@@ -295,6 +343,7 @@ func parseAllVersionsExpiry(expiryDays *string, deleteMarker *bool) (lfcAllVersE
 		if err != nil {
 			return lifecycle.AllVersionsExpiration{}, err
 		}
+
 		lfcAllVersExp.Days = int(days)
 	}
 

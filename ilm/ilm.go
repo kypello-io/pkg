@@ -51,13 +51,17 @@ type LifecycleOptions struct {
 
 // Filter returns lifecycle.Filter appropriate for opts
 func (opts LifecycleOptions) Filter() lifecycle.Filter {
-	var f lifecycle.Filter
-	var tags []lifecycle.Tag
-	var predCount int
+	var (
+		f         lifecycle.Filter
+		tags      []lifecycle.Tag
+		predCount int
+	)
+
 	if opts.Tags != nil {
 		tags = extractILMTags(*opts.Tags)
 		predCount += len(tags)
 	}
+
 	var prefix string
 	if opts.Prefix != nil {
 		prefix = *opts.Prefix
@@ -87,6 +91,7 @@ func (opts LifecycleOptions) Filter() lifecycle.Filter {
 		// following will only be set.
 		f.Prefix = prefix
 		f.ObjectSizeGreaterThan = szGt
+
 		f.ObjectSizeLessThan = szLt
 		if len(tags) >= 1 {
 			f.Tag = tags[0]
@@ -135,15 +140,19 @@ func (opts LifecycleOptions) ToILMRule() (lifecycle.Rule, error) {
 	if opts.NoncurrentVersionExpirationDays != nil {
 		nonCurrentVersionExpirationDays = lifecycle.ExpirationDays(*opts.NoncurrentVersionExpirationDays)
 	}
+
 	if opts.NewerNoncurrentExpirationVersions != nil {
 		newerNonCurrentExpirationVersions = *opts.NewerNoncurrentExpirationVersions
 	}
+
 	if opts.NoncurrentVersionTransitionDays != nil {
 		nonCurrentVersionTransitionDays = lifecycle.ExpirationDays(*opts.NoncurrentVersionTransitionDays)
 	}
+
 	if opts.NewerNoncurrentTransitionVersions != nil {
 		newerNonCurrentTransitionVersions = *opts.NewerNoncurrentTransitionVersions
 	}
+
 	if opts.NoncurrentVersionTransitionStorageClass != nil {
 		nonCurrentVersionTransitionStorageClass = *opts.NoncurrentVersionTransitionStorageClass
 	}
@@ -184,9 +193,11 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 			if len(dest.RuleFilter.And.Prefix) > 0 {
 				p = dest.RuleFilter.And.Prefix
 			}
+
 			if len(dest.RuleFilter.Prefix) > 0 {
 				p = dest.RuleFilter.Prefix
 			}
+
 			if len(*opts.Tags) > 0 {
 				dest.RuleFilter.And.Prefix = p
 				dest.RuleFilter.Prefix = ""
@@ -216,6 +227,7 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 		if err != nil {
 			return err
 		}
+
 		dest.Expiration.Date = date
 		// reset everything else
 		dest.Expiration.Days = 0
@@ -225,6 +237,7 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 		if err != nil {
 			return err
 		}
+
 		dest.Expiration.Days = days
 		// reset everything else
 		dest.Expiration.Date = lifecycle.ExpirationDate{}
@@ -239,8 +252,10 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 		if err != nil {
 			return err
 		}
+
 		dest.AllVersionsExpiration.Days = int(days)
 	}
+
 	if opts.PurgeAllVersionsDeleteMarker != nil {
 		dest.AllVersionsExpiration.DeleteMarker = lifecycle.ExpireDeleteMarker(*opts.PurgeAllVersionsDeleteMarker)
 	}
@@ -250,6 +265,7 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 		if err != nil {
 			return err
 		}
+
 		dest.Transition.Date = date
 		// reset everything else
 		dest.Transition.Days = 0
@@ -258,6 +274,7 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 		if err != nil {
 			return err
 		}
+
 		dest.Transition.Days = days
 		// reset everything else
 		dest.Transition.Date = lifecycle.ExpirationDate{}
@@ -293,6 +310,7 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 			if *opts.Status {
 				return "Enabled"
 			}
+
 			return "Disabled"
 		}()
 	}
