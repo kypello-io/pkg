@@ -21,5 +21,5 @@ package certs
 
 import "github.com/syncthing/notify"
 
-// eventWrite contains the notify events that will cause a write
+// eventWrite contains the notify events that will cause a write.
 var eventWrite = []notify.Event{notify.InCloseWrite, notify.InMovedTo}

@@ -58,12 +58,12 @@ func (key Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(key.String())
 }
 
-// VarName - returns variable key name, such as "${aws:username}"
+// VarName - returns variable key name, such as "${aws:username}".
 func (key Key) VarName() string {
 	return key.name.VarName()
 }
 
-// Name - returns key name which is stripped value of prefixes "aws:" and "s3:"
+// Name - returns key name which is stripped value of prefixes "aws:" and "s3:".
 func (key Key) Name() string {
 	name := key.name.Name()
 	if key.variable != "" {
@@ -109,7 +109,7 @@ func parseKey(s string) (Key, error) {
 	return key, fmt.Errorf("invalid condition key '%v'", s)
 }
 
-// NewKey - creates new key
+// NewKey - creates new key.
 func NewKey(name KeyName, variable string) Key {
 	return Key{
 		name:     name,
@@ -125,12 +125,12 @@ func (set KeySet) Add(key Key) {
 	set[key] = struct{}{}
 }
 
-// Merge merges two key sets, duplicates are overwritten
+// Merge merges two key sets, duplicates are overwritten.
 func (set KeySet) Merge(mset KeySet) {
 	maps.Copy(set, mset)
 }
 
-// Match matches the input key name with current keySet
+// Match matches the input key name with current keySet.
 func (set KeySet) Match(key Key) bool {
 	_, ok := set[key]
 	if ok {

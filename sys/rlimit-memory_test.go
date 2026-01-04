@@ -27,7 +27,7 @@ func TestGetMaxMemoryLimit(t *testing.T) {
 	}
 }
 
-// Test set memory limit
+// Test set memory limit.
 func TestSetMaxMemoryLimit(t *testing.T) {
 	curLimit, maxLimit, err := GetMaxMemoryLimit()
 	if err != nil {

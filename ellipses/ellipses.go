@@ -29,7 +29,7 @@ var (
 	// Regex to extract ellipses syntax inputs.
 	regexpEllipses = regexp.MustCompile(`(.*)({[0-9a-z]*\.\.\.[0-9a-z]*})(.*)`)
 
-	// Ellipses constants
+	// Ellipses constants.
 	openBraces  = "{"
 	closeBraces = "}"
 	ellipses    = "..."
@@ -39,7 +39,7 @@ var errFormat = errors.New("format error")
 
 // Parses an ellipses range pattern of following style
 // `{1...64}`
-// `{33...64}`
+// `{33...64}`.
 func parseEllipsesRange(pattern string) (seq []string, err error) {
 	if !strings.Contains(pattern, openBraces) {
 		return nil, errors.New("invalid argument")

@@ -191,7 +191,7 @@ func (m *Manager2) Subscribe(callback func(*Certificate2)) func() {
 //
 // It tries to find a certificate that would be accepted by the client
 // according to the client hello. However, if no certificate can be
-// found GetCertificate returns the first certificate as the "default"
+// found GetCertificate returns the first certificate as the "default".
 func (m *Manager2) GetCertificate(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
 	if m == nil {
 		return nil, errors.New("certs: no server certificate is supported by peer")
@@ -297,7 +297,7 @@ func (m *Manager2) GetClientCertificate(reqInfo *tls.CertificateRequestInfo) (*t
 	return nil, errors.New("certs: no client certificate is supported by peer")
 }
 
-// GetAllCertificates returns a copy of all loaded certificates
+// GetAllCertificates returns a copy of all loaded certificates.
 func (m *Manager2) GetAllCertificates() []*x509.Certificate {
 	if m == nil {
 		return nil
@@ -321,7 +321,7 @@ func (m *Manager2) GetAllCertificates() []*x509.Certificate {
 	return result
 }
 
-// HasCerts checks if any certificates have been loaded
+// HasCerts checks if any certificates have been loaded.
 func (m *Manager2) HasCerts() bool {
 	if m == nil {
 		return false

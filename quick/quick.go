@@ -29,7 +29,7 @@ import (
 	etcd "go.etcd.io/etcd/client/v3"
 )
 
-// Config - generic config interface functions
+// Config - generic config interface functions.
 type Config interface {
 	String() string
 	Version() string
@@ -40,14 +40,14 @@ type Config interface {
 	DeepDiff(Config) ([]structs.Field, error)
 }
 
-// config - implements quick.Config interface
+// config - implements quick.Config interface.
 type config struct {
 	data any
 	clnt *etcd.Client
 	lock *sync.RWMutex
 }
 
-// Version returns the current config file format version
+// Version returns the current config file format version.
 func (d config) Version() string {
 	st := structs.New(d.data)
 	f := st.Field("Version")
@@ -55,7 +55,7 @@ func (d config) Version() string {
 	return f.Value().(string)
 }
 
-// String converts JSON config to printable string
+// String converts JSON config to printable string.
 func (d config) String() string {
 	configBytes, _ := json.MarshalIndent(d.data, "", "\t")
 
@@ -106,12 +106,12 @@ func (d config) Load(filename string) error {
 	return loadFileConfig(filename, d.data)
 }
 
-// Data - grab internal data map for reading
+// Data - grab internal data map for reading.
 func (d config) Data() any {
 	return d.data
 }
 
-// Diff  - list fields that are in A but not in B
+// Diff  - list fields that are in A but not in B.
 func (d config) Diff(c Config) ([]structs.Field, error) {
 	var fields []structs.Field
 
@@ -136,7 +136,7 @@ func (d config) Diff(c Config) ([]structs.Field, error) {
 	return fields, nil
 }
 
-// DeepDiff  - list fields in A that are missing or not equal to fields in B
+// DeepDiff  - list fields in A that are missing or not equal to fields in B.
 func (d config) DeepDiff(c Config) ([]structs.Field, error) {
 	var fields []structs.Field
 
@@ -213,7 +213,7 @@ func GetVersion(filename string, clnt *etcd.Client) (version string, err error) 
 	return qc.Version(), nil
 }
 
-// LoadConfig - loads json config from filename for the a given struct data
+// LoadConfig - loads json config from filename for the a given struct data.
 func LoadConfig(filename string, clnt *etcd.Client, data any) (qc Config, err error) {
 	qc, err = NewConfig(data, clnt)
 	if err != nil {

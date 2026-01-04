@@ -39,7 +39,7 @@ type ConfigEncoding interface {
 	Marshal(any) ([]byte, error)
 }
 
-// YAML encoding implements ConfigEncoding
+// YAML encoding implements ConfigEncoding.
 type yamlEncoding struct{}
 
 func (y yamlEncoding) Unmarshal(b []byte, v any) error {
@@ -50,7 +50,7 @@ func (y yamlEncoding) Marshal(v any) ([]byte, error) {
 	return yaml.Marshal(v)
 }
 
-// JSON encoding implements ConfigEncoding
+// JSON encoding implements ConfigEncoding.
 type jsonEncoding struct{}
 
 func (j jsonEncoding) Unmarshal(b []byte, v any) error {
@@ -77,7 +77,7 @@ func (j jsonEncoding) Marshal(v any) ([]byte, error) {
 }
 
 // Convert a file extension to the appropriate struct capable
-// to marshal/unmarshal data
+// to marshal/unmarshal data.
 func ext2EncFormat(fileExtension string) ConfigEncoding {
 	// Lower the file extension
 	ext := strings.ToLower(fileExtension)
@@ -95,13 +95,13 @@ func ext2EncFormat(fileExtension string) ConfigEncoding {
 }
 
 // toMarshaller returns the right marshal function according
-// to the given file extension
+// to the given file extension.
 func toMarshaller(ext string) func(any) ([]byte, error) {
 	return ext2EncFormat(ext).Marshal
 }
 
 // toUnmarshaller returns the right marshal function according
-// to the given file extension
+// to the given file extension.
 func toUnmarshaller(ext string) func([]byte, any) error {
 	return ext2EncFormat(ext).Unmarshal
 }

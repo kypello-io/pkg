@@ -39,7 +39,7 @@ func (u URL) IsEmpty() bool {
 }
 
 // validOptionalPort reports whether port is either an empty string
-// or matches /^:\d*$/
+// or matches /^:\d*$/.
 func validOptionalPort(port string) bool {
 	if port == "" {
 		return true
@@ -147,7 +147,7 @@ func (u *URL) UnmarshalJSON(data []byte) (err error) {
 }
 
 // ParseHTTPURL - parses a string into HTTP URL, string is
-// expected to be of form http:// or https://
+// expected to be of form http:// or https://.
 func ParseHTTPURL(s string) (u *URL, err error) {
 	u, err = ParseURL(s)
 	if err != nil {

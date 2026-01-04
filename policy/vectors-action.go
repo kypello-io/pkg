@@ -64,7 +64,7 @@ const (
 	// S3VectorsQueryVectorsAction maps to the AWS `QueryVectors` S3 Vectors action.
 	S3VectorsQueryVectorsAction = "s3vectors:QueryVectors"
 
-	// AllS3VectorsActions - all Amazon S3 Vectors actions
+	// AllS3VectorsActions - all Amazon S3 Vectors actions.
 	AllS3VectorsActions = "s3vectors:*"
 )
 

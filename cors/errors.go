@@ -26,7 +26,7 @@ func (e ErrTooManyRules) Error() string {
 	return "The number of CORS rules should not exceed allowed limit of 100 rules."
 }
 
-// ErrMalformedXML is returned when the XML provided is not well-formed
+// ErrMalformedXML is returned when the XML provided is not well-formed.
 type ErrMalformedXML struct{}
 
 func (e ErrMalformedXML) Error() string {

@@ -21,7 +21,7 @@ import (
 	"github.com/kypello-io/pkg/v3/policy/condition"
 )
 
-// Policy claim constants
+// Policy claim constants.
 const (
 	PolicyName        = "policy"
 	SessionPolicyName = "sessionPolicy"

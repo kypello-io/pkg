@@ -23,7 +23,7 @@ import (
 	"strconv"
 )
 
-// Port - network port
+// Port - network port.
 type Port uint16
 
 // String - returns string representation of port.
@@ -70,7 +70,7 @@ func GetNextFreePort(port string) (Port, error) {
 	return Port(l.Addr().(*net.TCPAddr).Port), nil
 }
 
-// ParsePort - parses string into Port
+// ParsePort - parses string into Port.
 func ParsePort(s string) (p Port, err error) {
 	switch s {
 	case "https":

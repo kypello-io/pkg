@@ -81,7 +81,7 @@ func (functions Functions) Keys() KeySet {
 	return keySet
 }
 
-// Clone clones Functions structure
+// Clone clones Functions structure.
 func (functions Functions) Clone() Functions {
 	funcs := []Function{}
 	for _, f := range functions {
@@ -91,7 +91,7 @@ func (functions Functions) Clone() Functions {
 	return funcs
 }
 
-// Equals returns true if two Functions structures are equal
+// Equals returns true if two Functions structures are equal.
 func (functions Functions) Equals(funcs Functions) bool {
 	if len(functions) != len(funcs) {
 		return false

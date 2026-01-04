@@ -38,7 +38,7 @@ var toTrim = map[string]bool{
 	"s3tables": true,
 }
 
-// Name - returns key name which is stripped value of prefixes "aws:", "s3:", "jwt:" and "ldap:"
+// Name - returns key name which is stripped value of prefixes "aws:", "s3:", "jwt:" and "ldap:".
 func (key KeyName) Name() string {
 	idx := strings.IndexByte(string(key), ':')
 	if idx == -1 || !toTrim[string(key[:idx])] {
@@ -48,7 +48,7 @@ func (key KeyName) Name() string {
 	return string(key[idx+1:])
 }
 
-// VarName - returns variable key name, such as "${aws:username}"
+// VarName - returns variable key name, such as "${aws:username}".
 func (key KeyName) VarName() string {
 	return fmt.Sprintf("${%s}", key)
 }
@@ -98,7 +98,7 @@ const (
 	S3XAmzStorageClass KeyName = "s3:x-amz-storage-class"
 
 	// S3XAmzServerSideEncryptionAwsKmsKeyID - key representing x-amz-server-side-encryption-aws-kms-key-id
-	// HTTP header for S3 API calls
+	// HTTP header for S3 API calls.
 	S3XAmzServerSideEncryptionAwsKmsKeyID KeyName = "s3:x-amz-server-side-encryption-aws-kms-key-id"
 
 	// S3LocationConstraint - key representing LocationConstraint XML tag of CreateBucket API only.
@@ -124,15 +124,15 @@ const (
 	S3ObjectLockRemainingRetentionDays KeyName = "s3:object-lock-remaining-retention-days"
 
 	// S3ObjectLockMode - key representing object-lock-mode
-	// Enables enforcement of the specified object retention mode
+	// Enables enforcement of the specified object retention mode.
 	S3ObjectLockMode KeyName = "s3:object-lock-mode"
 
 	// S3ObjectLockRetainUntilDate - key representing object-lock-retain-util-date
-	// Enables enforcement of a specific retain-until-date
+	// Enables enforcement of a specific retain-until-date.
 	S3ObjectLockRetainUntilDate KeyName = "s3:object-lock-retain-until-date"
 
 	// S3ObjectLockLegalHold - key representing object-local-legal-hold
-	// Enables enforcement of the specified object legal hold status
+	// Enables enforcement of the specified object legal hold status.
 	S3ObjectLockLegalHold KeyName = "s3:object-lock-legal-hold"
 
 	// AWSReferer - key representing Referer header of any API.
@@ -168,7 +168,7 @@ const (
 	// S3SignatureVersion - identifies the version of AWS Signature that you want to support for authenticated requests.
 	S3SignatureVersion KeyName = "s3:signatureversion"
 
-	// S3SignatureAge - identifies the maximum age of presgiend URL allowed
+	// S3SignatureAge - identifies the maximum age of presgiend URL allowed.
 	S3SignatureAge KeyName = "s3:signatureAge"
 
 	// S3AuthType - optionally use this condition key to restrict incoming requests to use a specific authentication method.
@@ -230,10 +230,10 @@ const (
 )
 
 const (
-	// STSDurationSeconds - Duration seconds condition for STS policy
+	// STSDurationSeconds - Duration seconds condition for STS policy.
 	STSDurationSeconds KeyName = "sts:DurationSeconds"
 
-	// SVCDurationSeconds - Duration seconds condition for Admin policy
+	// SVCDurationSeconds - Duration seconds condition for Admin policy.
 	SVCDurationSeconds KeyName = "svc:DurationSeconds"
 )
 
@@ -384,7 +384,7 @@ var AllSupportedAdminKeys = append([]KeyName{
 	// Add new supported condition keys.
 }, JWTKeys...)
 
-// AllSupportedSTSKeys is the all supported conditions for STS policies
+// AllSupportedSTSKeys is the all supported conditions for STS policies.
 var AllSupportedSTSKeys = []KeyName{
 	AWSPrincipalType,
 	AWSSecureTransport,

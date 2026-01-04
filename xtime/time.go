@@ -25,7 +25,7 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-// Additional durations, a day is considered to be 24 hours
+// Additional durations, a day is considered to be 24 hours.
 const (
 	Day  time.Duration = time.Hour * 24
 	Week               = Day * 7
@@ -49,7 +49,7 @@ var unitMap = map[string]int64{
 // https://cs.opensource.google/go/go/+/refs/tags/go1.22.5:src/time/format.go;l=1589
 // This function extends this function by allowing support for days and weeks.
 // This function must only be used when days and weeks are necessary inputs
-// in all other cases it is preferred that a user uses Go's time.ParseDuration
+// in all other cases it is preferred that a user uses Go's time.ParseDuration.
 func ParseDuration(s string) (time.Duration, error) {
 	dur, err := time.ParseDuration(s) // Parse via standard Go, if success return right away.
 	if err == nil {
@@ -59,7 +59,7 @@ func ParseDuration(s string) (time.Duration, error) {
 	return parseDuration(s)
 }
 
-// Duration is a wrapper around time.Duration that supports YAML and JSON
+// Duration is a wrapper around time.Duration that supports YAML and JSON.
 type Duration time.Duration
 
 // D will return as a time.Duration.
@@ -67,7 +67,7 @@ func (d Duration) D() time.Duration {
 	return time.Duration(d)
 }
 
-// UnmarshalYAML implements yaml.Unmarshaler
+// UnmarshalYAML implements yaml.Unmarshaler.
 func (d *Duration) UnmarshalYAML(value *yaml.Node) error {
 	if value.Kind == yaml.ScalarNode {
 		dur, err := ParseDuration(value.Value)
@@ -83,7 +83,7 @@ func (d *Duration) UnmarshalYAML(value *yaml.Node) error {
 	return fmt.Errorf("unable to unmarshal %s", value.Tag)
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
 func (d *Duration) UnmarshalJSON(bs []byte) error {
 	if len(bs) <= 2 {
 		return nil
@@ -132,7 +132,7 @@ func (d Duration) Msgsize() int {
 	return msgp.Int64Size
 }
 
-// MarshalYAML implements yaml.Marshaler - Converts duration to human-readable format (e.g., "2h", "30m")
+// MarshalYAML implements yaml.Marshaler - Converts duration to human-readable format (e.g., "2h", "30m").
 func (d Duration) MarshalYAML() (any, error) {
 	return time.Duration(d).String(), nil
 }

@@ -94,7 +94,7 @@ func (p *Principal) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Clone clones Principal structure
+// Clone clones Principal structure.
 func (p Principal) Clone() Principal {
 	return NewPrincipal(p.AWS.ToSlice()...)
 }

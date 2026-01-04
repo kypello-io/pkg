@@ -59,7 +59,7 @@ func (jt *Workers) Give() {
 	jt.wg.Done()
 }
 
-// Wait waits for all ongoing concurrent jobs to complete
+// Wait waits for all ongoing concurrent jobs to complete.
 func (jt *Workers) Wait() {
 	jt.wg.Wait()
 }

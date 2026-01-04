@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	// names
+	// names.
 	stringEquals               = "StringEquals"
 	stringNotEquals            = "StringNotEquals"
 	stringEqualsIgnoreCase     = "StringEqualsIgnoreCase"

@@ -34,7 +34,7 @@ type Host struct {
 	IsPortSet bool
 }
 
-// IsEmpty - returns whether Host is empty or not
+// IsEmpty - returns whether Host is empty or not.
 func (host Host) IsEmpty() bool {
 	return host.Name == ""
 }
@@ -53,7 +53,7 @@ func (host Host) Equal(compHost Host) bool {
 	return host.String() == compHost.String()
 }
 
-// MarshalJSON - converts Host into JSON data
+// MarshalJSON - converts Host into JSON data.
 func (host Host) MarshalJSON() ([]byte, error) {
 	return json.Marshal(host.String())
 }
@@ -82,7 +82,7 @@ func (host *Host) UnmarshalJSON(data []byte) (err error) {
 	return nil
 }
 
-// ParseHost - parses string into Host
+// ParseHost - parses string into Host.
 func ParseHost(s string) (*Host, error) {
 	if s == "" {
 		return nil, errors.New("invalid argument")

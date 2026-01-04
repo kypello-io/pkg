@@ -30,7 +30,7 @@ func (set ValueSet) Add(value Value) {
 	set[value] = struct{}{}
 }
 
-// ToSlice converts ValueSet to a slice of Value
+// ToSlice converts ValueSet to a slice of Value.
 func (set ValueSet) ToSlice() []Value {
 	var values []Value
 	for k := range set {
@@ -85,7 +85,7 @@ func (set *ValueSet) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Clone clones ValueSet structure
+// Clone clones ValueSet structure.
 func (set ValueSet) Clone() ValueSet {
 	return NewValueSet(set.ToSlice()...)
 }

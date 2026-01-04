@@ -22,7 +22,7 @@ import (
 	"io"
 )
 
-// BucketPolicyArgs - arguments to policy to check whether it is allowed
+// BucketPolicyArgs - arguments to policy to check whether it is allowed.
 type BucketPolicyArgs struct {
 	AccountName     string              `json:"account"`
 	Groups          []string            `json:"groups"`
@@ -187,7 +187,7 @@ func ParseBucketPolicyConfig(reader io.Reader, bucketName string) (*BucketPolicy
 	return &policy, err
 }
 
-// Equals returns true if the two policies are identical
+// Equals returns true if the two policies are identical.
 func (policy *BucketPolicy) Equals(p BucketPolicy) bool {
 	if policy.ID != p.ID || policy.Version != p.Version {
 		return false

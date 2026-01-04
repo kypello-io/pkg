@@ -26,7 +26,7 @@ import (
 	"github.com/minio/minio-go/v7/pkg/lifecycle"
 )
 
-// Used in tags. Ex: --tags "key1=value1&key2=value2&key3=value3"
+// Used in tags. Ex: --tags "key1=value1&key2=value2&key3=value3".
 const (
 	tagSeparator    string = "&"
 	keyValSeparator string = "="
@@ -174,7 +174,7 @@ func validateNoncurrentTransition(rule lifecycle.Rule) error {
 	return nil
 }
 
-// Check if any date is before than cur date
+// Check if any date is before than cur date.
 func validateTranExpCurdate(rule lifecycle.Rule) error {
 	var e error
 

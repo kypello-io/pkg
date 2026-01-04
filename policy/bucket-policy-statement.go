@@ -147,7 +147,7 @@ func (statement BPStatement) Validate(bucketName string) error {
 	return nil
 }
 
-// Equals checks if two statements are equal
+// Equals checks if two statements are equal.
 func (statement BPStatement) Equals(st BPStatement) bool {
 	if statement.Effect != st.Effect {
 		return false
@@ -180,7 +180,7 @@ func (statement BPStatement) Equals(st BPStatement) bool {
 	return true
 }
 
-// Clone clones Statement structure
+// Clone clones Statement structure.
 func (statement BPStatement) Clone() BPStatement {
 	return BPStatement{
 		SID:          statement.SID,

@@ -44,7 +44,7 @@ const (
 
 var globalRootCAs *x509.CertPool
 
-// RegisterGlobalCAs register the global root CAs
+// RegisterGlobalCAs register the global root CAs.
 func RegisterGlobalCAs(CAs *x509.CertPool) {
 	globalRootCAs = CAs
 }
