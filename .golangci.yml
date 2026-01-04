@@ -21,6 +21,8 @@ linters:
     - godot
     - whitespace
     - usetesting
+    - thelper
+    - tparallel
   settings:
     misspell:
       locale: US

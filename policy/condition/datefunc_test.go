@@ -24,6 +24,8 @@ import (
 )
 
 func testDateFuncEvaluate(t *testing.T, funcs ...Function) {
+	t.Helper()
+
 	testCases := []struct {
 		function       Function
 		values         map[string][]string

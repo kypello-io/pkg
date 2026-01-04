@@ -122,6 +122,8 @@ func TestManager2_ReloadOnSIGHUP(t *testing.T) {
 }
 
 func updateReloadWithWait(t *testing.T, mgr *Manager2, update func()) {
+	t.Helper()
+
 	done := make(chan struct{})
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)

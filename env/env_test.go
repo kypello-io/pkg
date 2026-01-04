@@ -53,6 +53,8 @@ func GetenvHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func startTestServer(t *testing.T) *httptest.Server {
+	t.Helper()
+
 	router := mux.NewRouter().SkipClean(true).UseEncodedPath()
 	router.Methods(http.MethodGet).
 		Path("/webhook/v1/getenv/{namespace}/{name}").

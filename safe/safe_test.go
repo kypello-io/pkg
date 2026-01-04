@@ -28,10 +28,13 @@ type MySuite struct {
 }
 
 func (s *MySuite) SetUpSuite(t *testing.T) {
+	t.Helper()
 	s.root = t.TempDir()
 }
 
 func (s *MySuite) TearDownSuite(t *testing.T) {
+	t.Helper()
+
 	err := os.RemoveAll(s.root)
 	if err != nil {
 		t.Fatal(err)

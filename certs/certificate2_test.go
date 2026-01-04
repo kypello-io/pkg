@@ -93,6 +93,7 @@ func TestCertificate2_AutoReloadSymlink(t *testing.T) {
 }
 
 func testCertificate2AutoReload(t *testing.T, symlink bool) {
+	t.Helper()
 	tmpDir := t.TempDir()
 	tmpCert := filepath.Join(tmpDir, "test.crt")
 	tmpKey := filepath.Join(tmpDir, "test.key")
@@ -182,6 +183,7 @@ func TestCertificate2_AutoReloadCertFileOnlySymlink(t *testing.T) {
 }
 
 func testCertificate2AutoReloadCertFileOnly(t *testing.T, symlink bool) {
+	t.Helper()
 	tmpDir := t.TempDir()
 	tmpCert := filepath.Join(tmpDir, "test.crt")
 	tmpKey := filepath.Join(tmpDir, "test.key")
@@ -221,6 +223,7 @@ func TestCertificate2_InvalidReloadIgnoredSymlink(t *testing.T) {
 }
 
 func testCertificate2InvalidReloadIgnored(t *testing.T, symlink bool) {
+	t.Helper()
 	tmpDir := t.TempDir()
 	tmpCert := filepath.Join(tmpDir, "test.crt")
 
@@ -292,6 +295,8 @@ func overwriteFile(t *testing.T, src, dst string, symlink bool) {
 }
 
 func updateCertWithWait(t *testing.T, cert *Certificate2, symlink bool, update func()) {
+	t.Helper()
+
 	done := make(chan struct{})
 
 	wait := time.Second
