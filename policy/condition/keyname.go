@@ -264,7 +264,7 @@ var JWTKeys = []KeyName{
 	JWTClientID,
 }
 
-// AllSupportedKeys - is list of all all supported keys.
+// AllSupportedKeys - is list of all supported keys.
 var AllSupportedKeys = []KeyName{
 	S3SignatureVersion,
 	S3AuthType,

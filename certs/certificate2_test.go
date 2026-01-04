@@ -469,6 +469,8 @@ func TestCertificate2_LoadAfterClose(t *testing.T) {
 	loadedAfter := cert.Load()
 	if loadedAfter == nil {
 		t.Fatal("Expected certificate after close")
+
+		return
 	}
 
 	if !reflect.DeepEqual(loadedBefore.Certificate, loadedAfter.Certificate) {

@@ -30,6 +30,17 @@ linters:
     - nosprintfhostport
     - perfsprint
     - gocritic
+    - asasalint
+    - bidichk
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - gochecksumtype
+    - gocheckcompilerdirectives
+    - fatcontext
+    - exptostd
+    - dupword
     #- paralleltest
     #- recvcheck
   settings:
