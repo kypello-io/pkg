@@ -105,6 +105,7 @@ func BenchmarkReaderReadAt(b *testing.B) {
 
 func TestReaderReadAt(t *testing.T) {
 	t.Parallel()
+
 	for _, size := range []int{1000, 1024, 16384, 1 << 20} {
 		r, err := NewReader()
 		if err != nil {
@@ -147,6 +148,7 @@ func TestReaderReadAt(t *testing.T) {
 
 func TestReaderSeeker(t *testing.T) {
 	t.Parallel()
+
 	for _, size := range []int{1000, 1024, 16384, 1 << 20} {
 		r, err := NewReader()
 		if err != nil {

@@ -34,6 +34,8 @@ type testDuration struct {
 }
 
 func TestDuration_Unmarshal(t *testing.T) {
+	t.Parallel()
+
 	jsonData := []byte(`{"a":"1s","dur":"1w1s","durationPointer":"7d1s"}`)
 	yamlData := []byte(`a: 1s
 dur: 1w1s
@@ -63,6 +65,8 @@ dur: 1w1s`)
 }
 
 func TestMarshalUnmarshalDuration(t *testing.T) {
+	t.Parallel()
+
 	v := Duration(time.Hour)
 
 	var vn Duration
@@ -96,6 +100,8 @@ func TestMarshalUnmarshalDuration(t *testing.T) {
 }
 
 func TestEncodeDecodeDuration(t *testing.T) {
+	t.Parallel()
+
 	v := Duration(time.Hour)
 
 	var buf bytes.Buffer
@@ -127,6 +133,8 @@ func TestEncodeDecodeDuration(t *testing.T) {
 }
 
 func TestDuration_Marshal(t *testing.T) {
+	t.Parallel()
+
 	type testDuration struct {
 		A               Duration  `json:"a" yaml:"a"`
 		Dur             Duration  `json:"dur" yaml:"dur"`

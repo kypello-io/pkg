@@ -76,6 +76,8 @@ var parseDurationTests = []struct {
 }
 
 func TestParseDuration(t *testing.T) {
+	t.Parallel()
+
 	for _, tc := range parseDurationTests {
 		d, err := ParseDuration(tc.in)
 		if err != nil || d != tc.want {
@@ -113,6 +115,8 @@ var parseDurationErrorTests = []struct {
 }
 
 func TestParseDurationErrors(t *testing.T) {
+	t.Parallel()
+
 	for _, tc := range parseDurationErrorTests {
 		_, err := ParseDuration(tc.in)
 		if err == nil {

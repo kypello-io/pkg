@@ -24,6 +24,8 @@ import (
 )
 
 func TestWorkers(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		n        int
 		jobs     int

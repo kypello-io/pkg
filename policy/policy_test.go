@@ -2737,6 +2737,7 @@ func TestS3VectorsActionsAllowed(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			p, err := ParseConfig(strings.NewReader(policyJSON))
 			if err != nil {
 				t.Fatalf("failed to parse policy: %v", err)
