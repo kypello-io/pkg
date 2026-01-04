@@ -71,7 +71,7 @@ func TestWorkers(t *testing.T) {
 			t.Fatalf("Unexpected error: %v", err)
 		}
 
-		for i := 0; i < jobs; i++ {
+		for range jobs {
 			jt.Take()
 			go func() { // Launch a worker after acquiring a token
 				defer jt.Give() // Give token back once done
@@ -96,9 +96,9 @@ func TestWorkers(t *testing.T) {
 	t.Run("test-workers-reuse", func(t *testing.T) {
 		var mu sync.Mutex
 		jt, _ := New(5)
-		for reuse := 0; reuse < 3; reuse++ {
+		for range 3 {
 			var jobsDone int
-			for i := 0; i < 10; i++ {
+			for range 10 {
 				jt.Take()
 				go func() {
 					defer jt.Give()
@@ -122,7 +122,7 @@ func benchmarkWorkers(b *testing.B, n, jobs int) {
 			var mu sync.Mutex
 			var jobsDone int
 			jt, _ := New(n)
-			for i := 0; i < jobs; i++ {
+			for range jobs {
 				jt.Take()
 				go func() {
 					defer jt.Give()

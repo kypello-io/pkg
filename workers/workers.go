@@ -37,7 +37,7 @@ func New(n int) (*Workers, error) {
 	}
 
 	queue := make(chan struct{}, n)
-	for i := 0; i < n; i++ {
+	for range n {
 		queue <- struct{}{}
 	}
 	return &Workers{

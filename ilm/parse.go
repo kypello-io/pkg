@@ -39,7 +39,7 @@ var (
 
 func extractILMTags(tagLabelVal string) []lifecycle.Tag {
 	var ilmTagKVList []lifecycle.Tag
-	for _, tag := range strings.Split(tagLabelVal, tagSeparator) {
+	for tag := range strings.SplitSeq(tagLabelVal, tagSeparator) {
 		if tag == "" {
 			// split returns empty for empty tagLabelVal, skip it.
 			continue

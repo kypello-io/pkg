@@ -24,6 +24,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"slices"
 	"strings"
 	"time"
 
@@ -202,13 +203,7 @@ func (lv *LicenseValidator) ValidateEnterpriseLicense(acceptedPlans []string, li
 		return nil, err
 	}
 
-	accepted := false
-	for _, plan := range acceptedPlans {
-		if plan == li.Plan {
-			accepted = true
-			break
-		}
-	}
+	accepted := slices.Contains(acceptedPlans, li.Plan)
 	if !accepted {
 		return nil, fmt.Errorf("this software is only available for license plans %v", strings.Join(acceptedPlans, ", "))
 	}

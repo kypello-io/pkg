@@ -63,7 +63,7 @@ func GetValuesFromClaims(claims map[string]any, claimName string) (set.StringSet
 	if !ok {
 		pnameStr, ok := pname.(string)
 		if ok {
-			for _, pname := range strings.Split(pnameStr, ",") {
+			for pname := range strings.SplitSeq(pnameStr, ",") {
 				pname = strings.TrimSpace(pname)
 				if pname == "" {
 					// ignore any empty strings, considerate
@@ -79,7 +79,7 @@ func GetValuesFromClaims(claims map[string]any, claimName string) (set.StringSet
 	for _, pname := range pnames {
 		pnameStr, ok := pname.(string)
 		if ok {
-			for _, pnameStr := range strings.Split(pnameStr, ",") {
+			for pnameStr := range strings.SplitSeq(pnameStr, ",") {
 				pnameStr = strings.TrimSpace(pnameStr)
 				if pnameStr == "" {
 					// ignore any empty strings, considerate

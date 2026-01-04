@@ -20,6 +20,8 @@ package condition
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
+	"slices"
 	"strings"
 )
 
@@ -31,13 +33,7 @@ type Key struct {
 
 // IsValid - checks if key is valid or not.
 func (key Key) IsValid() bool {
-	for _, name := range AllSupportedKeys {
-		if key.name == name {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(AllSupportedKeys, key.name)
 }
 
 // Is - checks if this key has same key name or not.
@@ -128,9 +124,7 @@ func (set KeySet) Add(key Key) {
 
 // Merge merges two key sets, duplicates are overwritten
 func (set KeySet) Merge(mset KeySet) {
-	for k, v := range mset {
-		set[k] = v
-	}
+	maps.Copy(set, mset)
 }
 
 // Match matches the input key name with current keySet

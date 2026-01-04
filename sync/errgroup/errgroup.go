@@ -80,7 +80,7 @@ func (g *Group) WithConcurrency(n int) *Group {
 
 	// Fill bucket with tokens
 	g.bucket = make(chan struct{}, n)
-	for i := 0; i < n; i++ {
+	for range n {
 		g.bucket <- struct{}{}
 	}
 	return g
@@ -101,9 +101,7 @@ func (g *Group) WithCancelOnError(ctx context.Context) (context.Context, context
 //
 // The errors will be collected in errs slice and returned by Wait().
 func (g *Group) Go(f func() error, index int) {
-	g.wg.Add(1)
-	go func() {
-		defer g.wg.Done()
+	g.wg.Go(func() {
 		if g.bucket != nil {
 			// Wait for token
 			select {
@@ -129,5 +127,5 @@ func (g *Group) Go(f func() error, index int) {
 				g.cancel()
 			}
 		}
-	}()
+	})
 }

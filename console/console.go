@@ -41,91 +41,91 @@ var (
 	stderrColoredOutput = colorable.NewColorableStderr()
 
 	// Print prints a message.
-	Print = func(data ...interface{}) {
+	Print = func(data ...any) {
 		consolePrint("Print", getThemeColor("Print"), data...)
 	}
 
 	// PrintC prints a message with color.
-	PrintC = func(data ...interface{}) {
+	PrintC = func(data ...any) {
 		consolePrint("PrintC", getThemeColor("PrintC"), data...)
 	}
 
 	// Printf prints a formatted message.
-	Printf = func(format string, data ...interface{}) {
+	Printf = func(format string, data ...any) {
 		consolePrintf("Print", getThemeColor("Print"), format, data...)
 	}
 
 	// Println prints a message with a newline.
-	Println = func(data ...interface{}) {
+	Println = func(data ...any) {
 		consolePrintln("Print", getThemeColor("Print"), data...)
 	}
 
 	// Fatal print a error message and exit.
-	Fatal = func(data ...interface{}) {
+	Fatal = func(data ...any) {
 		consolePrint("Fatal", getThemeColor("Fatal"), data...)
 		os.Exit(1)
 	}
 
 	// Fatalf print a error message with a format specified and exit.
-	Fatalf = func(format string, data ...interface{}) {
+	Fatalf = func(format string, data ...any) {
 		consolePrintf("Fatal", getThemeColor("Fatal"), format, data...)
 		os.Exit(1)
 	}
 
 	// Fatalln print a error message with a new line and exit.
-	Fatalln = func(data ...interface{}) {
+	Fatalln = func(data ...any) {
 		consolePrintln("Fatal", getThemeColor("Fatal"), data...)
 		os.Exit(1)
 	}
 
 	// Error prints a error message.
-	Error = func(data ...interface{}) {
+	Error = func(data ...any) {
 		consolePrint("Error", getThemeColor("Error"), data...)
 	}
 
 	// Errorf print a error message with a format specified.
-	Errorf = func(format string, data ...interface{}) {
+	Errorf = func(format string, data ...any) {
 		consolePrintf("Error", getThemeColor("Error"), format, data...)
 	}
 
 	// Errorln prints a error message with a new line.
-	Errorln = func(data ...interface{}) {
+	Errorln = func(data ...any) {
 		consolePrintln("Error", getThemeColor("Error"), data...)
 	}
 
 	// Info prints a informational message.
-	Info = func(data ...interface{}) {
+	Info = func(data ...any) {
 		consolePrint("Info", getThemeColor("Info"), data...)
 	}
 
 	// Infof prints a informational message in custom format.
-	Infof = func(format string, data ...interface{}) {
+	Infof = func(format string, data ...any) {
 		consolePrintf("Info", getThemeColor("Info"), format, data...)
 	}
 
 	// Infoln prints a informational message with a new line.
-	Infoln = func(data ...interface{}) {
+	Infoln = func(data ...any) {
 		consolePrintln("Info", getThemeColor("Info"), data...)
 	}
 
 	// Debug prints a debug message without a new line
 	// Debug prints a debug message.
-	Debug = func(data ...interface{}) {
+	Debug = func(data ...any) {
 		consolePrint("Debug", getThemeColor("Debug"), data...)
 	}
 
 	// Debugf prints a debug message with a new line.
-	Debugf = func(format string, data ...interface{}) {
+	Debugf = func(format string, data ...any) {
 		consolePrintf("Debug", getThemeColor("Debug"), format, data...)
 	}
 
 	// Debugln prints a debug message with a new line.
-	Debugln = func(data ...interface{}) {
+	Debugln = func(data ...any) {
 		consolePrintln("Debug", getThemeColor("Debug"), data...)
 	}
 
 	// Colorize prints message in a colorized form, dictated by the corresponding tag argument.
-	Colorize = func(tag string, data interface{}) string {
+	Colorize = func(tag string, data any) string {
 		if isatty.IsTerminal(os.Stdout.Fd()) {
 			colorized := getThemeColor(tag)
 			if colorized != nil {
@@ -144,7 +144,7 @@ var (
 
 // wrap around standard fmt functions.
 // consolePrint prints a message prefixed with message type and program name.
-func consolePrint(tag string, c *color.Color, a ...interface{}) {
+func consolePrint(tag string, c *color.Color, a ...any) {
 	privateMutex.Lock()
 	defer privateMutex.Unlock()
 
@@ -203,7 +203,7 @@ func consolePrint(tag string, c *color.Color, a ...interface{}) {
 }
 
 // consolePrintf - same as print with a new line.
-func consolePrintf(tag string, c *color.Color, format string, a ...interface{}) {
+func consolePrintf(tag string, c *color.Color, format string, a ...any) {
 	privateMutex.Lock()
 	defer privateMutex.Unlock()
 
@@ -262,7 +262,7 @@ func consolePrintf(tag string, c *color.Color, format string, a ...interface{}) 
 }
 
 // consolePrintln - same as print with a new line.
-func consolePrintln(tag string, c *color.Color, a ...interface{}) {
+func consolePrintln(tag string, c *color.Color, a ...any) {
 	privateMutex.Lock()
 	defer privateMutex.Unlock()
 
@@ -501,7 +501,7 @@ func (t *Table) DisplayTable(rows [][]string) error {
 // RewindLines - uses terminal escape symbols to clear and rewind
 // upwards on the console for `n` lines.
 func RewindLines(n int) {
-	for i := 0; i < n; i++ {
+	for range n {
 		fmt.Printf("\033[1A\033[K")
 	}
 }

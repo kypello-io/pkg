@@ -198,7 +198,6 @@ func TestParseHTTPURL(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run(testCase.s, func(t *testing.T) {
 			url, err := ParseHTTPURL(testCase.s)
 			expectErr := (err != nil)

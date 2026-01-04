@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/kypello-io/pkg/v3/wildcard"
@@ -113,13 +114,7 @@ func (c *Rule) HasAllowedOrigin(origin string) bool {
 // HasAllowedMethod returns true if the given method is contained in the CORS rule.
 func (c *Rule) HasAllowedMethod(method string) bool {
 	// See "AllowedMethod element" in https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html
-	for _, allowedMethod := range c.AllowedMethod {
-		if allowedMethod == method {
-			// Methods are always uppercase, enforced by Validate() function.
-			return true
-		}
-	}
-	return false
+	return slices.Contains(c.AllowedMethod, method)
 }
 
 // FilterAllowedHeaders returns the headers that are allowed by the rule, and a boolean indicating if all headers are allowed.

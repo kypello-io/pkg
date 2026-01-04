@@ -10,6 +10,7 @@ linters:
     - staticcheck
     - unconvert
     - unused
+    - modernize
   settings:
     misspell:
       locale: US

@@ -35,25 +35,25 @@ import (
 // ConfigEncoding is a generic interface which
 // marshal/unmarshal configuration.
 type ConfigEncoding interface {
-	Unmarshal([]byte, interface{}) error
-	Marshal(interface{}) ([]byte, error)
+	Unmarshal([]byte, any) error
+	Marshal(any) ([]byte, error)
 }
 
 // YAML encoding implements ConfigEncoding
 type yamlEncoding struct{}
 
-func (y yamlEncoding) Unmarshal(b []byte, v interface{}) error {
+func (y yamlEncoding) Unmarshal(b []byte, v any) error {
 	return yaml.Unmarshal(b, v)
 }
 
-func (y yamlEncoding) Marshal(v interface{}) ([]byte, error) {
+func (y yamlEncoding) Marshal(v any) ([]byte, error) {
 	return yaml.Marshal(v)
 }
 
 // JSON encoding implements ConfigEncoding
 type jsonEncoding struct{}
 
-func (j jsonEncoding) Unmarshal(b []byte, v interface{}) error {
+func (j jsonEncoding) Unmarshal(b []byte, v any) error {
 	err := json.Unmarshal(b, v)
 	if err != nil {
 		// Try to return a sophisticated json error message if possible
@@ -70,7 +70,7 @@ func (j jsonEncoding) Unmarshal(b []byte, v interface{}) error {
 	return nil
 }
 
-func (j jsonEncoding) Marshal(v interface{}) ([]byte, error) {
+func (j jsonEncoding) Marshal(v any) ([]byte, error) {
 	return json.MarshalIndent(v, "", "\t")
 }
 
@@ -94,20 +94,20 @@ func ext2EncFormat(fileExtension string) ConfigEncoding {
 
 // toMarshaller returns the right marshal function according
 // to the given file extension
-func toMarshaller(ext string) func(interface{}) ([]byte, error) {
+func toMarshaller(ext string) func(any) ([]byte, error) {
 	return ext2EncFormat(ext).Marshal
 }
 
 // toUnmarshaller returns the right marshal function according
 // to the given file extension
-func toUnmarshaller(ext string) func([]byte, interface{}) error {
+func toUnmarshaller(ext string) func([]byte, any) error {
 	return ext2EncFormat(ext).Unmarshal
 }
 
 // saveFileConfig marshals with the right encoding format
 // according to the filename extension, if no extension is
 // provided, json will be selected.
-func saveFileConfig(filename string, v interface{}) error {
+func saveFileConfig(filename string, v any) error {
 	// Fetch filename's extension
 	ext := filepath.Ext(filename)
 	// Marshal data
@@ -122,7 +122,7 @@ func saveFileConfig(filename string, v interface{}) error {
 	return writeFile(filename, dataBytes)
 }
 
-func saveFileConfigEtcd(filename string, clnt *etcd.Client, v interface{}) error {
+func saveFileConfigEtcd(filename string, clnt *etcd.Client, v any) error {
 	// Fetch filename's extension
 	ext := filepath.Ext(filename)
 	// Marshal data
@@ -145,7 +145,7 @@ func saveFileConfigEtcd(filename string, clnt *etcd.Client, v interface{}) error
 	return nil
 }
 
-func loadFileConfigEtcd(filename string, clnt *etcd.Client, v interface{}) error {
+func loadFileConfigEtcd(filename string, clnt *etcd.Client, v any) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	resp, err := clnt.Get(ctx, filename)
@@ -175,7 +175,7 @@ func loadFileConfigEtcd(filename string, clnt *etcd.Client, v interface{}) error
 // loadFileConfig unmarshals the file's content with the right
 // decoder format according to the filename extension. If no
 // extension is provided, json will be selected by default.
-func loadFileConfig(filename string, v interface{}) error {
+func loadFileConfig(filename string, v any) error {
 	fileData, err := os.ReadFile(filename)
 	if err != nil {
 		return err

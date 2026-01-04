@@ -38,7 +38,7 @@ func randStr(n int) (string, error) {
 		return "", err
 	}
 	// Map random bytes to alphabet
-	for i := 0; i < n; i++ {
+	for i := range n {
 		b[i] = alphabet[int(b[i])%len(alphabet)]
 	}
 	return string(b), nil

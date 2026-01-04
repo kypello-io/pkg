@@ -466,7 +466,7 @@ func validateAttributes(attrs []string) error {
 // or empty strings.
 func checkForDNOverlaps(s []BaseDNInfo) (string, string) {
 	n := len(s)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		for j := i + 1; j < n; j++ {
 			if s[i].Parsed.AncestorOf(s[j].Parsed) {
 				return s[i].Original, s[j].Original

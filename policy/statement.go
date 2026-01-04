@@ -40,7 +40,7 @@ type Statement struct {
 
 // smallBufPool should always return a non-nil *bytes.Buffer
 var smallBufPool = sync.Pool{
-	New: func() interface{} { return &bytes.Buffer{} },
+	New: func() any { return &bytes.Buffer{} },
 }
 
 // IsAllowed - checks given policy args is allowed to continue the Rest API.

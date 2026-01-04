@@ -30,7 +30,7 @@ import (
 	"time"
 
 	"github.com/kypello-io/pkg/v3/env"
-	"github.com/rjeczalik/notify"
+	"github.com/syncthing/notify"
 )
 
 // Manager is a TLS certificate manager that can handle multiple certificates.
