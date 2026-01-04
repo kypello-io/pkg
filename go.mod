@@ -5,7 +5,7 @@ go 1.25.0
 toolchain go1.25.5
 
 require (
-	github.com/cheggaaa/pb v1.0.29
+	github.com/cheggaaa/pb v2.0.7+incompatible
 	github.com/coreos/go-oidc/v3 v3.17.0
 	github.com/fatih/color v1.18.0
 	github.com/fatih/structs v1.1.0
@@ -28,8 +28,6 @@ require (
 )
 
 require (
-	github.com/clipperhouse/stringish v0.1.1 // indirect
-	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/lestrrat-go/dsig v1.0.0 // indirect
@@ -38,6 +36,12 @@ require (
 	github.com/lestrrat-go/option/v2 v2.0.0 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
 	github.com/valyala/fastjson v1.6.4 // indirect
+	gopkg.in/VividCortex/ewma.v1 v1.1.1 // indirect
+	gopkg.in/cheggaaa/pb.v2 v2.0.7 // indirect
+	gopkg.in/fatih/color.v1 v1.7.0 // indirect
+	gopkg.in/mattn/go-colorable.v0 v0.1.0 // indirect
+	gopkg.in/mattn/go-isatty.v0 v0.0.4 // indirect
+	gopkg.in/mattn/go-runewidth.v0 v0.0.4 // indirect
 )
 
 require (
@@ -58,7 +62,6 @@ require (
 	github.com/lestrrat-go/blackmagic v1.0.4 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
-	github.com/mattn/go-runewidth v0.0.19 // indirect
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/segmentio/asm v1.2.1 // indirect
