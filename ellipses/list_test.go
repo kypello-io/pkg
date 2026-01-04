@@ -26,6 +26,8 @@ import (
 
 // Test tests if args has a list sequence.
 func TestHasList(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		args       []string
 		expectedOk bool
@@ -86,6 +88,8 @@ func TestHasList(t *testing.T) {
 
 // Test tests find list sequences patterns.
 func TestFindListPatterns(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		pattern string
 		success bool

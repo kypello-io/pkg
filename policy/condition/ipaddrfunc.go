@@ -176,8 +176,8 @@ func newIPAddressFunc(key Key, values ValueSet, _ string) (Function, error) {
 }
 
 // NewIPAddressFunc - returns new IP address function.
-func NewIPAddressFunc(key Key, IPNets ...*net.IPNet) (Function, error) {
-	return newIPAddrFunc(ipAddress, key, IPNets, false)
+func NewIPAddressFunc(key Key, ipNets ...*net.IPNet) (Function, error) {
+	return newIPAddrFunc(ipAddress, key, ipNets, false)
 }
 
 // newNotIPAddressFunc - returns new Not IP address function.
@@ -191,6 +191,6 @@ func newNotIPAddressFunc(key Key, values ValueSet, _ string) (Function, error) {
 }
 
 // NewNotIPAddressFunc - returns new Not IP address function.
-func NewNotIPAddressFunc(key Key, IPNets ...*net.IPNet) (Function, error) {
-	return newIPAddrFunc(notIPAddress, key, IPNets, true)
+func NewNotIPAddressFunc(key Key, ipNets ...*net.IPNet) (Function, error) {
+	return newIPAddrFunc(notIPAddress, key, ipNets, true)
 }

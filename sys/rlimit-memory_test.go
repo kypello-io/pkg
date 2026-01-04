@@ -21,6 +21,8 @@ import "testing"
 
 // Test get max memory limit.
 func TestGetMaxMemoryLimit(t *testing.T) {
+	t.Parallel()
+
 	_, _, err := GetMaxMemoryLimit()
 	if err != nil {
 		t.Errorf("expected: nil, got: %v", err)
@@ -29,6 +31,8 @@ func TestGetMaxMemoryLimit(t *testing.T) {
 
 // Test set memory limit.
 func TestSetMaxMemoryLimit(t *testing.T) {
+	t.Parallel()
+
 	curLimit, maxLimit, err := GetMaxMemoryLimit()
 	if err != nil {
 		t.Fatalf("Unable to get max memory limit. %v", err)

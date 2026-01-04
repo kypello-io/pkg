@@ -126,8 +126,8 @@ func argExpander(labels [][]string) (out [][]string) {
 	for _, lbl := range labels[0] {
 		rs := argExpander(labels[1:])
 		for _, rlbls := range rs {
-			r := append(rlbls, []string{lbl}...)
-			out = append(out, r)
+			rlbls = append(rlbls, []string{lbl}...)
+			out = append(out, rlbls)
 		}
 	}
 

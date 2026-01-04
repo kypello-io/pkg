@@ -29,7 +29,8 @@ linters:
     - predeclared
     - nosprintfhostport
     - perfsprint
-    - paralleltest
+    - gocritic
+    #- paralleltest
     #- recvcheck
   settings:
     misspell:

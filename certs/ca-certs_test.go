@@ -60,13 +60,12 @@ func TestGetRootCAs(t *testing.T) {
 	for _, testCase := range testCases {
 		_, err := GetRootCAs(testCase.certCAsDir)
 
-		if testCase.expectedErr == nil {
-			if err != nil {
-				t.Fatalf("error: expected = <nil>, got = %v", err)
-			}
-		} else if err == nil {
+		switch {
+		case testCase.expectedErr == nil && err != nil:
+			t.Fatalf("error: expected = <nil>, got = %v", err)
+		case testCase.expectedErr != nil && err == nil:
 			t.Fatalf("error: expected = %v, got = <nil>", testCase.expectedErr)
-		} else if testCase.expectedErr.Error() != err.Error() {
+		case testCase.expectedErr != nil && err != nil && testCase.expectedErr.Error() != err.Error():
 			t.Fatalf("error: expected = %v, got = %v", testCase.expectedErr, err)
 		}
 	}

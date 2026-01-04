@@ -21,6 +21,8 @@ import "testing"
 
 // Test get stats result.
 func TestGetStats(t *testing.T) {
+	t.Parallel()
+
 	stats, err := GetStats()
 	if err != nil {
 		t.Errorf("Tests: Expected `nil`, Got %s", err)

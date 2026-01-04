@@ -25,6 +25,8 @@ import (
 )
 
 func TestGroupWithNErrs(t *testing.T) {
+	t.Parallel()
+
 	err1 := errors.New("errgroup_test: 1")
 	err2 := errors.New("errgroup_test: 2")
 

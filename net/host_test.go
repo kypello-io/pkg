@@ -176,6 +176,8 @@ func TestHostUnmarshalJSON(t *testing.T) {
 }
 
 func TestParseHost(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		s            string
 		expectedHost *Host

@@ -25,6 +25,8 @@ import (
 )
 
 func TestFunctionsEvaluate(t *testing.T) {
+	t.Parallel()
+
 	func1, err := newNullFunc(S3XAmzCopySource.ToKey(), NewValueSet(NewBoolValue(true)), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -87,6 +89,8 @@ func TestFunctionsEvaluate(t *testing.T) {
 }
 
 func TestFunctionsKeys(t *testing.T) {
+	t.Parallel()
+
 	func1, err := newNullFunc(S3XAmzCopySource.ToKey(), NewValueSet(NewBoolValue(true)), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -124,6 +128,8 @@ func TestFunctionsKeys(t *testing.T) {
 }
 
 func TestFunctionsMarshalJSON(t *testing.T) {
+	t.Parallel()
+
 	func1, err := newStringLikeFunc(S3XAmzMetadataDirective.ToKey(), NewValueSet(NewStringValue("REPL*")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -201,6 +207,8 @@ func TestFunctionsMarshalJSON(t *testing.T) {
 }
 
 func TestFunctionsUnmarshalJSON(t *testing.T) {
+	t.Parallel()
+
 	case1Data := []byte(`{
     "StringLike": {
         "s3:x-amz-metadata-directive": "REPL*"
@@ -356,7 +364,7 @@ func TestFunctionsUnmarshalJSON(t *testing.T) {
 		}
 
 		if !testCase.expectErr {
-			if (*result).String() != testCase.expectedResult.String() {
+			if result.String() != testCase.expectedResult.String() {
 				t.Fatalf("case %v: result: expected: %v, got: %v", i+1, testCase.expectedResult, *result)
 			}
 		}

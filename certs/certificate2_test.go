@@ -240,7 +240,7 @@ func testCertificate2InvalidReloadIgnored(t *testing.T, symlink bool) {
 	validCert := cert.Load()
 
 	if symlink {
-		tmpCert = tmpCert + ".tmp"
+		tmpCert += ".tmp"
 	}
 
 	if err := os.WriteFile(tmpCert, []byte("invalid certificate data"), 0o600); err != nil {
@@ -288,7 +288,7 @@ func overwriteFile(t *testing.T, src, dst string, symlink bool) {
 	}
 
 	if symlink {
-		dst = dst + ".tmp"
+		dst += ".tmp"
 	}
 
 	if err := os.WriteFile(dst, data, 0o600); err != nil {
@@ -303,7 +303,7 @@ func updateCertWithWait(t *testing.T, cert *Certificate2, symlink bool, update f
 
 	wait := time.Second
 	if symlink {
-		wait = wait + symlinkReloadInterval // can take up to symlinkReloadInterval to detect changes
+		wait += symlinkReloadInterval // can take up to symlinkReloadInterval to detect changes
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), wait)

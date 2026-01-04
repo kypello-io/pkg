@@ -45,8 +45,8 @@ const (
 var globalRootCAs *x509.CertPool
 
 // RegisterGlobalCAs register the global root CAs.
-func RegisterGlobalCAs(CAs *x509.CertPool) {
-	globalRootCAs = CAs
+func RegisterGlobalCAs(cas *x509.CertPool) {
+	globalRootCAs = cas
 }
 
 var hostKeys = regexp.MustCompile("^(https?://)(.*?):(.*?)@(.*?)$")

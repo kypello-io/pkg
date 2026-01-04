@@ -222,7 +222,8 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 	}
 
 	// only one of expiration day, date or transition day, date is expected
-	if opts.ExpiryDate != nil {
+	switch {
+	case opts.ExpiryDate != nil:
 		date, err := parseExpiryDate(*opts.ExpiryDate)
 		if err != nil {
 			return err
@@ -232,7 +233,7 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 		// reset everything else
 		dest.Expiration.Days = 0
 		dest.Expiration.DeleteMarker = false
-	} else if opts.ExpiryDays != nil {
+	case opts.ExpiryDays != nil:
 		days, err := parseExpiryDays(*opts.ExpiryDays)
 		if err != nil {
 			return err
@@ -241,7 +242,7 @@ func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 		dest.Expiration.Days = days
 		// reset everything else
 		dest.Expiration.Date = lifecycle.ExpirationDate{}
-	} else if opts.ExpiredObjectDeleteMarker != nil {
+	case opts.ExpiredObjectDeleteMarker != nil:
 		dest.Expiration.DeleteMarker = lifecycle.ExpireDeleteMarker(*opts.ExpiredObjectDeleteMarker)
 		dest.Expiration.Days = 0
 		dest.Expiration.Date = lifecycle.ExpirationDate{}
