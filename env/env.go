@@ -66,14 +66,18 @@ func IsSet(key string) bool {
 // returned.
 func Get(key, defaultValue string) string {
 	privateMutex.RLock()
+
 	ok := envOff
+
 	privateMutex.RUnlock()
+
 	if !ok {
 		v, _, _, _ := LookupEnv(key)
 		if v != "" {
 			return strings.TrimSpace(v)
 		}
 	}
+
 	return strings.TrimSpace(defaultValue)
 }
 
@@ -84,6 +88,7 @@ func GetInt(key string, defaultValue int) (int, error) {
 	if v == "" {
 		return defaultValue, nil
 	}
+
 	return strconv.Atoi(v)
 }
 
@@ -95,6 +100,7 @@ func GetDuration(key string, defaultValue time.Duration) (time.Duration, error) 
 	if v == "" {
 		return defaultValue, nil
 	}
+
 	return time.ParseDuration(v)
 }
 
@@ -108,5 +114,6 @@ func List(prefix string) (envs []string) {
 			}
 		}
 	}
+
 	return envs
 }

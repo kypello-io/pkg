@@ -218,6 +218,7 @@ func TestDateFuncName(t *testing.T) {
 
 func TestDateFuncToMap(t *testing.T) {
 	valueSet := NewValueSet(NewStringValue("2009-11-10T15:00:00Z"))
+
 	case1Function, err := newDateEqualsFunc(S3ObjectLockRetainUntilDate.ToKey(), valueSet, "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)

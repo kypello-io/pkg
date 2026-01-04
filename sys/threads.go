@@ -31,9 +31,11 @@ func GetMaxThreads() (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
 	sysMaxThreads, err := strconv.Atoi(strings.TrimSpace(string(sysMaxThreadsStr)))
 	if err != nil {
 		return 0, err
 	}
+
 	return sysMaxThreads, nil
 }

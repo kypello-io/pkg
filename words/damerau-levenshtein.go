@@ -27,6 +27,7 @@ func minimum(integers []int) (minVal int) {
 			minVal = v
 		}
 	}
+
 	return minVal
 }
 
@@ -34,16 +35,20 @@ func minimum(integers []int) (minVal int) {
 // described in https://en.wikipedia.org/wiki/Damerau-Levenshtein_distance
 func DamerauLevenshteinDistance(a, b string) int {
 	var cost int
+
 	d := make([][]int, len(a)+1)
 	for i := 1; i <= len(a)+1; i++ {
 		d[i-1] = make([]int, len(b)+1)
 	}
+
 	for i := 0; i <= len(a); i++ {
 		d[i][0] = i
 	}
+
 	for j := 0; j <= len(b); j++ {
 		d[0][j] = j
 	}
+
 	for i := 1; i <= len(a); i++ {
 		for j := 1; j <= len(b); j++ {
 			if a[i-1] == b[j-1] {
@@ -51,6 +56,7 @@ func DamerauLevenshteinDistance(a, b string) int {
 			} else {
 				cost = 1
 			}
+
 			d[i][j] = minimum([]int{
 				d[i-1][j] + 1,
 				d[i][j-1] + 1,
@@ -61,5 +67,6 @@ func DamerauLevenshteinDistance(a, b string) int {
 			}
 		}
 	}
+
 	return d[len(a)][len(b)]
 }

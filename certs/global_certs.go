@@ -37,27 +37,35 @@ var (
 
 func globalCertificate(certFile, keyFile string) (*Certificate2, error) {
 	var err error
+
 	certFile, err = filepath.Abs(certFile)
 	if err != nil {
 		return nil, err
 	}
+
 	keyFile, err = filepath.Abs(keyFile)
 	if err != nil {
 		return nil, err
 	}
+
 	key := certKey{certFile, keyFile}
+
 	globalCertsLock.Lock()
 	defer globalCertsLock.Unlock()
+
 	if globalCerts == nil {
 		globalCerts = make(map[certKey]*Certificate2)
 	} else if c, ok := globalCerts[key]; ok {
 		return c, nil
 	}
+
 	c, err := NewCertificate2(certFile, keyFile)
 	if err != nil {
 		return nil, err
 	}
+
 	globalCerts[key] = c
+
 	return c, nil
 }
 
@@ -83,6 +91,7 @@ func GetClientCertificate(certFile, keyFile string) (func(*tls.CertificateReques
 	if err != nil {
 		return nil, err
 	}
+
 	return func(*tls.CertificateRequestInfo) (*tls.Certificate, error) {
 		return cert.Load(), nil
 	}, nil
@@ -110,6 +119,7 @@ func GetCertificate(certFile, keyFile string) (func(*tls.ClientHelloInfo) (*tls.
 	if err != nil {
 		return nil, err
 	}
+
 	return func(*tls.ClientHelloInfo) (*tls.Certificate, error) {
 		return cert.Load(), nil
 	}, nil

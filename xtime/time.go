@@ -55,6 +55,7 @@ func ParseDuration(s string) (time.Duration, error) {
 	if err == nil {
 		return dur, nil
 	}
+
 	return parseDuration(s)
 }
 
@@ -73,9 +74,12 @@ func (d *Duration) UnmarshalYAML(value *yaml.Node) error {
 		if err != nil {
 			return err
 		}
+
 		*d = Duration(dur)
+
 		return nil
 	}
+
 	return fmt.Errorf("unable to unmarshal %s", value.Tag)
 }
 
@@ -84,11 +88,14 @@ func (d *Duration) UnmarshalJSON(bs []byte) error {
 	if len(bs) <= 2 {
 		return nil
 	}
+
 	dur, err := ParseDuration(string(bs[1 : len(bs)-1]))
 	if err != nil {
 		return err
 	}
+
 	*d = Duration(dur)
+
 	return nil
 }
 
@@ -103,6 +110,7 @@ func (d Duration) MarshalMsg(bytes []byte) ([]byte, error) {
 func (d *Duration) UnmarshalMsg(b []byte) ([]byte, error) {
 	i, rem, err := msgp.ReadInt64Bytes(b)
 	*d = Duration(i)
+
 	return rem, err
 }
 
@@ -115,6 +123,7 @@ func (d Duration) EncodeMsg(w *msgp.Writer) error {
 func (d *Duration) DecodeMsg(reader *msgp.Reader) error {
 	i, err := reader.ReadInt64()
 	*d = Duration(i)
+
 	return err
 }
 

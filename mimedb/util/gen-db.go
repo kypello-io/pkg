@@ -114,6 +114,7 @@ func convertDB(jsonFile string) (mimeDB, error) {
 			}
 		}
 	}
+
 	return mDB, nil
 }
 
@@ -133,6 +134,7 @@ func main() {
 
 	// Generate db embedded go program.
 	tmpl := template.New("mimedb")
+
 	mimeTmpl, err := tmpl.Parse(progTempl)
 	if err != nil {
 		panic(err)

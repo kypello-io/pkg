@@ -52,6 +52,7 @@ func TestNewCLILoginClaims(t *testing.T) {
 func TestCLILoginClaims_Valid(t *testing.T) {
 	t.Run("Valid token", func(t *testing.T) {
 		claims := NewCLILoginClaims(8080, "test-req-id")
+
 		err := claims.c.Valid()
 		if err != nil {
 			t.Errorf("Expected valid token, got error: %v", err)
@@ -66,10 +67,12 @@ func TestCLILoginClaims_Valid(t *testing.T) {
 				Expiry: time.Now().UTC().Add(-1 * time.Minute),
 			},
 		}
+
 		err := claims.c.Valid()
 		if err == nil {
 			t.Error("Expected expired token to be invalid")
 		}
+
 		if !strings.Contains(err.Error(), "expired") {
 			t.Errorf("Expected error to contain 'expired', got: %v", err)
 		}
@@ -106,6 +109,7 @@ func TestCredentialsClaims_Valid(t *testing.T) {
 			AccessKeyID:     "access-key",
 			SecretAccessKey: "secret-key",
 		}
+
 		err := claims.Valid()
 		if err != nil {
 			t.Errorf("Expected valid credentials, got error: %v", err)
@@ -118,6 +122,7 @@ func TestCredentialsClaims_Valid(t *testing.T) {
 			SecretAccessKey: "secret-key",
 			Expiration:      time.Now().UTC().Add(1 * time.Hour),
 		}
+
 		err := claims.Valid()
 		if err != nil {
 			t.Errorf("Expected valid credentials, got error: %v", err)
@@ -130,10 +135,12 @@ func TestCredentialsClaims_Valid(t *testing.T) {
 			SecretAccessKey: "secret-key",
 			Expiration:      time.Now().UTC().Add(-1 * time.Hour),
 		}
+
 		err := claims.Valid()
 		if err == nil {
 			t.Error("Expected expired credentials to be invalid")
 		}
+
 		if !strings.Contains(err.Error(), "expired") {
 			t.Errorf("Expected error to contain 'expired', got: %v", err)
 		}
@@ -183,6 +190,7 @@ func TestParseCLILoginClaims(t *testing.T) {
 		if err != nil {
 			t.Errorf("Expected no error, got: %v", err)
 		}
+
 		if parsedClaims == nil {
 			t.Fatal("Expected non-nil parsed claims")
 		}

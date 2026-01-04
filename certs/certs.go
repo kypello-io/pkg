@@ -61,10 +61,12 @@ func NewCertificate(certFile, keyFile string, loadX509KeyPair LoadX509KeyPairFun
 	if err != nil {
 		return nil, err
 	}
+
 	keyFile, err = filepath.Abs(keyFile)
 	if err != nil {
 		return nil, err
 	}
+
 	c := &Certificate{
 		certFile:        certFile,
 		keyFile:         keyFile,
@@ -73,6 +75,7 @@ func NewCertificate(certFile, keyFile string, loadX509KeyPair LoadX509KeyPairFun
 	if err := c.Reload(); err != nil {
 		return nil, err
 	}
+
 	return c, nil
 }
 
@@ -105,6 +108,7 @@ func (c *Certificate) Stop(events chan<- tls.Certificate) {
 			listeners = append(listeners, listener)
 		}
 	}
+
 	c.listeners = listeners
 }
 
@@ -115,6 +119,7 @@ func (c *Certificate) Reload() error {
 	if err != nil {
 		return err
 	}
+
 	if certificate.Leaf == nil {
 		certificate.Leaf, err = x509.ParseCertificate(certificate.Certificate[0])
 		if err != nil {
@@ -127,13 +132,16 @@ func (c *Certificate) Reload() error {
 	c.lock.Unlock()
 
 	c.listenerLock.Lock()
+
 	for _, listener := range c.listeners {
 		select {
 		case listener <- certificate:
 		default:
 		}
 	}
+
 	c.listenerLock.Unlock()
+
 	return nil
 }
 
@@ -145,6 +153,7 @@ func (c *Certificate) Reload() error {
 // if interval > 0.
 func (c *Certificate) Watch(ctx context.Context, interval time.Duration, signals ...os.Signal) {
 	certFileSymLink, _ := isSymlink(c.certFile)
+
 	keyFileSymLink, _ := isSymlink(c.keyFile)
 	if !certFileSymLink && !keyFileSymLink && !isk8s {
 		go func() {
@@ -152,11 +161,13 @@ func (c *Certificate) Watch(ctx context.Context, interval time.Duration, signals
 			if err := notify.Watch(filepath.Dir(c.certFile), events, eventWrite...); err != nil {
 				return
 			}
+
 			if err := notify.Watch(filepath.Dir(c.keyFile), events, eventWrite...); err != nil {
 				notify.Stop(events)
 				return
 			}
 			defer notify.Stop(events)
+
 			for {
 				select {
 				case <-events:
@@ -167,10 +178,12 @@ func (c *Certificate) Watch(ctx context.Context, interval time.Duration, signals
 			}
 		}()
 	}
+
 	if interval > 0 {
 		go func() {
 			ticker := time.NewTicker(interval)
 			defer ticker.Stop()
+
 			for {
 				select {
 				case <-ticker.C:
@@ -181,11 +194,14 @@ func (c *Certificate) Watch(ctx context.Context, interval time.Duration, signals
 			}
 		}()
 	}
+
 	if len(signals) > 0 {
 		go func() {
 			events := make(chan os.Signal, 1)
+
 			signal.Notify(events, signals...)
 			defer signal.Stop(events)
+
 			for {
 				select {
 				case <-events:

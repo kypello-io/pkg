@@ -31,11 +31,14 @@ func TestReadVersion(t *testing.T) {
 	type myStruct struct {
 		Version string
 	}
+
 	saveMe := myStruct{"1"}
+
 	config, err := NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Save("test.json")
 	if err != nil {
 		t.Fatal(err)
@@ -45,6 +48,7 @@ func TestReadVersion(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if version != "1" {
 		t.Fatalf("Expected version '1', got '%v'", version)
 	}
@@ -54,7 +58,9 @@ func TestReadVersionErr(t *testing.T) {
 	type myStruct struct {
 		Version int
 	}
+
 	saveMe := myStruct{1}
+
 	_, err := NewConfig(&saveMe, nil)
 	if err == nil {
 		t.Fatal("Unexpected should fail in initialization for bad input")
@@ -83,18 +89,23 @@ func TestReadVersionErr(t *testing.T) {
 
 func TestSaveFailOnDir(t *testing.T) {
 	defer os.RemoveAll("test-1.json")
+
 	err := os.MkdirAll("test-1.json", 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	type myStruct struct {
 		Version string
 	}
+
 	saveMe := myStruct{"1"}
+
 	config, err := NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Save("test-1.json")
 	if err == nil {
 		t.Fatal("Unexpected should fail to save if test-1.json is a directory")
@@ -112,7 +123,9 @@ func TestCheckData(t *testing.T) {
 		Password    string
 		Directories []string
 	}
+
 	saveMeBadNoVersion := myStructBadNoVersion{"guest", "nopassword", []string{"Work", "Documents", "Music"}}
+
 	err = CheckData(&saveMeBadNoVersion)
 	if err == nil {
 		t.Fatal("Unexpected should fail if Version is not set")
@@ -123,7 +136,9 @@ func TestCheckData(t *testing.T) {
 		User     string
 		Password string
 	}
+
 	saveMeBadVersionInt := myStructBadVersionInt{1, "guest", "nopassword"}
+
 	err = CheckData(&saveMeBadVersionInt)
 	if err == nil {
 		t.Fatal("Unexpected should fail if Version is integer")
@@ -137,6 +152,7 @@ func TestCheckData(t *testing.T) {
 	}
 
 	saveMeGood := myStructGood{"1", "guest", "nopassword", []string{"Work", "Documents", "Music"}}
+
 	err = CheckData(&saveMeGood)
 	if err != nil {
 		t.Fatal(err)
@@ -150,7 +166,9 @@ func TestLoadFile(t *testing.T) {
 		Password    string
 		Directories []string
 	}
+
 	saveMe := myStruct{}
+
 	_, err := LoadConfig("test.json", nil, &saveMe)
 	if err == nil {
 		t.Fatal(err)
@@ -160,17 +178,21 @@ func TestLoadFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if err = file.Close(); err != nil {
 		t.Fatal(err)
 	}
+
 	_, err = LoadConfig("test.json", nil, &saveMe)
 	if err == nil {
 		t.Fatal("Unexpected should fail to load empty JSON")
 	}
+
 	config, err := NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Load("test-non-exist.json")
 	if err == nil {
 		t.Fatal("Unexpected should fail to Load non-existent config")
@@ -182,28 +204,35 @@ func TestLoadFile(t *testing.T) {
 	}
 
 	saveMe = myStruct{"1", "guest", "nopassword", []string{"Work", "Documents", "Music"}}
+
 	config, err = NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Save("test.json")
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	saveMe1 := myStruct{}
+
 	_, err = LoadConfig("test.json", nil, &saveMe1)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if !reflect.DeepEqual(saveMe1, saveMe) {
 		t.Fatalf("Expected %v, got %v", saveMe1, saveMe)
 	}
 
 	saveMe2 := myStruct{}
+
 	err = json.Unmarshal([]byte(config.String()), &saveMe2)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if !reflect.DeepEqual(saveMe2, saveMe1) {
 		t.Fatalf("Expected %v, got %v", saveMe2, saveMe1)
 	}
@@ -258,6 +287,7 @@ directories:
 
 	// Check if the loaded data is the same as the saved one
 	loadMe := myStruct{}
+
 	config, err = NewConfig(&loadMe, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -324,10 +354,12 @@ func TestJSONFormat(t *testing.T) {
 
 	// Check if the loaded data is the same as the saved one
 	loadMe := myStruct{}
+
 	config, err = NewConfig(&loadMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Load(testJSON)
 	if err != nil {
 		t.Fatal(err)
@@ -340,27 +372,33 @@ func TestJSONFormat(t *testing.T) {
 
 func TestSaveLoad(t *testing.T) {
 	defer os.RemoveAll("test.json")
+
 	type myStruct struct {
 		Version     string
 		User        string
 		Password    string
 		Directories []string
 	}
+
 	saveMe := myStruct{"1", "guest", "nopassword", []string{"Work", "Documents", "Music"}}
+
 	config, err := NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Save("test.json")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	loadMe := myStruct{Version: "1"}
+
 	newConfig, err := NewConfig(&loadMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = newConfig.Load("test.json")
 	if err != nil {
 		t.Fatal(err)
@@ -369,6 +407,7 @@ func TestSaveLoad(t *testing.T) {
 	if !reflect.DeepEqual(config.Data(), newConfig.Data()) {
 		t.Fatalf("Expected %v, got %v", config.Data(), newConfig.Data())
 	}
+
 	if !reflect.DeepEqual(config.Data(), &loadMe) {
 		t.Fatalf("Expected %v, got %v", config.Data(), &loadMe)
 	}
@@ -382,27 +421,33 @@ func TestSaveLoad(t *testing.T) {
 func TestSaveBackup(t *testing.T) {
 	defer os.RemoveAll("test.json")
 	defer os.RemoveAll("test.json.old")
+
 	type myStruct struct {
 		Version     string
 		User        string
 		Password    string
 		Directories []string
 	}
+
 	saveMe := myStruct{"1", "guest", "nopassword", []string{"Work", "Documents", "Music"}}
+
 	config, err := NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Save("test.json")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	loadMe := myStruct{Version: "1"}
+
 	newConfig, err := NewConfig(&loadMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = newConfig.Load("test.json")
 	if err != nil {
 		t.Fatal(err)
@@ -411,6 +456,7 @@ func TestSaveBackup(t *testing.T) {
 	if !reflect.DeepEqual(config.Data(), newConfig.Data()) {
 		t.Fatalf("Expected %v, got %v", config.Data(), newConfig.Data())
 	}
+
 	if !reflect.DeepEqual(config.Data(), &loadMe) {
 		t.Fatalf("Expected %v, got %v", config.Data(), &loadMe)
 	}
@@ -424,6 +470,7 @@ func TestSaveBackup(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = config.Save("test.json")
 	if err != nil {
 		t.Fatal(err)
@@ -437,7 +484,9 @@ func TestDiff(t *testing.T) {
 		Password    string
 		Directories []string
 	}
+
 	saveMe := myStruct{"1", "guest", "nopassword", []string{"Work", "Documents", "Music"}}
+
 	config, err := NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -451,6 +500,7 @@ func TestDiff(t *testing.T) {
 	}
 
 	mismatch := myNewConfigStruct{"1", "nopassword", []string{"Work", "documents", "Music"}}
+
 	newConfig, err := NewConfig(&mismatch, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -460,6 +510,7 @@ func TestDiff(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if len(fields) != 1 {
 		t.Fatalf("Expected len 1, got %v", len(fields))
 	}
@@ -477,13 +528,16 @@ func TestDeepDiff(t *testing.T) {
 		Password    string
 		Directories []string
 	}
+
 	saveMe := myStruct{"1", "guest", "nopassword", []string{"Work", "Documents", "Music"}}
+
 	config, err := NewConfig(&saveMe, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	mismatch := myStruct{"1", "Guest", "nopassword", []string{"Work", "documents", "Music"}}
+
 	newConfig, err := NewConfig(&mismatch, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -493,6 +547,7 @@ func TestDeepDiff(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if len(fields) != 2 {
 		t.Fatalf("Expected len 2, got %v", len(fields))
 	}

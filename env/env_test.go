@@ -34,14 +34,17 @@ func GetenvHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "namespace not found", http.StatusNotFound)
 		return
 	}
+
 	if vars["name"] != "minio" {
 		http.Error(w, "tenant not found", http.StatusNotFound)
 		return
 	}
+
 	if vars["key"] != "MINIO_ARGS" {
 		http.Error(w, "key not found", http.StatusNotFound)
 		return
 	}
+
 	w.Write([]byte("http://127.0.0.{1..4}:9000/data{1...4}"))
 	w.(http.Flusher).Flush()
 }
@@ -53,6 +56,7 @@ func startTestServer(t *testing.T) *httptest.Server {
 		HandlerFunc(GetenvHandler).Queries("key", "{key:.*}")
 
 	ts := httptest.NewServer(router)
+
 	t.Cleanup(func() {
 		ts.Close()
 	})
@@ -96,6 +100,7 @@ func TestIsSetType(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if v != 0 {
 		t.Fatal("unexpected")
 	}
@@ -123,6 +128,7 @@ func TestIsSetType(t *testing.T) {
 	}
 
 	t.Setenv("_TEST_ENV", "")
+
 	d, err = GetDuration("_TEST_ENV", time.Second)
 	if err != nil {
 		t.Fatal(err)
@@ -135,11 +141,13 @@ func TestIsSetType(t *testing.T) {
 
 func TestIsSet(t *testing.T) {
 	t.Setenv("_TEST_ENV", "")
+
 	if IsSet("_TEST_ENV") {
 		t.Fatal("Expected IsSet(false) but found IsSet(true)")
 	}
 
 	t.Setenv("_TEST_ENV", "v")
+
 	if !IsSet("_TEST_ENV") {
 		t.Fatal("Expected IsSet(true) but found IsSet(false)")
 	}
@@ -156,11 +164,13 @@ func TestGetEnv(t *testing.T) {
 	}
 
 	t.Setenv("_TEST_ENV", "")
+
 	if v := Get("_TEST_ENV", "value"); v != "value" {
 		t.Fatalf("Expected 'value', but got %s", v)
 	}
 
 	t.Setenv("_TEST_ENV", "value-new")
+
 	if v := Get("_TEST_ENV", "value"); v != "value-new" {
 		t.Fatalf("Expected 'value-new', but got %s", v)
 	}

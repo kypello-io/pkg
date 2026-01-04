@@ -41,6 +41,7 @@ func randStr(n int) (string, error) {
 	for i := range n {
 		b[i] = alphabet[int(b[i])%len(alphabet)]
 	}
+
 	return string(b), nil
 }
 
@@ -103,6 +104,7 @@ func NewCallbackServer(ctx context.Context) (*CallbackServer, error) {
 	})
 
 	cs.server = &http.Server{Handler: mux}
+
 	go func() {
 		if err := cs.server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			cs.errChan <- err
@@ -115,6 +117,7 @@ func NewCallbackServer(ctx context.Context) (*CallbackServer, error) {
 		// Use a separate context with timeout for graceful shutdown
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
+
 		_ = cs.server.Shutdown(shutdownCtx)
 	}()
 
@@ -131,6 +134,7 @@ func (cs *CallbackServer) GetLoginURL(ctx context.Context, client reqClient, con
 	if err != nil {
 		return "", fmt.Errorf("failed to get login URL: %w", err)
 	}
+
 	return loginURL, nil
 }
 
@@ -145,6 +149,7 @@ func (cs *CallbackServer) WaitForCredentials(ctx context.Context) (credentials.V
 		if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 			return credentials.Value{}, fmt.Errorf("timeout waiting for authentication callback")
 		}
+
 		return credentials.Value{}, fmt.Errorf("authentication canceled: %w", ctx.Err())
 	}
 }

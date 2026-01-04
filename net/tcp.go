@@ -70,6 +70,7 @@ func (c *TCPConfig) Control(network, address string, rc syscall.RawConn) error {
 	if c == nil {
 		return nil
 	}
+
 	return c.control(network, address, rc)
 }
 
@@ -78,6 +79,7 @@ func (c *TCPConfig) Clone() *TCPConfig {
 	if c == nil {
 		return nil
 	}
+
 	return &TCPConfig{
 		IdleTimeout: c.IdleTimeout,
 		UserTimeout: c.UserTimeout,

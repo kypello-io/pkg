@@ -41,6 +41,7 @@ func DecodeDN(str string) (string, error) {
 	s := []rune(stripLeadingAndTrailingSpaces(str))
 
 	builder := strings.Builder{}
+
 	for i := 0; i < len(s); i++ {
 		char := s[i]
 
@@ -63,6 +64,7 @@ func DecodeDN(str string) (string, error) {
 		case ' ', '"', '#', '+', ',', ';', '<', '=', '>', '\\':
 			builder.WriteRune(s[i+1])
 			i++
+
 			continue
 		}
 
@@ -93,6 +95,7 @@ func DecodeDN(str string) (string, error) {
 		}
 
 		builder.WriteByte(dst[0])
+
 		i += 2
 	}
 

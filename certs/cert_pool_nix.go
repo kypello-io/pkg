@@ -41,12 +41,14 @@ func readUniqueDirectoryEntries(dir string) ([]fs.DirEntry, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	uniq := fis[:0]
 	for _, fi := range fis {
 		if !isSameDirSymlink(fi, dir) {
 			uniq = append(uniq, fi)
 		}
 	}
+
 	return uniq, nil
 }
 
@@ -56,7 +58,9 @@ func isSameDirSymlink(de fs.DirEntry, dir string) bool {
 	if de.Type()&fs.ModeSymlink == 0 {
 		return false
 	}
+
 	target, err := os.Readlink(filepath.Join(dir, de.Name()))
+
 	return err == nil && !strings.Contains(target, "/")
 }
 
@@ -72,8 +76,10 @@ func loadSystemRoots() (*x509.CertPool, error) {
 			if os.IsNotExist(err) || os.IsPermission(err) {
 				return caPool, nil
 			}
+
 			return caPool, err
 		}
+
 		for _, fi := range fis {
 			data, err := os.ReadFile(directory + "/" + fi.Name())
 			if err == nil {
@@ -81,5 +87,6 @@ func loadSystemRoots() (*x509.CertPool, error) {
 			}
 		}
 	}
+
 	return caPool, nil
 }

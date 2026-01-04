@@ -45,6 +45,7 @@ func (key Key) String() string {
 	if key.variable != "" {
 		return string(key.name) + "/" + key.variable
 	}
+
 	return string(key.name)
 }
 
@@ -68,6 +69,7 @@ func (key Key) Name() string {
 	if key.variable != "" {
 		return name + "/" + key.variable
 	}
+
 	return name
 }
 
@@ -84,6 +86,7 @@ func (key *Key) UnmarshalJSON(data []byte) error {
 	}
 
 	*key = parsedKey
+
 	return nil
 }
 
@@ -133,7 +136,9 @@ func (set KeySet) Match(key Key) bool {
 	if ok {
 		return true
 	}
+
 	_, ok = set[key.name.ToKey()]
+
 	return ok
 }
 

@@ -41,12 +41,14 @@ var (
 func getThemeColor(tag string) *color.Color {
 	themeMu.Lock()
 	defer themeMu.Unlock()
+
 	return theme[tag]
 }
 
 func setThemeColor(tag string, cl *color.Color) {
 	themeMu.Lock()
 	defer themeMu.Unlock()
+
 	theme[tag] = cl
 }
 
@@ -54,6 +56,7 @@ func setThemeColor(tag string, cl *color.Color) {
 func SetColorOff() {
 	privateMutex.Lock()
 	defer privateMutex.Unlock()
+
 	color.NoColor = true
 }
 
@@ -61,6 +64,7 @@ func SetColorOff() {
 func SetColorOn() {
 	privateMutex.Lock()
 	defer privateMutex.Unlock()
+
 	color.NoColor = false
 }
 

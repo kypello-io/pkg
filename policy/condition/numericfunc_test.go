@@ -228,6 +228,7 @@ func TestNumericFuncName(t *testing.T) {
 
 func TestNumericFuncToMap(t *testing.T) {
 	valueSet := NewValueSet(NewIntValue(16))
+
 	case1Function, err := newNumericEqualsFunc(S3MaxKeys.ToKey(), valueSet, "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)

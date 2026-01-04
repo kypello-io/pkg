@@ -116,12 +116,15 @@ func TestOptionFilter(t *testing.T) {
 		if a.ObjectSizeGreaterThan != b.ObjectSizeGreaterThan {
 			return false
 		}
+
 		if a.ObjectSizeLessThan != b.ObjectSizeLessThan {
 			return false
 		}
+
 		if a.Prefix != b.Prefix {
 			return false
 		}
+
 		if a.Tag != b.Tag {
 			return false
 		}
@@ -129,15 +132,19 @@ func TestOptionFilter(t *testing.T) {
 		if a.And.ObjectSizeGreaterThan != b.And.ObjectSizeGreaterThan {
 			return false
 		}
+
 		if a.And.ObjectSizeLessThan != b.And.ObjectSizeLessThan {
 			return false
 		}
+
 		if a.And.Prefix != b.And.Prefix {
 			return false
 		}
+
 		if len(a.And.Tags) != len(b.And.Tags) {
 			return false
 		}
+
 		for i := range a.And.Tags {
 			if a.And.Tags[i] != b.And.Tags[i] {
 				return false
@@ -281,9 +288,11 @@ func TestToILMRule(t *testing.T) {
 					t.Errorf("ToILMRule() expected error but got none")
 					return
 				}
+
 				if tt.errMsg != "" && !strings.Contains(err.Error(), tt.errMsg) {
 					t.Errorf("ToILMRule() error = %v, want error containing %v", err, tt.errMsg)
 				}
+
 				return
 			}
 
@@ -300,6 +309,7 @@ func TestToILMRule(t *testing.T) {
 			if tt.opts.Status != nil && !*tt.opts.Status {
 				expectedStatus = "Disabled"
 			}
+
 			if rule.Status != expectedStatus {
 				t.Errorf("ToILMRule() rule.Status = %v, want %v", rule.Status, expectedStatus)
 			}
@@ -502,6 +512,7 @@ func TestApplyRuleFields(t *testing.T) {
 				if err == nil {
 					t.Errorf("ApplyRuleFields() expected error but got none")
 				}
+
 				return
 			}
 
@@ -511,12 +522,14 @@ func TestApplyRuleFields(t *testing.T) {
 
 			if tt.opts.Prefix != nil {
 				expectedPrefix := *tt.opts.Prefix
+
 				actualPrefix := ""
 				if len(rule.RuleFilter.And.Tags) > 0 {
 					actualPrefix = rule.RuleFilter.And.Prefix
 				} else {
 					actualPrefix = rule.RuleFilter.Prefix
 				}
+
 				if actualPrefix != expectedPrefix {
 					t.Errorf("ApplyRuleFields() prefix = %v, want %v", actualPrefix, expectedPrefix)
 				}
@@ -527,6 +540,7 @@ func TestApplyRuleFields(t *testing.T) {
 				if !*tt.opts.Status {
 					expectedStatus = "Disabled"
 				}
+
 				if rule.Status != expectedStatus {
 					t.Errorf("ApplyRuleFields() status = %v, want %v", rule.Status, expectedStatus)
 				}
@@ -659,6 +673,7 @@ func TestValidationFunctions(t *testing.T) {
 
 		// Test STANDARD_IA with less than 30 days
 		rule.Transition.Days = 15
+
 		rule.Transition.StorageClass = "STANDARD_IA"
 		if err := validateTranDays(rule); err == nil {
 			t.Error("validateTranDays() should error for STANDARD_IA with less than 30 days")
@@ -672,6 +687,7 @@ func TestValidationFunctions(t *testing.T) {
 
 		// Test other storage class with less than 30 days (valid)
 		rule.Transition.Days = 15
+
 		rule.Transition.StorageClass = "GLACIER"
 		if err := validateTranDays(rule); err != nil {
 			t.Errorf("validateTranDays() should not error for GLACIER with 15 days: %v", err)
@@ -746,12 +762,14 @@ func TestParseFunctions(t *testing.T) {
 		if err != nil {
 			t.Errorf("parseTransition() should not error with nil parameters: %v", err)
 		}
+
 		if transition.StorageClass != "" || transition.Days != 0 {
 			t.Error("parseTransition() should return empty transition with nil parameters")
 		}
 
 		// Test with invalid date
 		invalidDate := "invalid-date"
+
 		_, err = parseTransition(nil, &invalidDate, nil)
 		if err == nil {
 			t.Error("parseTransition() should error with invalid date")
@@ -759,6 +777,7 @@ func TestParseFunctions(t *testing.T) {
 
 		// Test with invalid days
 		invalidDays := "invalid"
+
 		_, err = parseTransition(nil, nil, &invalidDays)
 		if err == nil {
 			t.Error("parseTransition() should error with invalid days")
@@ -768,10 +787,12 @@ func TestParseFunctions(t *testing.T) {
 		storageClass := "GLACIER"
 		date := "2025-06-01"
 		days := "30"
+
 		transition, err = parseTransition(&storageClass, &date, &days)
 		if err != nil {
 			t.Errorf("parseTransition() should not error with valid parameters: %v", err)
 		}
+
 		if transition.StorageClass != storageClass {
 			t.Errorf("parseTransition() storage class = %v, want %v", transition.StorageClass, storageClass)
 		}
@@ -795,6 +816,7 @@ func TestParseFunctions(t *testing.T) {
 		if err != nil {
 			t.Errorf("parseExpiryDate() should not error for valid date: %v", err)
 		}
+
 		if date.IsZero() {
 			t.Error("parseExpiryDate() should return non-zero date")
 		}
@@ -803,6 +825,7 @@ func TestParseFunctions(t *testing.T) {
 	t.Run("parseAllVersionsExpiry", func(t *testing.T) {
 		// Test with invalid days
 		invalidDays := "invalid"
+
 		_, err := parseAllVersionsExpiry(&invalidDays, nil)
 		if err == nil {
 			t.Error("parseAllVersionsExpiry() should error with invalid days")
@@ -811,13 +834,16 @@ func TestParseFunctions(t *testing.T) {
 		// Test with valid days and delete marker
 		validDays := "7"
 		deleteMarker := true
+
 		expiry, err := parseAllVersionsExpiry(&validDays, &deleteMarker)
 		if err != nil {
 			t.Errorf("parseAllVersionsExpiry() should not error with valid parameters: %v", err)
 		}
+
 		if expiry.Days != 7 {
 			t.Errorf("parseAllVersionsExpiry() days = %v, want 7", expiry.Days)
 		}
+
 		if bool(expiry.DeleteMarker) != deleteMarker {
 			t.Errorf("parseAllVersionsExpiry() delete marker = %v, want %v", expiry.DeleteMarker, deleteMarker)
 		}

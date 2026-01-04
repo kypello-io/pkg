@@ -57,6 +57,7 @@ func TestBucketPolicyIsAllowed(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func1, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet,
@@ -313,6 +314,7 @@ func TestBucketPolicyIsValid(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewNullFunc(
 		condition.S3XAmzServerSideEncryption.ToKey(),
 		false,
@@ -460,6 +462,7 @@ func TestBucketPolicyMarshalJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func1, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet1,
@@ -559,6 +562,7 @@ func TestBucketPolicyMarshalJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet2,
@@ -626,6 +630,7 @@ func TestBucketPolicyMarshalJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	case9Policy := BucketPolicy{
 		ID:      "MyPolicyForMyBucket1",
 		Version: DefaultVersion,
@@ -723,10 +728,12 @@ func TestBucketPolicyUnmarshalJSON(t *testing.T) {
         }
     ]
 }`)
+
 	_, IPNet1, err := net.ParseCIDR("192.168.1.0/24")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func1, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet1,
@@ -904,10 +911,12 @@ func TestBucketPolicyUnmarshalJSON(t *testing.T) {
         }
     ]
 }`)
+
 	_, IPNet2, err := net.ParseCIDR("192.168.2.0/24")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet2,
@@ -1100,6 +1109,7 @@ func TestBucketPolicyUnmarshalJSON(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var result BucketPolicy
+
 		err := json.Unmarshal(testCase.data, &result)
 		expectErr := (err != nil)
 
@@ -1136,6 +1146,7 @@ func TestBucketPolicyValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewNullFunc(
 		condition.S3XAmzServerSideEncryption.ToKey(),
 		false,
@@ -1143,6 +1154,7 @@ func TestBucketPolicyValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	case2Policy := BucketPolicy{
 		ID:      "MyPolicyForMyBucket1",
 		Version: DefaultVersion,

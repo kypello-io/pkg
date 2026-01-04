@@ -32,6 +32,7 @@ func TestManager2_Close(t *testing.T) {
 		if err != nil {
 			return nil, err
 		}
+
 		return []*Certificate2{cert}, nil
 	}
 
@@ -56,6 +57,7 @@ func TestManager2_CloseMultipleTimes(t *testing.T) {
 		if err != nil {
 			return nil, err
 		}
+
 		return []*Certificate2{cert}, nil
 	}
 
@@ -76,12 +78,14 @@ func TestManager2_ReloadOnSIGHUP(t *testing.T) {
 		if callCount%2 == 1 {
 			certFile, keyFile = "new-public.crt", "new-private.key"
 		}
+
 		callCount++
 
 		cert, err := NewCertificate2(certFile, keyFile)
 		if err != nil {
 			return nil, err
 		}
+
 		return []*Certificate2{cert}, nil
 	}
 
@@ -119,6 +123,7 @@ func TestManager2_ReloadOnSIGHUP(t *testing.T) {
 
 func updateReloadWithWait(t *testing.T, mgr *Manager2, update func()) {
 	done := make(chan struct{})
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
@@ -152,12 +157,14 @@ func TestManager2_NoCertificates(t *testing.T) {
 	defer mgr.Close()
 
 	hello := &tls.ClientHelloInfo{ServerName: "example.com"}
+
 	_, err = mgr.GetCertificate(hello)
 	if err == nil {
 		t.Error("Expected error when no certificates are loaded")
 	}
 
 	reqInfo := &tls.CertificateRequestInfo{}
+
 	_, err = mgr.GetClientCertificate(reqInfo)
 	if err == nil {
 		t.Error("Expected error when no certificates are loaded for mTLS")
@@ -171,6 +178,7 @@ func TestManager2_GetCertificateNilHello(t *testing.T) {
 		if err != nil {
 			return nil, err
 		}
+
 		return []*Certificate2{cert}, nil
 	}
 
@@ -193,6 +201,7 @@ func TestManager2_GetClientCertificateNilReqInfo(t *testing.T) {
 		if err != nil {
 			return nil, err
 		}
+
 		return []*Certificate2{cert}, nil
 	}
 
@@ -215,6 +224,7 @@ func TestManager2_ConcurrentGetCertificate(t *testing.T) {
 		if err != nil {
 			return nil, err
 		}
+
 		return []*Certificate2{cert}, nil
 	}
 
@@ -274,6 +284,7 @@ func TestManager2_HasCerts(t *testing.T) {
 		if err != nil {
 			return nil, err
 		}
+
 		return []*Certificate2{cert}, nil
 	}
 

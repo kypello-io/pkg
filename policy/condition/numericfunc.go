@@ -112,6 +112,7 @@ func valueToInt(n string, values ValueSet) (v int, err error) {
 			if err != nil {
 				return -1, err
 			}
+
 			if v, err = strconv.Atoi(s); err != nil {
 				return -1, fmt.Errorf("value %s must be a int for %s condition: %w", vs, n, err)
 			}

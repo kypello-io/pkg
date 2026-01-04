@@ -154,6 +154,7 @@ func TestActionSetUnmarshalJSON(t *testing.T) {
 		}
 
 		err = result.Validate()
+
 		expectErr = (err != nil)
 		if expectErr != testCase.expectValidateErr {
 			t.Fatalf("case %v: error during validation: expected: %v, got: %v\n", i+1, testCase.expectValidateErr, expectErr)

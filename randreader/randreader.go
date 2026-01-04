@@ -40,5 +40,6 @@ func NewSource(src rand.Source) io.Reader {
 	if err != nil {
 		panic(err)
 	}
+
 	return r
 }

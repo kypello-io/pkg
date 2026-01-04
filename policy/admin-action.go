@@ -375,6 +375,7 @@ func (action AdminAction) IsValid() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -388,6 +389,7 @@ func createAdminActionConditionKeyMap() map[Action]condition.KeySet {
 	for act := range SupportedAdminActions {
 		adminActionConditionKeyMap[Action(act)] = condition.NewKeySet(allSupportedAdminKeys...)
 	}
+
 	return adminActionConditionKeyMap
 }
 

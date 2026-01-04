@@ -83,6 +83,7 @@ type Server struct {
 func (s *Server) ShutDown() (err error) {
 	close(s.quit)
 	err = s.listener.Close()
+
 	return err
 }
 
@@ -117,12 +118,15 @@ func NewServer(options *Options) (sftpServer *Server, err error) {
 	if options.HandleSFTPSession == nil {
 		return nil, ErrMissingConnectionHandlerFunction
 	}
+
 	if options.SSHConfig == nil {
 		return nil, ErrMissingSSHConfig
 	}
+
 	if options.Logger == nil {
 		return nil, ErrMissingLoggerInterface
 	}
+
 	if options.Port < 1 || options.Port > 65535 {
 		return nil, ErrInvalidPort
 	}
@@ -158,6 +162,7 @@ func NewServer(options *Options) (sftpServer *Server, err error) {
 	sftpServer.handleSFTPSession = options.HandleSFTPSession
 	sftpServer.logger = options.Logger
 	sftpServer.quit = make(chan struct{})
+
 	return sftpServer, err
 }
 
@@ -174,8 +179,10 @@ func (s *Server) Listen() (err error) {
 			if conn != nil {
 				conn.Close()
 			}
+
 			continue
 		}
+
 		if err != nil {
 			select {
 			case <-s.quit:
@@ -195,8 +202,10 @@ func (s *Server) Listen() (err error) {
 					AcceptNetworkError,
 					fmt.Errorf("error accepting connections: %w", err),
 				)
+
 				continue
 			}
+
 			return err
 		}
 
@@ -207,6 +216,7 @@ func (s *Server) Listen() (err error) {
 func (s *Server) handleConnection(conn net.Conn) {
 	// Before use, a handshake must be performed on the incoming net.Conn.
 	conn.SetDeadline(time.Now().Add(s.sshHandshakeDeadline))
+
 	sconn, chans, reqs, err := ssh.NewServerConn(conn, &s.sshConfig)
 	if err != nil {
 		s.logger.Error(SSHKeyExchangeError, err)
@@ -229,6 +239,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 				ChannelNotSession,
 				"Channel type is not a session",
 			)
+
 			continue
 		}
 
@@ -238,6 +249,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 				AcceptChannelError,
 				fmt.Errorf("unable to accept request from channel: %w", err),
 			)
+
 			continue
 		}
 
@@ -247,9 +259,11 @@ func (s *Server) handleConnection(conn net.Conn) {
 		go func(in <-chan *ssh.Request) {
 			for req := range in {
 				ok := false
+
 				if req.Type == "subsystem" {
 					if len(req.Payload) > 4 && string(req.Payload[4:]) == "sftp" {
 						ok = true
+
 						go s.handleSFTPSession(channel, sconn)
 					}
 				}

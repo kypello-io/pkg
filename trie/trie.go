@@ -53,6 +53,7 @@ func (t *Trie) Insert(key string) {
 		if curNode.child[v] == nil {
 			curNode.child[v] = newNode()
 		}
+
 		curNode = curNode.child[v]
 	}
 
@@ -71,6 +72,7 @@ func (t *Trie) PrefixMatch(key string) []string {
 	if node == nil {
 		return nil
 	}
+
 	return t.Walk(node)
 }
 
@@ -79,24 +81,29 @@ func (t *Trie) Walk(node *Node) (ret []string) {
 	if node.exists {
 		ret = append(ret, node.value)
 	}
+
 	for _, v := range node.child {
 		ret = append(ret, t.Walk(v)...)
 	}
+
 	return ret
 }
 
 // find nodes corresponding to key.
 func (t *Trie) findNode(key string) (node *Node, index int) {
 	curNode := t.root
+
 	f := false
 	for k, v := range key {
 		if f {
 			index = k
 			f = false
 		}
+
 		if curNode.child[v] == nil {
 			return nil, index
 		}
+
 		curNode = curNode.child[v]
 		if curNode.exists {
 			f = true

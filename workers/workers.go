@@ -40,6 +40,7 @@ func New(n int) (*Workers, error) {
 	for range n {
 		queue <- struct{}{}
 	}
+
 	return &Workers{
 		queue: queue,
 	}, nil
@@ -54,6 +55,7 @@ func (jt *Workers) Take() {
 // Give is how a job (goroutine) can give back its turn once done.
 func (jt *Workers) Give() {
 	jt.queue <- struct{}{}
+
 	jt.wg.Done()
 }
 

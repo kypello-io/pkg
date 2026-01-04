@@ -32,6 +32,7 @@ func (s *MySuite) SetUpSuite(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	s.root = root
 }
 
@@ -44,6 +45,7 @@ func (s *MySuite) TearDownSuite(t *testing.T) {
 
 func TestSafeAbort(t *testing.T) {
 	s := &MySuite{}
+
 	s.SetUpSuite(t)
 	defer s.TearDownSuite(t)
 
@@ -56,10 +58,12 @@ func TestSafeAbort(t *testing.T) {
 	if !os.IsNotExist(err) {
 		t.Fatal(err)
 	}
+
 	err = f.Abort()
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = f.Close()
 	if err != nil {
 		if err.Error() != "close on aborted file" {
@@ -70,6 +74,7 @@ func TestSafeAbort(t *testing.T) {
 
 func TestSafeClose(t *testing.T) {
 	s := &MySuite{}
+
 	s.SetUpSuite(t)
 	defer s.TearDownSuite(t)
 
@@ -108,6 +113,7 @@ func TestSafeClose(t *testing.T) {
 
 func TestSafe(t *testing.T) {
 	s := &MySuite{}
+
 	s.SetUpSuite(t)
 	defer s.TearDownSuite(t)
 
@@ -153,6 +159,7 @@ func TestSafe(t *testing.T) {
 
 func TestSafeAbortWrite(t *testing.T) {
 	s := &MySuite{}
+
 	s.SetUpSuite(t)
 	defer s.TearDownSuite(t)
 

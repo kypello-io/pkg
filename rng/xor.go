@@ -27,6 +27,7 @@ func xor32Go(in, out []byte, v *[4]uint64) {
 			if len(in)-i < 32 {
 				panic("short input")
 			}
+
 			store64(out, i, v[0]^load64(in, i))
 			store64(out, i+8, v[1]^load64(in, i+8))
 			store64(out, i+16, v[2]^load64(in, i+16))
@@ -40,6 +41,7 @@ func xor32Go(in, out []byte, v *[4]uint64) {
 			v1 := v[1] ^ load64(inS, 8)
 			v2 := v[2] ^ load64(inS, 16)
 			v3 := v[3] ^ load64(inS, 24)
+
 			store64(out, 0, v0)
 			store64(out, 8, v1)
 			store64(out, 16, v2)

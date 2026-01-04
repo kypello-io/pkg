@@ -41,5 +41,6 @@ func (e Error) Error() string {
 	if e.err == nil {
 		return "policy: cause <nil>"
 	}
+
 	return e.err.Error()
 }

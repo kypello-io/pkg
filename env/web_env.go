@@ -58,6 +58,7 @@ func fetchHTTPConstituentParts(u *url.URL) (username, password, envURL string, e
 		if len(parts) != 5 {
 			return "", "", "", errors.New("invalid arguments")
 		}
+
 		username = parts[2]
 		password = parts[3]
 		envURL = fmt.Sprintf("%s%s", parts[1], parts[4])
@@ -67,6 +68,7 @@ func fetchHTTPConstituentParts(u *url.URL) (username, password, envURL string, e
 		username = u.User.Username()
 		password, _ = u.User.Password()
 	}
+
 	return username, password, envURL, nil
 }
 
@@ -104,17 +106,21 @@ func getEnvValueFromHTTP(urlStr, envKey string) (string, string, string, error) 
 	if err != nil {
 		return "", "", "", err
 	}
+
 	skey.Set(jwk.AlgorithmKey, jwa.HS512)
 	skey.Set(jwk.KeyIDKey, "minio")
 
 	token := jwt.New()
 	t := time.Now().Add(15 * time.Minute)
+
 	if err = token.Set(jwt.IssuerKey, username); err != nil {
 		return "", "", "", err
 	}
+
 	if err = token.Set(jwt.SubjectKey, envKey); err != nil {
 		return "", "", "", err
 	}
+
 	if err = token.Set(jwt.ExpirationKey, t.Unix()); err != nil {
 		return "", "", "", err
 	}
@@ -123,6 +129,7 @@ func getEnvValueFromHTTP(urlStr, envKey string) (string, string, string, error) 
 	if err != nil {
 		return "", "", "", err
 	}
+
 	req.Header.Set("Authorization", "Bearer "+string(signed))
 
 	clnt := &http.Client{
@@ -181,6 +188,7 @@ func LookupEnv(key string) (string, string, string, error) {
 		// If env value starts with `env*://`
 		// continue to parse and fetch from remote
 		var err error
+
 		v, user, pwd, err := getEnvValueFromHTTP(strings.TrimSpace(v), key)
 		if err != nil {
 			env, eok := os.LookupEnv("_" + key)
@@ -188,6 +196,7 @@ func LookupEnv(key string) (string, string, string, error) {
 				// fallback to cached value if-any.
 				return env, user, pwd, nil
 			}
+
 			return env, user, pwd, err
 		}
 		// Set the ENV value to _env value,
@@ -195,7 +204,9 @@ func LookupEnv(key string) (string, string, string, error) {
 		// server restarts when webhook server
 		// is down.
 		os.Setenv("_"+key, v)
+
 		return v, user, pwd, nil
 	}
+
 	return v, "", "", nil
 }

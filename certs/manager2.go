@@ -83,16 +83,19 @@ func NewManager2(loadCerts func() ([]*Certificate2, error)) (*Manager2, error) {
 				certUpdateCh <- updatedCert
 			})
 		}
+
 		certUpdateCh <- nil
 	}
 
 	signalCh := make(chan os.Signal, 1)
 	signal.Notify(signalCh, syscall.SIGHUP)
+
 	go func() {
 		defer signal.Stop(signalCh)
 		defer func() {
 			mgr.subscriptionLock.Lock()
 			defer mgr.subscriptionLock.Unlock()
+
 			for _, sub := range mgr.subscriptions {
 				close(sub)
 			}
@@ -110,6 +113,7 @@ func NewManager2(loadCerts func() ([]*Certificate2, error)) (*Manager2, error) {
 				// use a copy to prevent deadlocks when sending to the channel
 				subs := append([]chan *Certificate2{}, mgr.subscriptions...)
 				mgr.subscriptionLock.Unlock()
+
 				for _, sub := range subs {
 					select {
 					case sub <- cert:
@@ -150,23 +154,31 @@ func (m *Manager2) Close() {
 // internal certificate reloading goroutine.
 func (m *Manager2) Subscribe(callback func(*Certificate2)) func() {
 	ch := make(chan *Certificate2, 1)
+
 	m.subscriptionLock.Lock()
 	defer m.subscriptionLock.Unlock()
+
 	m.subscriptions = append(m.subscriptions, ch)
+
 	go func() {
 		for cert := range ch {
 			callback(cert)
 		}
 	}()
+
 	var once sync.Once
+
 	return func() {
 		once.Do(func() {
 			m.subscriptionLock.Lock()
 			defer m.subscriptionLock.Unlock()
+
 			for i, sub := range m.subscriptions {
 				if sub == ch {
 					m.subscriptions = append(m.subscriptions[:i], m.subscriptions[i+1:]...)
+
 					close(ch)
+
 					break
 				}
 			}
@@ -291,6 +303,7 @@ func (m *Manager2) GetAllCertificates() []*x509.Certificate {
 	}
 
 	certs := m.certs.Load()
+
 	result := make([]*x509.Certificate, 0, len(*certs))
 	for i := range *certs {
 		c := *((*certs)[i].Load())
@@ -299,9 +312,11 @@ func (m *Manager2) GetAllCertificates() []*x509.Certificate {
 			if err != nil {
 				continue
 			}
+
 			result = append(result, cert)
 		}
 	}
+
 	return result
 }
 
@@ -312,5 +327,6 @@ func (m *Manager2) HasCerts() bool {
 	}
 
 	certs := m.certs.Load()
+
 	return len(*certs) > 0
 }

@@ -726,6 +726,7 @@ func BenchmarkMatchSimple(b *testing.B) {
 			_ = strings.HasPrefix(testCases[0].text, "a")
 		}
 	})
+
 	for i, testCase := range testCases {
 		b.Run(fmt.Sprintf("bench-%d", i), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {

@@ -32,48 +32,62 @@ func updateCerts(crt, key string) {
 	// ignore error handling
 	crtSource, _ := os.Open(crt)
 	defer crtSource.Close()
+
 	crtDest, _ := os.Create("public.crt")
 	defer crtDest.Close()
+
 	io.Copy(crtDest, crtSource)
 
 	keySource, _ := os.Open(key)
 	defer keySource.Close()
+
 	keyDest, _ := os.Create("private.key")
 	defer keyDest.Close()
+
 	io.Copy(keyDest, keySource)
 }
 
 func TestNewManager(t *testing.T) {
 	ctx := t.Context()
+
 	c, err := certs.NewManager(ctx, "public.crt", "private.key", tls.LoadX509KeyPair)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	hello := &tls.ClientHelloInfo{}
+
 	gcert, err := c.GetCertificate(hello)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	expectedCert, err := tls.LoadX509KeyPair("public.crt", "private.key")
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if !reflect.DeepEqual(gcert.Certificate, expectedCert.Certificate) {
 		t.Error("certificate doesn't match expected certificate")
 	}
+
 	_, err = certs.NewManager(ctx, "public.crt", "new-private.key", tls.LoadX509KeyPair)
 	if err == nil {
 		t.Fatal("Expected to fail but got success")
 	}
 
 	allCerts := c.GetAllCertificates()
+
 	var found bool
+
 	for _, cert := range allCerts {
 		if cert.Issuer.String() != "CN=minio.io,OU=Engineering,O=Minio,L=Redwood City,ST=CA,C=US" {
 			t.Error("Unexpected cert issuer found")
 		}
+
 		found = true
 	}
+
 	if !found {
 		t.Error("atleast one public cert is expected")
 	}
@@ -86,6 +100,7 @@ func TestNewManager(t *testing.T) {
 
 func TestValidPairAfterWrite(t *testing.T) {
 	ctx := t.Context()
+
 	expectedCert, err := tls.LoadX509KeyPair("new-public.crt", "new-private.key")
 	if err != nil {
 		t.Fatal(err)
@@ -103,6 +118,7 @@ func TestValidPairAfterWrite(t *testing.T) {
 	time.Sleep(200 * time.Millisecond)
 
 	hello := &tls.ClientHelloInfo{}
+
 	gcert, err := c.GetCertificate(hello)
 	if err != nil {
 		t.Fatal(err)
@@ -113,6 +129,7 @@ func TestValidPairAfterWrite(t *testing.T) {
 	}
 
 	rInfo := &tls.CertificateRequestInfo{}
+
 	gcert, err = c.GetClientCertificate(rInfo)
 	if err != nil {
 		t.Fatal(err)
@@ -125,27 +142,33 @@ func TestValidPairAfterWrite(t *testing.T) {
 
 func TestNonMatchingCertificate(t *testing.T) {
 	ctx := t.Context()
+
 	c, err := certs.NewManager(ctx, "public.crt", "private.key", tls.LoadX509KeyPair)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	err = c.AddCertificate("server.crt", "server.key")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	hello := &tls.ClientHelloInfo{ServerName: "non-matching"}
+
 	gcert, err := c.GetCertificate(hello)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	expectedCert, err := tls.LoadX509KeyPair("public.crt", "private.key")
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if !reflect.DeepEqual(gcert.Certificate, expectedCert.Certificate) {
 		t.Error("certificate doesn't match expected certificate")
 	}
+
 	_, err = certs.NewManager(ctx, "public.crt", "new-private.key", tls.LoadX509KeyPair)
 	if err == nil {
 		t.Fatal("Expected to fail but got success")

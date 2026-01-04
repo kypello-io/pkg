@@ -30,6 +30,7 @@ func MatchSimple(pattern, name string) bool {
 	if pattern == "" {
 		return name == pattern
 	}
+
 	if pattern == "*" {
 		return true
 	}
@@ -45,6 +46,7 @@ func Match(pattern, name string) (matched bool) {
 	if pattern == "" {
 		return name == pattern
 	}
+
 	if pattern == "*" {
 		return true
 	}
@@ -73,9 +75,11 @@ func deepMatchRune(str, pattern string, simple bool) bool {
 				deepMatchRune(str, pattern[1:], simple) || // Matches next part of pattern
 				(len(str) > 0 && deepMatchRune(str[1:], pattern, simple)) // Continue searching forward
 		}
+
 		str = str[1:]
 		pattern = pattern[1:]
 	}
+
 	return len(str) == 0 && len(pattern) == 0
 }
 
@@ -98,12 +102,15 @@ func MatchAsPatternPrefix(pattern, text string) bool {
 		if pattern[i] == '*' {
 			return true
 		}
+
 		if pattern[i] == '?' {
 			continue
 		}
+
 		if pattern[i] != text[i] {
 			return false
 		}
 	}
+
 	return len(text) <= len(pattern)
 }

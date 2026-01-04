@@ -58,18 +58,23 @@ func TestGetPoliciesFromClaims(t *testing.T) {
     "  readonly",
     ""
   ]}`
+
 	m := make(map[string]any)
 	if err := json.Unmarshal([]byte(attributesArray), &m); err != nil {
 		t.Fatal(err)
 	}
+
 	expectedSet := set.CreateStringSet("readwrite", "readonly")
+
 	gotSet, ok := GetPoliciesFromClaims(m, "policy")
 	if !ok {
 		t.Fatal("no policy claim was found")
 	}
+
 	if gotSet.IsEmpty() {
 		t.Fatal("no policies were found in policy claim")
 	}
+
 	if !gotSet.Equals(expectedSet) {
 		t.Fatalf("Expected %v got %v", expectedSet, gotSet)
 	}
@@ -97,6 +102,7 @@ func TestAdminPolicyResource(t *testing.T) {
   }
  ]
 }`
+
 	p, err := ParseConfig(strings.NewReader(test))
 	if err != nil {
 		t.Fatal(err)
@@ -140,6 +146,7 @@ func TestPolicyIsAllowedActions(t *testing.T) {
        }
     ]
 }`
+
 	p, err := ParseConfig(strings.NewReader(policy1))
 	if err != nil {
 		t.Fatal(err)
@@ -180,6 +187,7 @@ func TestPolicyIsAllowedCornerCase1(t *testing.T) {
        }
     ]
 }`
+
 	policy1, err := ParseConfig(strings.NewReader(policy1Str))
 	if err != nil {
 		t.Fatal(err)
@@ -241,6 +249,7 @@ func TestPolicyIsAllowed(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func1, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet,
@@ -494,6 +503,7 @@ func TestPolicyIsValid(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewNullFunc(
 		condition.S3XAmzServerSideEncryption.ToKey(),
 		false,
@@ -865,6 +875,7 @@ func TestPolicyParseConfig(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
+
 			if got := ip.IsAllowed(test.args); got != test.allowed {
 				t.Errorf("Expected %t, got %t", test.allowed, got)
 			}
@@ -920,10 +931,12 @@ func TestPolicyUnmarshalJSONAndValidate(t *testing.T) {
         }
     ]
 }`)
+
 	_, IPNet1, err := net.ParseCIDR("192.168.1.0/24")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func1, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet1,
@@ -1089,10 +1102,12 @@ func TestPolicyUnmarshalJSONAndValidate(t *testing.T) {
         }
     ]
 }`)
+
 	_, IPNet2, err := net.ParseCIDR("192.168.2.0/24")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewIPAddressFunc(
 		condition.AWSSourceIP.ToKey(),
 		IPNet2,
@@ -1447,6 +1462,7 @@ func TestPolicyUnmarshalJSONAndValidate(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var result Policy
+
 		err := json.Unmarshal(testCase.data, &result)
 		expectErr := (err != nil)
 
@@ -1463,6 +1479,7 @@ func TestPolicyUnmarshalJSONAndValidate(t *testing.T) {
 
 		if !testCase.expectUnmarshalErr && !testCase.expectValidationErr {
 			exp1, _ := json.Marshal(result)
+
 			exp2, _ := json.Marshal(testCase.expectedResult)
 			if !bytes.Equal(exp1, exp2) {
 				t.Errorf("case %v: result: expected: %v, got: %v", i+1, testCase.expectedResult, result)
@@ -1492,6 +1509,7 @@ func TestPolicyValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	func2, err := condition.NewNullFunc(
 		condition.S3XAmzServerSideEncryption.ToKey(),
 		false,
@@ -1499,6 +1517,7 @@ func TestPolicyValidate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
 	}
+
 	case2Policy := Policy{
 		ID:      "MyPolicyForMyBucket1",
 		Version: DefaultVersion,
@@ -1992,8 +2011,10 @@ func TestJWTScopePolicyIntegration(t *testing.T) {
 				if err == nil {
 					t.Errorf("Expected ParseConfig error, got nil")
 				}
+
 				return
 			}
+
 			if err != nil {
 				t.Fatalf("Unexpected ParseConfig error: %v", err)
 			}
@@ -2071,6 +2092,7 @@ func TestDropDuplicateStatements(t *testing.T) {
 				Statements: tt.input,
 			}
 			policy.dropDuplicateStatements()
+
 			if !reflect.DeepEqual(policy.Statements, tt.expected) {
 				t.Errorf("got %v, want %v", policy.Statements, tt.expected)
 			}
@@ -2161,19 +2183,23 @@ func TestPolicyParseS3TablesExamples(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unexpected parse error: %v", err)
 			}
+
 			if len(p.Statements) != 1 {
 				t.Fatalf("expected 1 statement, got %d", len(p.Statements))
 			}
+
 			st := p.Statements[0]
 
 			actions := st.Actions.ToSlice()
 			if len(actions) != len(tt.expectedActions) {
 				t.Fatalf("expected %d actions, got %d", len(tt.expectedActions), len(actions))
 			}
+
 			actionSet := make(map[Action]struct{}, len(actions))
 			for _, a := range actions {
 				actionSet[a] = struct{}{}
 			}
+
 			for _, want := range tt.expectedActions {
 				if _, ok := actionSet[want]; !ok {
 					t.Fatalf("expected action %v missing", want)
@@ -2184,10 +2210,12 @@ func TestPolicyParseS3TablesExamples(t *testing.T) {
 			if len(resources) != len(tt.expectedResources) {
 				t.Fatalf("expected %d resources, got %d", len(tt.expectedResources), len(resources))
 			}
+
 			resourceSet := make(map[string]struct{}, len(resources))
 			for _, r := range resources {
 				resourceSet[r.String()] = struct{}{}
 			}
+
 			for _, want := range tt.expectedResources {
 				if _, ok := resourceSet[want]; !ok {
 					t.Fatalf("expected resource %q missing", want)
@@ -2199,6 +2227,7 @@ func TestPolicyParseS3TablesExamples(t *testing.T) {
 				if len(keys) != len(tt.expectedCondKeys) {
 					t.Fatalf("expected %d condition keys, got %d", len(tt.expectedCondKeys), len(keys))
 				}
+
 				for _, keyName := range tt.expectedCondKeys {
 					if !keys.Match(keyName.ToKey()) {
 						t.Fatalf("expected condition key %v", keyName)
@@ -2605,6 +2634,7 @@ func TestPolicyParseS3VectorsExamples(t *testing.T) {
 			if len(stmt.Actions) != len(tt.expectedActions) {
 				t.Errorf("expected %d actions, got %d", len(tt.expectedActions), len(stmt.Actions))
 			}
+
 			for _, expectedAction := range tt.expectedActions {
 				if !stmt.Actions.Contains(expectedAction) {
 					t.Errorf("expected action %v not found in statement", expectedAction)
@@ -2615,14 +2645,17 @@ func TestPolicyParseS3VectorsExamples(t *testing.T) {
 			if len(stmt.Resources) != len(tt.expectedResources) {
 				t.Errorf("expected %d resources, got %d", len(tt.expectedResources), len(stmt.Resources))
 			}
+
 			for _, expectedResource := range tt.expectedResources {
 				found := false
+
 				for r := range stmt.Resources {
 					if r.String() == expectedResource {
 						found = true
 						break
 					}
 				}
+
 				if !found {
 					t.Errorf("expected resource %v not found in statement", expectedResource)
 				}

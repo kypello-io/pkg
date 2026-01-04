@@ -44,6 +44,7 @@ func (key KeyName) Name() string {
 	if idx == -1 || !toTrim[string(key[:idx])] {
 		return string(key)
 	}
+
 	return string(key[idx+1:])
 }
 

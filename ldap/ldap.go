@@ -103,16 +103,19 @@ func (l *Config) connect(ldapAddr string) (ldapConn *ldap.Conn, err error) {
 
 	if ldapConn != nil {
 		ldapConn.SetTimeout(30 * time.Second) // Change default timeout to 30 seconds.
+
 		if l.ServerStartTLS {
 			// we need to fix up the ServerName in the TLS config to match the
 			// host name to which we are actually connecting - this may be
 			// different from the originally configured host name if this
 			// ldapAddr was derived from an SRV lookup
 			var host string
+
 			host, _, err = net.SplitHostPort(ldapAddr)
 			if err != nil {
 				return nil, err
 			}
+
 			tlsConfig := l.TLS.Clone()
 			tlsConfig.ServerName = host
 			err = ldapConn.StartTLS(tlsConfig)
@@ -129,6 +132,7 @@ func (l *Config) Connect() (ldapConn *ldap.Conn, err error) {
 	}
 
 	var srvService, srvProto, srvName string
+
 	switch l.SRVRecordName {
 	case "on":
 		srvName = l.ServerAddr
@@ -175,6 +179,7 @@ func (l *Config) Connect() (ldapConn *ldap.Conn, err error) {
 		if err == nil {
 			return ldapConn, nil
 		}
+
 		errs = append(errs, err)
 	}
 
@@ -183,7 +188,9 @@ func (l *Config) Connect() (ldapConn *ldap.Conn, err error) {
 	for i, e := range errs {
 		errMsgs = append(errMsgs, fmt.Sprintf("Connect err to %s:%d - %v", addrs[i].Target, addrs[i].Port, e))
 	}
+
 	err = fmt.Errorf("could not connect to any LDAP server: %s", strings.Join(errMsgs, "; "))
+
 	return nil, err
 }
 
@@ -195,12 +202,15 @@ func (l *Config) LookupBind(conn *ldap.Conn) error {
 	} else {
 		err = conn.Bind(l.LookupBindDN, l.LookupBindPassword)
 	}
+
 	if err != nil {
 		if ldap.IsErrorWithCode(err, 49) {
 			return fmt.Errorf("ldap lookup bind user invalid credentials error: %w", err)
 		}
+
 		return fmt.Errorf("ldap client: %w", err)
 	}
+
 	return nil
 }
 
@@ -246,7 +256,9 @@ func (l *Config) LookupUsername(conn *ldap.Conn, username string) (*DNSearchResu
 	}
 
 	filter := strings.ReplaceAll(l.UserDNSearchFilter, "%s", ldap.EscapeFilter(username))
+
 	var foundDistNames []DNSearchResult
+
 	for _, userSearchBase := range l.userDNSearchBaseDistNames {
 		searchRequest := ldap.NewSearchRequest(
 			userSearchBase.ServerDN,
@@ -268,6 +280,7 @@ func (l *Config) LookupUsername(conn *ldap.Conn, username string) (*DNSearchResu
 				return nil, fmt.Errorf("base DN (%s) for user DN search does not exist: %w",
 					searchRequest.BaseDN, err)
 			}
+
 			return nil, err
 		}
 
@@ -276,10 +289,12 @@ func (l *Config) LookupUsername(conn *ldap.Conn, username string) (*DNSearchResu
 			if err != nil {
 				return nil, err
 			}
+
 			attrs := make(map[string][]string, len(entry.Attributes))
 			for _, attr := range entry.Attributes {
 				attrs[attr.Name] = attr.Values
 			}
+
 			foundDistNames = append(foundDistNames, DNSearchResult{
 				NormDN:     normDN,
 				ActualDN:   entry.DN,
@@ -287,12 +302,15 @@ func (l *Config) LookupUsername(conn *ldap.Conn, username string) (*DNSearchResu
 			})
 		}
 	}
+
 	if len(foundDistNames) == 0 {
 		return nil, fmt.Errorf("user DN not found for: %s", username)
 	}
+
 	if len(foundDistNames) != 1 {
 		return nil, fmt.Errorf("multiple DNs for %s found - please fix the search filter", username)
 	}
+
 	return &foundDistNames[0], nil
 }
 
@@ -300,6 +318,7 @@ func (l *Config) LookupUsername(conn *ldap.Conn, username string) (*DNSearchResu
 func (l *Config) SearchForUserGroups(conn *ldap.Conn, username, bindDN string) ([]string, error) {
 	// User groups lookup.
 	var groups []string
+
 	if l.GroupSearchFilter != "" {
 		for _, groupSearchBase := range l.groupSearchBaseDistNames {
 			filter := strings.ReplaceAll(l.GroupSearchFilter, "%s", ldap.EscapeFilter(username))
@@ -313,6 +332,7 @@ func (l *Config) SearchForUserGroups(conn *ldap.Conn, username, bindDN string) (
 			)
 
 			var newGroups []string
+
 			newGroups, err := getGroups(conn, searchRequest)
 			if err != nil {
 				errRet := fmt.Errorf("error finding groups of %s: %w", bindDN, err)
@@ -328,6 +348,7 @@ func (l *Config) SearchForUserGroups(conn *ldap.Conn, username, bindDN string) (
 
 func getGroups(conn *ldap.Conn, sreq *ldap.SearchRequest) ([]string, error) {
 	var groups []string
+
 	sres, err := conn.Search(sreq)
 	if err != nil {
 		// For a search, if the base DN does not exist, we get a 32 error code.
@@ -336,8 +357,10 @@ func getGroups(conn *ldap.Conn, sreq *ldap.SearchRequest) ([]string, error) {
 			return nil, fmt.Errorf("base DN (%s) for group search does not exist: %w",
 				sreq.BaseDN, err)
 		}
+
 		return nil, fmt.Errorf("ldap client: %w", err)
 	}
+
 	for _, entry := range sres.Entries {
 		// We only queried one attribute,
 		// so we only look up the first one.
@@ -345,8 +368,10 @@ func getGroups(conn *ldap.Conn, sreq *ldap.SearchRequest) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		groups = append(groups, normalizedDN)
 	}
+
 	return groups, nil
 }
 
@@ -394,10 +419,12 @@ func LookupDN(conn *ldap.Conn, dn string, attrs []string) (*DNSearchResult, erro
 	if err != nil {
 		return nil, err
 	}
+
 	foundAttrs := make(map[string][]string, len(searchResult.Entries[0].Attributes))
 	for _, attr := range searchResult.Entries[0].Attributes {
 		foundAttrs[attr.Name] = attr.Values
 	}
+
 	return &DNSearchResult{
 		NormDN:     foundDistName,
 		ActualDN:   searchResult.Entries[0].DN,
@@ -412,5 +439,6 @@ func NormalizeDN(dn string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("DN (%s) parse failure: %w", dn, err)
 	}
+
 	return parsedDN.String(), nil
 }

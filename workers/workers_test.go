@@ -57,30 +57,40 @@ func TestWorkers(t *testing.T) {
 		},
 	}
 	testFn := func(t *testing.T, n, jobs int, mustFail bool) {
-		var mu sync.Mutex
-		var jobsDone int
+		var (
+			mu       sync.Mutex
+			jobsDone int
+		)
 		// Create workers for n concurrent workers
 		jt, err := New(n)
 		if err == nil && mustFail {
 			t.Fatal("Expected test to return error")
 		}
+
 		if err != nil && mustFail {
 			return
 		}
+
 		if err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
 
 		for range jobs {
 			jt.Take()
+
 			go func() { // Launch a worker after acquiring a token
 				defer jt.Give() // Give token back once done
+
 				mu.Lock()
+
 				jobsDone++
+
 				mu.Unlock()
 			}()
 		}
+
 		jt.Wait() // Wait for all workers to complete
+
 		if jobsDone != jobs {
 			t.Fatalf("Expected %d jobs to be done but only %d were done", jobs, jobsDone)
 		}
@@ -95,19 +105,28 @@ func TestWorkers(t *testing.T) {
 	// Verify that workers can be reused after full drain
 	t.Run("test-workers-reuse", func(t *testing.T) {
 		var mu sync.Mutex
+
 		jt, _ := New(5)
+
 		for range 3 {
 			var jobsDone int
+
 			for range 10 {
 				jt.Take()
+
 				go func() {
 					defer jt.Give()
+
 					mu.Lock()
+
 					jobsDone++
+
 					mu.Unlock()
 				}()
 			}
+
 			jt.Wait()
+
 			if jobsDone != 10 {
 				t.Fatalf("Expected %d jobs to be complete but only %d were", 10, jobsDone)
 			}
@@ -119,19 +138,28 @@ func benchmarkWorkers(b *testing.B, n, jobs int) {
 	b.ReportAllocs()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			var mu sync.Mutex
-			var jobsDone int
+			var (
+				mu       sync.Mutex
+				jobsDone int
+			)
+
 			jt, _ := New(n)
 			for range jobs {
 				jt.Take()
+
 				go func() {
 					defer jt.Give()
+
 					mu.Lock()
+
 					jobsDone++
+
 					mu.Unlock()
 				}()
 			}
+
 			jt.Wait()
+
 			if jobsDone != jobs {
 				b.Fail()
 			}

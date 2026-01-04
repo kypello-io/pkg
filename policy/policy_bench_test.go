@@ -87,6 +87,7 @@ func BenchmarkIsAllowed(b *testing.B) {
 					"Allow",
 					nil,
 				))
+
 				return stmts
 			}()),
 			args: args,
@@ -180,6 +181,7 @@ func BenchmarkMergePolicies(b *testing.B) {
 		b.Run(scenario.name, func(b *testing.B) {
 			// Prepare input policies
 			policies := make([]Policy, scenario.count)
+
 			uniqueCount := int(float64(scenario.count) * (1 - scenario.dupRatio))
 			for i := range uniqueCount {
 				policies[i] = setupPolicy([]Statement{
@@ -192,6 +194,7 @@ func BenchmarkMergePolicies(b *testing.B) {
 				})
 				policies[i].Version = "2012-10-17"
 			}
+
 			for i := uniqueCount; i < scenario.count; i++ {
 				policies[i] = setupPolicy([]Statement{
 					setupStatement(
@@ -206,6 +209,7 @@ func BenchmarkMergePolicies(b *testing.B) {
 
 			b.ResetTimer()
 			b.ReportAllocs()
+
 			for i := 0; i < b.N; i++ {
 				_ = MergePolicies(policies...)
 			}
@@ -234,6 +238,7 @@ func BenchmarkDropDuplicateStatements(b *testing.B) {
 
 			b.ResetTimer()
 			b.ReportAllocs()
+
 			for i := 0; i < b.N; i++ {
 				p := *policy
 				p.Statements = make([]Statement, len(policy.Statements))
@@ -250,6 +255,7 @@ func BenchmarkDropDuplicateStatements(b *testing.B) {
 
 			b.ResetTimer()
 			b.ReportAllocs()
+
 			for i := 0; i < b.N; i++ {
 				p := *policy
 				p.Statements = make([]Statement, len(policy.Statements))
@@ -261,11 +267,15 @@ func BenchmarkDropDuplicateStatements(b *testing.B) {
 }
 
 func BenchmarkDedupe(b *testing.B) {
-	var allActions []Action
-	var allAdminActions []Action
+	var (
+		allActions      []Action
+		allAdminActions []Action
+	)
+
 	for action := range SupportedActions {
 		allActions = append(allActions, action)
 	}
+
 	for action := range SupportedAdminActions {
 		allAdminActions = append(allAdminActions, Action(action))
 	}
@@ -359,12 +369,15 @@ func BenchmarkDedupe(b *testing.B) {
 				if merged.Version == "" {
 					merged.Version = p.Version
 				}
+
 				for _, st := range p.Statements {
 					merged.Statements = append(merged.Statements, st.Clone())
 				}
 			}
+
 			b.ResetTimer()
 			b.ReportAllocs()
+
 			for i := 0; i < b.N; i++ {
 				shallow := merged
 				shallow.dropDuplicateStatements()
@@ -425,10 +438,12 @@ func BenchmarkSerialEvalVsParEval(b *testing.B) {
 				policies[i] = getReadWritePolicyBucket(fmt.Sprintf("mybucket%d", i))
 			}
 		}
+
 		return policies
 	}
 	getRequestArgs := func(numArgs, numBuckets int) ([]Args, []bool) {
 		args := make([]Args, numArgs)
+
 		isAllowed := make([]bool, numArgs)
 		for i := range numArgs {
 			bucketIndex := i % numBuckets
@@ -441,13 +456,16 @@ func BenchmarkSerialEvalVsParEval(b *testing.B) {
 			// Even buckets get only read permission. Others get read-write.
 			isAllowed[i] = bucketIndex%2 == 1
 		}
+
 		return args, isAllowed
 	}
+
 	type tcase struct {
 		policies []Policy
 		args     []Args
 		expected []bool
 	}
+
 	genTestCases := func(numPolicies, numArgs int) tcase {
 		// numPolicies == numBuckets in these test cases.
 		policies := getBucketPolicies(numPolicies)
@@ -474,6 +492,7 @@ func BenchmarkSerialEvalVsParEval(b *testing.B) {
 		{numPolicies: 4096, numArgs: 10},
 		{numPolicies: 16384, numArgs: 10},
 	}
+
 	testCases := make([]tcase, 0, len(testCaseGeneratorCases))
 	for _, tc := range testCaseGeneratorCases {
 		testCases = append(testCases, genTestCases(tc.numPolicies, tc.numArgs))
@@ -500,6 +519,7 @@ func BenchmarkSerialEvalVsParEval(b *testing.B) {
 			b.Run("ParallelEval", func(b *testing.B) {
 				b.ResetTimer()
 				b.ReportAllocs()
+
 				for j := 0; j < b.N; j++ {
 					parallelEval(testCase.policies, testCase.args, testCase.expected)
 				}
@@ -508,6 +528,7 @@ func BenchmarkSerialEvalVsParEval(b *testing.B) {
 			b.Run("SerialEval", func(b *testing.B) {
 				b.ResetTimer()
 				b.ReportAllocs()
+
 				for j := 0; j < b.N; j++ {
 					serialEval(testCase.policies, testCase.args, testCase.expected)
 				}

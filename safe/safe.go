@@ -37,6 +37,7 @@ func (file *File) Write(b []byte) (n int, err error) {
 		err = errors.New("write on closed file")
 		return n, err
 	}
+
 	if file.aborted {
 		err = errors.New("write on aborted file")
 		return n, err
@@ -50,6 +51,7 @@ func (file *File) Write(b []byte) (n int, err error) {
 	}()
 
 	n, err = file.tmpfile.Write(b)
+
 	return n, err
 }
 
@@ -66,6 +68,7 @@ func (file *File) Close() (err error) {
 		err = errors.New("close on closed file")
 		return err
 	}
+
 	if file.aborted {
 		err = errors.New("close on aborted file")
 		return err
@@ -78,6 +81,7 @@ func (file *File) Close() (err error) {
 	err = os.Rename(file.tmpfile.Name(), file.name)
 
 	file.closed = true
+
 	return err
 }
 
@@ -87,6 +91,7 @@ func (file *File) Abort() (err error) {
 		err = errors.New("abort on closed file")
 		return err
 	}
+
 	if file.aborted {
 		err = errors.New("abort on aborted file")
 		return err
@@ -95,6 +100,7 @@ func (file *File) Abort() (err error) {
 	file.tmpfile.Close()
 	err = os.Remove(file.tmpfile.Name())
 	file.aborted = true
+
 	return err
 }
 
@@ -116,6 +122,7 @@ func CreateFile(name string) (*File, error) {
 	}
 
 	fname := filepath.Base(name)
+
 	tmpfile, err := os.CreateTemp(dname, "$tmpfile."+fname+".")
 	if err != nil {
 		return nil, err
@@ -125,6 +132,7 @@ func CreateFile(name string) (*File, error) {
 		if rerr := os.Remove(tmpfile.Name()); rerr != nil {
 			err = rerr
 		}
+
 		return nil, err
 	}
 

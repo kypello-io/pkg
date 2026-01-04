@@ -152,24 +152,30 @@ func TestFindListPatterns(t *testing.T) {
 		if testCase.pattern == "" {
 			continue
 		}
+
 		t.Run(fmt.Sprintf("Test%d", i), func(t *testing.T) {
 			argP, err := FindListPatterns(testCase.pattern)
 			if err != nil && testCase.success {
 				t.Errorf("Expected success but failed instead %s", err)
 			}
+
 			if err == nil && !testCase.success {
 				t.Errorf("Expected failure but passed instead")
 			}
+
 			if err == nil {
 				got := argP.Expand()
+
 				gotCount := len(got)
 				if gotCount != len(testCase.want) {
 					t.Errorf("Expected %d, got %d", len(testCase.want), gotCount)
 				}
+
 				repl := func(v any) string {
 					s := fmt.Sprintf("%#v", v)
 					// Clean up unneeded declarations
 					s = strings.ReplaceAll(s, `[]string{"`, `{"`)
+
 					return s
 				}
 				if !reflect.DeepEqual(got, testCase.want) {

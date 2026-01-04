@@ -131,6 +131,7 @@ func (actionSet ActionSet) Equals(sactionSet ActionSet) bool {
 // Intersection - returns actions available in both ActionSet.
 func (actionSet ActionSet) Intersection(sset ActionSet) ActionSet {
 	nset := NewActionSet()
+
 	for k := range actionSet {
 		if _, ok := sset[k]; ok {
 			nset.Add(k)
@@ -145,6 +146,7 @@ func (actionSet ActionSet) MarshalJSON() ([]byte, error) {
 	if len(actionSet) == 0 {
 		return nil, Errorf("empty actions not allowed")
 	}
+
 	return json.Marshal(actionSet.ToSlice())
 }
 
@@ -153,6 +155,7 @@ func (actionSet ActionSet) String() string {
 	for action := range actionSet {
 		actions = append(actions, string(action))
 	}
+
 	sort.Strings(actions)
 
 	return fmt.Sprintf("%v", actions)
@@ -163,6 +166,7 @@ func (actionSet ActionSet) ToSlice() []Action {
 	if len(actionSet) == 0 {
 		return nil
 	}
+
 	actions := make([]Action, 0, len(actionSet))
 	for action := range actionSet {
 		actions = append(actions, action)
@@ -176,6 +180,7 @@ func (actionSet ActionSet) ToAdminSlice() []AdminAction {
 	if len(actionSet) == 0 {
 		return nil
 	}
+
 	actions := make([]AdminAction, 0, len(actionSet))
 	for action := range actionSet {
 		actions = append(actions, AdminAction(action))
@@ -199,6 +204,7 @@ func (actionSet ActionSet) ToKMSSlice() (actions []KMSAction) {
 	for action := range actionSet {
 		actions = append(actions, KMSAction(action))
 	}
+
 	return actions
 }
 
@@ -207,6 +213,7 @@ func (actionSet ActionSet) ToTableSlice() []TableAction {
 	if len(actionSet) == 0 {
 		return nil
 	}
+
 	actions := make([]TableAction, 0, len(actionSet))
 	for action := range actionSet {
 		actions = append(actions, TableAction(action))
@@ -220,6 +227,7 @@ func (actionSet ActionSet) ToVectorsSlice() []VectorsAction {
 	if len(actionSet) == 0 {
 		return nil
 	}
+
 	actions := make([]VectorsAction, 0, len(actionSet))
 	for action := range actionSet {
 		actions = append(actions, VectorsAction(action))
@@ -250,6 +258,7 @@ func (actionSet ActionSet) ValidateAdmin() error {
 			return Errorf("unsupported admin action '%v'", action)
 		}
 	}
+
 	return nil
 }
 
@@ -260,6 +269,7 @@ func (actionSet ActionSet) ValidateSTS() error {
 			return Errorf("unsupported STS action '%v'", action)
 		}
 	}
+
 	return nil
 }
 
@@ -270,6 +280,7 @@ func (actionSet ActionSet) ValidateKMS() error {
 			return Errorf("unsupported KMS action '%v'", action)
 		}
 	}
+
 	return nil
 }
 
@@ -280,6 +291,7 @@ func (actionSet ActionSet) ValidateTable() error {
 			return Errorf("unsupported table action '%v'", action)
 		}
 	}
+
 	return nil
 }
 
@@ -290,6 +302,7 @@ func (actionSet ActionSet) ValidateVectors() error {
 			return Errorf("unsupported vectors action '%v'", action)
 		}
 	}
+
 	return nil
 }
 
@@ -300,6 +313,7 @@ func (actionSet ActionSet) Validate() error {
 			return Errorf("unsupported action '%v'", action)
 		}
 	}
+
 	return nil
 }
 

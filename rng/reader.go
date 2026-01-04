@@ -56,6 +56,7 @@ type ReaderOption func(options *readerOptions) error
 // NewReader returns a new Reader.
 func NewReader(opts ...ReaderOption) (*Reader, error) {
 	var r Reader
+
 	o := readerOptions{
 		size: -1,
 		rng:  rand.New(rand.NewSource(time.Now().UnixNano())),
@@ -66,7 +67,9 @@ func NewReader(opts ...ReaderOption) (*Reader, error) {
 			return nil, err
 		}
 	}
+
 	r.o = &o
+
 	return &r, r.init()
 }
 
@@ -76,19 +79,23 @@ func (r *Reader) init() error {
 		if err != nil {
 			return err
 		}
+
 		r.bufferSeeded = !r.o.fullReset
 	}
 	// Always reset subkeys.
 	var tmp [32]byte
+
 	_, err := io.ReadFull(r.o.rng, r.tmp[:])
 	if err != nil {
 		return err
 	}
+
 	r.subxor[0] = binary.LittleEndian.Uint64(tmp[:8])
 	r.subxor[1] = binary.LittleEndian.Uint64(tmp[8:16])
 	r.subxor[2] = binary.LittleEndian.Uint64(tmp[16:24])
 	r.subxor[3] = binary.LittleEndian.Uint64(tmp[24:32])
 	r.offset = 0
+
 	return nil
 }
 
@@ -100,40 +107,50 @@ func scrambleU64(v uint64) uint64 {
 	h64 ^= (h64 >> 35) + 8
 	h64 *= 0x9fb21c651e98df25
 	h64 ^= h64 >> 28
+
 	return h64
 }
 
 // Read satisfies the io.Reader interface.
 func (r *Reader) Read(p []byte) (n int, err error) {
 	var keys [4]uint64
+
 	const debug = false
+
 	isEOF := false
 	if r.o.size >= 0 && int64(len(p))+r.offset >= r.o.size {
 		isEOF = true
 		p = p[:r.o.size-r.offset]
 	}
+
 	for len(p) > 0 {
 		// Keys are the same for the block.
 		blockN := uint64(r.offset >> bufferLog)
+
 		scrambleBase := scrambleU64(blockN)
 		for i := range keys[:] {
 			// Generate 4 unique keys, and mix in offset again multiplied by a prime.
 			keys[i] = scrambleBase ^ r.subxor[i] ^ (blockN * 11400714785074694791)
 		}
+
 		if r.offset&31 != 0 || len(p) < 32 {
 			// Fill until we align
 			startAligned := (r.offset & bufferMask >> 5) << 5
 			xorSlice(r.buf[startAligned:], r.tmp[:], &keys)
 			startCopy := r.offset & 31
+
 			copied := copy(p, r.tmp[startCopy:])
 			if copied == 0 {
 				panic("no progress")
 			}
+
 			p = p[copied:]
 			n += copied
 			r.offset += int64(copied)
+
 			continue
 		}
+
 		if debug && r.offset&31 != 0 {
 			panic(r.offset & 31)
 		}
@@ -144,48 +161,61 @@ func (r *Reader) Read(p []byte) (n int, err error) {
 		n += lenAligned
 		p = p[lenAligned:]
 		r.offset += int64(lenAligned)
+
 		if len(p) < 32 && n > 0 && !isEOF {
 			// Do short read to keep alignment
 			break
 		}
 	}
+
 	if isEOF {
 		return n, io.EOF
 	}
+
 	return n, nil
 }
 
 // ReadAt satisfies the io.ReaderAt interface.
 func (r *Reader) ReadAt(p []byte, off int64) (n int, err error) {
 	var keys [4]uint64
+
 	const debug = false
+
 	isEOF := false
 	if r.o.size >= 0 && int64(len(p))+off >= r.o.size {
 		isEOF = true
 		p = p[:r.o.size-off]
 	}
+
 	for len(p) > 0 {
 		// Keys are the same for the block.
 		blockN := uint64(off >> bufferLog)
+
 		scrambleBase := scrambleU64(blockN)
 		for i := range keys[:] {
 			// Generate 4 unique keys, and mix in offset again multiplied by a prime.
 			keys[i] = scrambleBase ^ r.subxor[i] ^ (blockN * 11400714785074694791)
 		}
+
 		if off&31 != 0 || len(p) < 32 {
 			// Fill until we align
 			startAligned := (off & bufferMask >> 5) << 5
 			xorSlice(r.buf[startAligned:], r.tmp[:], &keys)
+
 			startCopy := off & 31
+
 			copied := copy(p, r.tmp[startCopy:])
 			if copied == 0 {
 				panic("no progress")
 			}
+
 			p = p[copied:]
 			n += copied
 			off += int64(copied)
+
 			continue
 		}
+
 		if debug && off&31 != 0 {
 			panic(off & 31)
 		}
@@ -197,9 +227,11 @@ func (r *Reader) ReadAt(p []byte, off int64) (n int, err error) {
 		p = p[lenAligned:]
 		off += int64(lenAligned)
 	}
+
 	if isEOF {
 		return n, io.EOF
 	}
+
 	return n, nil
 }
 
@@ -215,16 +247,20 @@ func (r *Reader) Seek(offset int64, whence int) (int64, error) {
 		if r.o.size < 0 {
 			return 0, errors.New("Seek: seeking to end of endless stream")
 		}
+
 		r.offset = r.o.size + offset
 	default:
 		return 0, errors.New("Seek: invalid whence")
 	}
+
 	if r.offset < 0 {
 		return 0, errors.New("Seek: negative offset")
 	}
+
 	if r.o.size >= 0 && r.offset > r.o.size {
 		return 0, io.ErrUnexpectedEOF
 	}
+
 	return r.offset, nil
 }
 

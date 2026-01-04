@@ -31,6 +31,7 @@ func getValuesByKey(m map[string][]string, key Key) []string {
 	if values, found := m[http.CanonicalHeaderKey(name)]; found {
 		return values
 	}
+
 	return m[name]
 }
 
@@ -48,6 +49,7 @@ func path2BucketAndObject(path string) (bucket, object string) {
 		bucket = pathComponents[0]
 		object = pathComponents[1]
 	}
+
 	return bucket, object
 }
 
@@ -167,6 +169,7 @@ func (v *Value) UnmarshalJSON(data []byte) error {
 func NewBoolValue(b bool) Value {
 	value := &Value{}
 	value.StoreBool(b)
+
 	return *value
 }
 
@@ -174,6 +177,7 @@ func NewBoolValue(b bool) Value {
 func NewIntValue(i int) Value {
 	value := &Value{}
 	value.StoreInt(i)
+
 	return *value
 }
 
@@ -181,5 +185,6 @@ func NewIntValue(i int) Value {
 func NewStringValue(s string) Value {
 	value := &Value{}
 	value.StoreString(s)
+
 	return *value
 }

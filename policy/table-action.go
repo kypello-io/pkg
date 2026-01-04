@@ -287,6 +287,7 @@ func createTableActionConditionKeyMap() map[Action]condition.KeySet {
 	withCommon := func(keys ...condition.Key) condition.KeySet {
 		merged := append([]condition.Key{}, commonKeys...)
 		merged = append(merged, keys...)
+
 		return condition.NewKeySet(merged...)
 	}
 

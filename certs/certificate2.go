@@ -55,10 +55,12 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	keyPEMBlock, err := os.ReadFile(keyFile)
 	if err != nil {
 		return nil, err
 	}
+
 	cert, err := tls.X509KeyPair(certPEMBlock, keyPEMBlock)
 	if err != nil {
 		return nil, err
@@ -72,8 +74,11 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 
 	var wg sync.WaitGroup
 
-	var c Certificate2
-	var once sync.Once
+	var (
+		c    Certificate2
+		once sync.Once
+	)
+
 	c.close = func() {
 		once.Do(func() {
 			notify.Stop(ch)
@@ -85,6 +90,7 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 			subs := c.subscriptions
 			c.subscriptions = nil
 			c.lock.Unlock()
+
 			for _, sub := range subs {
 				close(sub)
 			}
@@ -96,6 +102,7 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 		c.close()
 		return nil, err
 	}
+
 	if err := watchFile(ctx, keyFile, ch, &wg); err != nil {
 		c.close()
 		return nil, err
@@ -109,12 +116,15 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 				// This gracefully handles files being updated (not yet written fully).
 				continue
 			}
+
 			keyPEMBlock, err := os.ReadFile(keyFile)
 			if err != nil {
 				// Silently skip reload if key file cannot be read.
 				continue
 			}
+
 			newCertHash := sha256.Sum256(certPEMBlock)
+
 			newKeyHash := sha256.Sum256(keyPEMBlock)
 			if newCertHash == certHash && newKeyHash == keyHash {
 				continue
@@ -137,6 +147,7 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 				// use a copy to prevent deadlocks when sending to the channel
 				subs := append([]chan *Certificate2{}, c.subscriptions...)
 				c.lock.Unlock()
+
 				for _, sub := range subs {
 					select {
 					case sub <- &c:
@@ -148,6 +159,7 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 			}()
 		}
 	}()
+
 	return &c, nil
 }
 
@@ -167,23 +179,31 @@ func NewCertificate2(certFile, keyFile string) (*Certificate2, error) {
 // certificate reloading goroutine and to ensure prompt cleanup of resources.
 func (c *Certificate2) Subscribe(callback func(*Certificate2)) func() {
 	ch := make(chan *Certificate2, 1)
+
 	c.lock.Lock()
 	defer c.lock.Unlock()
+
 	c.subscriptions = append(c.subscriptions, ch)
+
 	go func() {
 		for range ch {
 			callback(c)
 		}
 	}()
+
 	var once sync.Once
+
 	return func() {
 		once.Do(func() {
 			c.lock.Lock()
 			defer c.lock.Unlock()
+
 			for i, sub := range c.subscriptions {
 				if sub == ch {
 					c.subscriptions = append(c.subscriptions[:i], c.subscriptions[i+1:]...)
+
 					close(ch)
+
 					break
 				}
 			}
@@ -201,6 +221,7 @@ func watchFile(ctx context.Context, path string, ch chan notify.EventInfo, wg *s
 	if err != nil {
 		return err
 	}
+
 	symLink := st.Mode()&os.ModeSymlink == os.ModeSymlink
 	if !symLink {
 		// Windows doesn't allow for watching file changes but instead allows
@@ -219,9 +240,9 @@ func watchFile(ctx context.Context, path string, ch chan notify.EventInfo, wg *s
 	}
 
 	wg.Go(func() {
-
 		t := time.NewTicker(symlinkReloadInterval)
 		defer t.Stop()
+
 		for {
 			select {
 			case <-ctx.Done():
@@ -231,6 +252,7 @@ func watchFile(ctx context.Context, path string, ch chan notify.EventInfo, wg *s
 			}
 		}
 	})
+
 	return nil
 }
 

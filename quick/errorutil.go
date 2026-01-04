@@ -32,7 +32,9 @@ const errorFmt = "%5d: %s  <<<<"
 // golang doesn't provide an easy way to report the location of the error
 func FormatJSONSyntaxError(data io.Reader, offset int64) (highlight string) {
 	var readLine bytes.Buffer
+
 	errLine := 1
+
 	var readBytes int64
 
 	bio := bufio.NewReader(data)
@@ -55,23 +57,29 @@ func FormatJSONSyntaxError(data io.Reader, offset int64) (highlight string) {
 		if err != nil {
 			break
 		}
+
 		readBytes++
 		if readBytes > offset {
 			break
 		}
+
 		if b == '\n' {
 			readLine.Reset()
+
 			errLine++
+
 			continue
 		} else if b == '\t' {
 			readLine.WriteByte(' ')
 		} else if b == '\r' {
 			break
 		}
+
 		readLine.WriteByte(b)
 	}
 
 	lineLen := readLine.Len()
+
 	idx := lineLen - termWidth + errorShift
 	if idx < 0 || idx > lineLen-1 {
 		idx = 0

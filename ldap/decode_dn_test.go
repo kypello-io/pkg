@@ -80,9 +80,11 @@ func TestDecodeDN(t *testing.T) {
 			if err != nil && testCase.err == nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
+
 			if testCase.err != nil && errors.Is(err, testCase.err) {
 				t.Fatalf("expected error `%v`, got `%v`", testCase.err, err)
 			}
+
 			if output != testCase.expected {
 				t.Fatalf("expected %q, got %q", testCase.expected, output)
 			}

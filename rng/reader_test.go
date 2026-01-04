@@ -31,11 +31,14 @@ func BenchmarkReader(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
+
 		b.Run(strconv.Itoa(size), func(b *testing.B) {
 			buf := make([]byte, size)
+
 			b.ReportAllocs()
 			b.SetBytes(int64(len(buf)))
 			b.ResetTimer()
+
 			for n := 0; n < b.N; n++ {
 				_, err := io.ReadFull(r, buf)
 				if err != nil {
@@ -52,13 +55,17 @@ func BenchmarkReaderReset(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
+
 		b.Run(strconv.Itoa(size), func(b *testing.B) {
 			buf := make([]byte, size)
+
 			b.ReportAllocs()
 			b.SetBytes(int64(len(buf)))
 			b.ResetTimer()
+
 			for n := 0; n < b.N; n++ {
 				r.Reset()
+
 				_, err := io.ReadFull(r, buf)
 				if err != nil {
 					b.Fatal(err)
@@ -74,16 +81,20 @@ func BenchmarkReaderReadAt(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
+
 		b.Run(strconv.Itoa(size), func(b *testing.B) {
 			buf := make([]byte, size)
+
 			b.ReportAllocs()
 			b.SetBytes(int64(len(buf)))
 			b.ResetTimer()
+
 			for n := 0; n < b.N; n++ {
 				nr, err := r.ReadAt(buf, int64(n*size))
 				if err != nil {
 					b.Fatal(err)
 				}
+
 				if nr != len(buf) {
 					b.Fatalf("expected %d bytes, got %d", len(buf), nr)
 				}
@@ -98,28 +109,36 @@ func TestReaderReadAt(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		buf := make([]byte, size)
 		bufAt := make([]byte, size)
 		rng := rand.New(rand.NewSource(0))
 		offset := 0
+
 		for range 1000 {
 			n := rng.Intn(size)
 			buf := buf[:n]
+
 			_, err := io.ReadFull(r, buf)
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			bufAt := bufAt[:n]
+
 			n2, err := r.ReadAt(bufAt, int64(offset))
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			if n != n2 {
 				t.Fatalf("expected %d bytes, got %d", n, n2)
 			}
+
 			if !bytes.Equal(bufAt, buf) {
 				t.Fatalf("\nexpected (%d) %x\ngot      (%d) %x", len(buf), buf, len(bufAt), bufAt)
 			}
+
 			offset += n
 		}
 	}
@@ -131,23 +150,29 @@ func TestReaderSeeker(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		buf := make([]byte, size)
 		bufAt := make([]byte, size)
+
 		rng := rand.New(rand.NewSource(0))
 		for range 1000 {
 			offset := rng.Int63()
+
 			_, err := r.Seek(offset, io.SeekStart)
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			_, err = io.ReadFull(r, buf)
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			_, err = r.ReadAt(bufAt, offset)
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			if !bytes.Equal(bufAt, buf) {
 				t.Fatalf("\nexpected (%d) %x\ngot      (%d) %x", len(buf), buf, len(bufAt), bufAt)
 			}
@@ -158,30 +183,39 @@ func TestReaderSeeker(t *testing.T) {
 func TestXor(t *testing.T) {
 	// Validate asm, if any, otherwise validate ourselves.
 	rng := rand.New(rand.NewSource(0))
+
 	for _, size := range []int{1000, 1024, 16384, 1 << 20} {
 		bufIn := make([]byte, size)
+
 		_, err := io.ReadFull(rng, bufIn)
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		bufOut := make([]byte, size)
 		bufOut2 := make([]byte, size)
+
 		var keys [4]uint64
 		for i := range keys {
 			keys[i] = rng.Uint64()
 		}
+
 		for range 1000 {
 			bSize := (rand.Intn(size) / 32) * 32
+
 			bufOut := bufOut[:bSize]
 			for i := range bufOut {
 				bufOut[i] = 0
 			}
+
 			bufOut2 := bufOut2[:bSize]
 			for i := range bufOut2 {
 				bufOut2[i] = 0
 			}
+
 			xorSlice(bufIn, bufOut, &keys)
 			xor32Go(bufIn, bufOut2, &keys)
+
 			if !bytes.Equal(bufOut, bufOut2) {
 				t.Fatalf("\nexpected %x\ngot      %x", bufOut, bufOut2)
 			}

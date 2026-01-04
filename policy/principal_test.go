@@ -126,6 +126,7 @@ func TestPrincipalUnmarshalJSON(t *testing.T) {
 
 	for i, testCase := range testCases {
 		var result Principal
+
 		err := json.Unmarshal(testCase.data, &result)
 		expectErr := (err != nil)
 

@@ -47,9 +47,11 @@ func WithNErrs(nerrs int) *Group {
 // returns the slice of errors from all function calls.
 func (g *Group) Wait() []error {
 	g.wg.Wait()
+
 	if g.cancel != nil {
 		g.cancel()
 	}
+
 	return g.errs
 }
 
@@ -57,13 +59,16 @@ func (g *Group) Wait() []error {
 // returns the first error returned.
 func (g *Group) WaitErr() error {
 	g.wg.Wait()
+
 	if g.cancel != nil {
 		g.cancel()
 	}
+
 	if g.firstErr >= 0 && len(g.errs) > int(g.firstErr) {
 		// len(g.errs) > int(g.firstErr) is for then used uninitialized.
 		return g.errs[g.firstErr]
 	}
+
 	return nil
 }
 
@@ -83,6 +88,7 @@ func (g *Group) WithConcurrency(n int) *Group {
 	for range n {
 		g.bucket <- struct{}{}
 	}
+
 	return g
 }
 
@@ -94,6 +100,7 @@ func (g *Group) WithCancelOnError(ctx context.Context) (context.Context, context
 	ctx, g.cancel = context.WithCancel(ctx)
 	g.ctxCancel = ctx.Done()
 	g.ctxErr = ctx.Err
+
 	return ctx, g.cancel
 }
 
@@ -115,14 +122,17 @@ func (g *Group) Go(f func() error, index int) {
 					atomic.CompareAndSwapInt64(&g.firstErr, -1, int64(index))
 					g.errs[index] = g.ctxErr()
 				}
+
 				return
 			}
 		}
+
 		if err := f(); err != nil {
 			if len(g.errs) > index {
 				atomic.CompareAndSwapInt64(&g.firstErr, -1, int64(index))
 				g.errs[index] = err
 			}
+
 			if g.cancel != nil {
 				g.cancel()
 			}

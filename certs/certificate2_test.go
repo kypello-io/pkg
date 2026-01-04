@@ -152,6 +152,7 @@ func TestCertificate2_AutoReloadWithRename(t *testing.T) {
 		if err := os.Rename(tmpCert2, tmpCert); err != nil {
 			t.Fatalf("Unable to rename %s to %s: %s", tmpCert2, tmpCert, err)
 		}
+
 		if err := os.Rename(tmpKey2, tmpKey); err != nil {
 			t.Fatalf("Unable to rename %s to %s: %s", tmpKey2, tmpKey, err)
 		}
@@ -251,17 +252,21 @@ func testCertificate2InvalidReloadIgnored(t *testing.T, symlink bool) {
 
 func copyFile(t *testing.T, src, dst string, symlink bool) {
 	t.Helper()
+
 	data, err := os.ReadFile(src)
 	if err != nil {
 		t.Fatalf("Failed to read source file %s: %v", src, err)
 	}
+
 	tmp := dst
 	if symlink {
 		tmp = dst + ".tmp"
 	}
+
 	if err := os.WriteFile(tmp, data, 0o600); err != nil {
 		t.Fatalf("Failed to write destination file %s: %v", dst, err)
 	}
+
 	if symlink {
 		if err := os.Symlink(tmp, dst); err != nil {
 			t.Fatalf("Failed to create symlink: %v", err)
@@ -271,13 +276,16 @@ func copyFile(t *testing.T, src, dst string, symlink bool) {
 
 func overwriteFile(t *testing.T, src, dst string, symlink bool) {
 	t.Helper()
+
 	data, err := os.ReadFile(src)
 	if err != nil {
 		t.Fatalf("Failed to read source file %s: %v", src, err)
 	}
+
 	if symlink {
 		dst = dst + ".tmp"
 	}
+
 	if err := os.WriteFile(dst, data, 0o600); err != nil {
 		t.Fatalf("Failed to write destination file %s: %v", dst, err)
 	}
@@ -285,10 +293,12 @@ func overwriteFile(t *testing.T, src, dst string, symlink bool) {
 
 func updateCertWithWait(t *testing.T, cert *Certificate2, symlink bool, update func()) {
 	done := make(chan struct{})
+
 	wait := time.Second
 	if symlink {
 		wait = wait + symlinkReloadInterval // can take up to symlinkReloadInterval to detect changes
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), wait)
 	defer cancel()
 
@@ -296,6 +306,7 @@ func updateCertWithWait(t *testing.T, cert *Certificate2, symlink bool, update f
 		if c != cert {
 			t.Error("Received certificate does not match subscribed certificate")
 		}
+
 		close(done)
 	})
 	defer unsub()
@@ -335,14 +346,17 @@ func TestCertificate2_ConcurrentSubscriptions(t *testing.T) {
 
 	// Subscribe multiple subscribers concurrently
 	const numSubscribers = 10
+
 	done := make([]chan struct{}, numSubscribers)
 	for i := range numSubscribers {
 		done[i] = make(chan struct{})
 		idx := i
+
 		unsub := cert.Subscribe(func(c *Certificate2) {
 			if c != cert {
 				t.Errorf("Subscriber %d: received certificate does not match", idx)
 			}
+
 			done[idx] <- struct{}{}
 		})
 		defer unsub()
@@ -384,11 +398,13 @@ func TestCertificate2_UnsubscribeDuringCallback(t *testing.T) {
 	defer cert.Close()
 
 	var unsub func()
+
 	callbackExecuted := make(chan struct{})
 
 	unsub = cert.Subscribe(func(_ *Certificate2) {
 		// Unsubscribe while callback is executing
 		unsub()
+
 		callbackExecuted <- struct{}{}
 	})
 

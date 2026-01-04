@@ -55,10 +55,12 @@ type Args struct {
 // - string array
 func GetValuesFromClaims(claims map[string]any, claimName string) (set.StringSet, bool) {
 	s := set.NewStringSet()
+
 	pname, ok := claims[claimName]
 	if !ok {
 		return s, false
 	}
+
 	pnames, ok := pname.([]any)
 	if !ok {
 		pnameStr, ok := pname.(string)
@@ -70,12 +72,16 @@ func GetValuesFromClaims(claims map[string]any, claimName string) (set.StringSet
 					// towards some user errors.
 					continue
 				}
+
 				s.Add(pname)
 			}
+
 			return s, true
 		}
+
 		return s, false
 	}
+
 	for _, pname := range pnames {
 		pnameStr, ok := pname.(string)
 		if ok {
@@ -86,10 +92,12 @@ func GetValuesFromClaims(claims map[string]any, claimName string) (set.StringSet
 					// towards some user errors.
 					continue
 				}
+
 				s.Add(pnameStr)
 			}
 		}
 	}
+
 	return s, true
 }
 
@@ -109,10 +117,12 @@ func (a Args) GetPolicies(policyClaimName string) (set.StringSet, bool) {
 // empty string.
 func (a Args) GetRoleArn() string {
 	s, ok := a.Claims["roleArn"]
+
 	roleArn, ok2 := s.(string)
 	if ok && ok2 {
 		return roleArn
 	}
+
 	return ""
 }
 
@@ -137,12 +147,14 @@ func (iamp Policy) MatchResource(resource string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
 // IsAllowedActions returns all supported actions for this policy.
 func (iamp Policy) IsAllowedActions(bucketName, objectName string, conditionValues map[string][]string) ActionSet {
 	actionSet := make(ActionSet)
+
 	for action := range SupportedActions {
 		if iamp.IsAllowed(Args{
 			BucketName:      bucketName,
@@ -153,6 +165,7 @@ func (iamp Policy) IsAllowedActions(bucketName, objectName string, conditionValu
 			actionSet.Add(action)
 		}
 	}
+
 	for action := range SupportedAdminActions {
 		admAction := Action(action)
 		if iamp.IsAllowed(Args{
@@ -167,6 +180,7 @@ func (iamp Policy) IsAllowedActions(bucketName, objectName string, conditionValu
 			actionSet.Add(admAction)
 		}
 	}
+
 	for action := range supportedKMSActions {
 		kmsAction := Action(action)
 		if iamp.IsAllowed(Args{
@@ -188,15 +202,18 @@ func (iamp Policy) IsAllowedActions(bucketName, objectName string, conditionValu
 // This is currently the fastest implementation for our basic benchmark.
 func IsAllowedSerial(policies []Policy, args Args) bool {
 	gotAllow := false
+
 	for _, policy := range policies {
 		res := policy.Decide(&args)
 		if res == DenyDecision {
 			return false
 		}
+
 		if res == AllowDecision {
 			gotAllow = true
 		}
 	}
+
 	return gotAllow
 }
 
@@ -229,15 +246,18 @@ func IsAllowedPar(policies []Policy, args Args) bool {
 	for i := range numJobs {
 		jobs <- i * numPoliciesPerWorker
 	}
+
 	close(jobs)
 
 	resultCh := make(chan Decision, len(policies))
 
 	var wg sync.WaitGroup
 	wg.Add(numWorkers)
+
 	for range numWorkers {
 		go func() {
 			defer wg.Done()
+
 			for i := range jobs {
 				select {
 				case <-ctx.Done():
@@ -247,6 +267,7 @@ func IsAllowedPar(policies []Policy, args Args) bool {
 
 				maxJ := min(i+numPoliciesPerWorker, len(policies))
 				res := NoDecision
+
 				for j := i; j < maxJ; j++ {
 					decision := policies[j].Decide(&args)
 					if decision == DenyDecision {
@@ -267,19 +288,23 @@ func IsAllowedPar(policies []Policy, args Args) bool {
 	}
 
 	gotAllow := false
+
 	for range numJobs {
 		res := <-resultCh
 		if res == DenyDecision {
 			cancel()
 			wg.Wait()
+
 			return false
 		}
+
 		if res == AllowDecision {
 			gotAllow = true
 		}
 	}
 
 	wg.Wait()
+
 	return gotAllow
 }
 
@@ -367,6 +392,7 @@ func (iamp Policy) isValid() error {
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -382,18 +408,22 @@ func MergePolicies(inputs ...Policy) (merged Policy) {
 	}
 
 	totalStmts := 0
+
 	for _, p := range inputs {
 		if merged.Version == "" {
 			merged.Version = p.Version
 		}
+
 		totalStmts += len(p.Statements)
 	}
+
 	merged.Statements = make([]Statement, 0, totalStmts)
 	found := make(map[[16]byte]struct{}, totalStmts)
 
 	// Apply a base seed
 	var baseSeed [8]byte
 	rand.Read(baseSeed[:])
+
 	var seed uint64
 	binary.LittleEndian.PutUint64(baseSeed[:], seed)
 
@@ -403,12 +433,15 @@ func MergePolicies(inputs ...Policy) (merged Policy) {
 			if _, ok := found[h]; ok {
 				continue
 			}
+
 			found[h] = struct{}{}
+
 			merged.Statements = append(merged.Statements, st)
 		}
 	}
 
 	merged.updateActionIndex()
+
 	return merged
 }
 
@@ -420,19 +453,24 @@ func (iamp *Policy) dropDuplicateStatementsMany() {
 	// Apply a base seed
 	var baseSeed [8]byte
 	rand.Read(baseSeed[:])
+
 	var seed uint64
 	binary.LittleEndian.PutUint64(baseSeed[:], seed)
+
 	writeAt := 0
+
 	for _, s := range iamp.Statements {
 		h := s.hash(seed)
 		if _, ok := found[h]; ok {
 			// duplicate, do not write.
 			continue
 		}
+
 		found[h] = struct{}{}
 		iamp.Statements[writeAt] = s
 		writeAt++
 	}
+
 	iamp.Statements = iamp.Statements[:writeAt]
 }
 
@@ -443,22 +481,27 @@ func (iamp *Policy) dropDuplicateStatementsOriginal() {
 		if _, ok := dups[i]; ok {
 			continue
 		}
+
 		for j := i + 1; j < len(iamp.Statements); j++ {
 			if !iamp.Statements[i].Equals(iamp.Statements[j]) {
 				continue
 			}
+
 			dups[j] = struct{}{}
 		}
 	}
 
 	var c int
+
 	for i := range iamp.Statements {
 		if _, ok := dups[i]; ok {
 			continue
 		}
+
 		iamp.Statements[c] = iamp.Statements[i]
 		c++
 	}
+
 	iamp.Statements = iamp.Statements[:c]
 }
 
@@ -476,6 +519,7 @@ func (iamp *Policy) dropDuplicateStatements() {
 func (iamp *Policy) UnmarshalJSON(data []byte) error {
 	// subtype to avoid recursive call to UnmarshalJSON()
 	type subPolicy Policy
+
 	var sp subPolicy
 	if err := json.Unmarshal(data, &sp); err != nil {
 		return err
@@ -485,6 +529,7 @@ func (iamp *Policy) UnmarshalJSON(data []byte) error {
 	p.dropDuplicateStatements()
 	p.updateActionIndex()
 	*iamp = p
+
 	return nil
 }
 
@@ -503,18 +548,21 @@ func (iamp *Policy) updateActionIndex() {
 			iamp.hasDeny = true
 			continue
 		}
+
 		for action := range stmt.Actions {
 			if wildcard.Has(string(action)) {
 				// Do not store any 'wildcard' actions
 				// as we cannot optimize such actions.
 				continue
 			}
+
 			if iamp.actionStatementIndex == nil {
 				// do not create action statement index
 				// if we do not have any statement or actions
 				// to save them for, simply avoids allocations
 				iamp.actionStatementIndex = make(map[Action][]int, len(iamp.Statements))
 			}
+
 			iamp.actionStatementIndex[action] = append(iamp.actionStatementIndex[action], i)
 		}
 	}
@@ -526,6 +574,7 @@ func ParseConfig(reader io.Reader) (*Policy, error) {
 
 	decoder := json.NewDecoder(reader)
 	decoder.DisallowUnknownFields()
+
 	if err := decoder.Decode(&iamp); err != nil {
 		return nil, Errorf("%w", err)
 	}
@@ -538,13 +587,16 @@ func (iamp *Policy) Equals(p Policy) bool {
 	if iamp.ID != p.ID || iamp.Version != p.Version {
 		return false
 	}
+
 	if len(iamp.Statements) != len(p.Statements) {
 		return false
 	}
+
 	for i, st := range iamp.Statements {
 		if !p.Statements[i].Equals(st) {
 			return false
 		}
 	}
+
 	return true
 }

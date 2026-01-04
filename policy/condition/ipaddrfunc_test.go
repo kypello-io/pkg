@@ -211,6 +211,7 @@ func TestIPAddrFuncClone(t *testing.T) {
 		result := testCase.f.clone()
 
 		exp1, _ := json.Marshal(result)
+
 		exp2, _ := json.Marshal(testCase.expectedResult)
 		if !bytes.Equal(exp1, exp2) {
 			t.Fatalf("case %v: result: expected: %v, got: %v\n", i+1, testCase.expectedResult, result)

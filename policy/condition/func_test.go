@@ -230,6 +230,7 @@ func TestFunctionsUnmarshalJSON(t *testing.T) {
         ]
     }
 }`)
+
 	func1, err := newStringLikeFunc(S3XAmzMetadataDirective.ToKey(), NewValueSet(NewStringValue("REPL*")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)

@@ -44,6 +44,7 @@ func parseEllipsesRange(pattern string) (seq []string, err error) {
 	if !strings.Contains(pattern, openBraces) {
 		return nil, errors.New("invalid argument")
 	}
+
 	if !strings.Contains(pattern, closeBraces) {
 		return nil, errors.New("invalid argument")
 	}
@@ -56,14 +57,18 @@ func parseEllipsesRange(pattern string) (seq []string, err error) {
 		return nil, errors.New("invalid argument")
 	}
 
-	var hexadecimal bool
-	var start, end uint64
+	var (
+		hexadecimal bool
+		start, end  uint64
+	)
+
 	if start, err = strconv.ParseUint(ellipsesRange[0], 10, 64); err != nil {
 		// Look for hexadecimal conversions if any.
 		start, err = strconv.ParseUint(ellipsesRange[0], 16, 64)
 		if err != nil {
 			return nil, err
 		}
+
 		hexadecimal = true
 	}
 
@@ -73,6 +78,7 @@ func parseEllipsesRange(pattern string) (seq []string, err error) {
 		if err != nil {
 			return nil, err
 		}
+
 		hexadecimal = true
 	}
 
@@ -113,8 +119,10 @@ func argExpander(labels [][]string) (out [][]string) {
 		for _, v := range labels[0] {
 			out = append(out, []string{v})
 		}
+
 		return out
 	}
+
 	for _, lbl := range labels[0] {
 		rs := argExpander(labels[1:])
 		for _, rlbls := range rs {
@@ -122,6 +130,7 @@ func argExpander(labels [][]string) (out [][]string) {
 			out = append(out, r)
 		}
 	}
+
 	return out
 }
 
@@ -135,12 +144,14 @@ func (a ArgPattern) Expand() [][]string {
 	for i := range labels {
 		labels[i] = a[i].Expand()
 	}
+
 	return argExpander(labels)
 }
 
 // Expand - expands a ellipses pattern.
 func (p Pattern) Expand() []string {
 	var labels []string
+
 	for i := range p.Seq {
 		switch {
 		case p.Prefix != "" && p.Suffix == "":
@@ -153,6 +164,7 @@ func (p Pattern) Expand() []string {
 			labels = append(labels, fmt.Sprintf("%s%s%s", p.Prefix, p.Seq[i], p.Suffix))
 		}
 	}
+
 	return labels
 }
 
@@ -162,6 +174,7 @@ func HasEllipses(args ...string) bool {
 	for _, arg := range args {
 		ok = ok && (strings.Count(arg, ellipses) > 0 || (strings.Count(arg, openBraces) > 0 && strings.Count(arg, closeBraces) > 0))
 	}
+
 	return ok
 }
 
@@ -176,12 +189,14 @@ func FindEllipsesPatterns(arg string) (ArgPattern, error) {
 	if err == errFormat {
 		err = ErrInvalidEllipsesFormatFn(arg)
 	}
+
 	return v, err
 }
 
 // findPatterns - finds all patterns, recursively and parses the ranges numerically.
 func findPatterns(arg string, re *regexp.Regexp, patternParser func(string) ([]string, error)) (ArgPattern, error) {
 	var patterns []Pattern
+
 	parts := re.FindStringSubmatch(arg)
 	if len(parts) == 0 {
 		// We throw an error if arg doesn't have any recognizable ellipses pattern.
@@ -189,23 +204,28 @@ func findPatterns(arg string, re *regexp.Regexp, patternParser func(string) ([]s
 	}
 
 	parts = parts[1:]
+
 	patternFound := re.MatchString(parts[0])
 	for patternFound {
 		seq, err := patternParser(parts[1])
 		if err != nil {
 			return patterns, err
 		}
+
 		patterns = append(patterns, Pattern{
 			Prefix: "",
 			Suffix: parts[2],
 			Seq:    seq,
 		})
+
 		parts = re.FindStringSubmatch(parts[0])
 		if len(parts) > 0 {
 			parts = parts[1:]
 			patternFound = re.MatchString(parts[0])
+
 			continue
 		}
+
 		break
 	}
 
@@ -229,6 +249,7 @@ func findPatterns(arg string, re *regexp.Regexp, patternParser func(string) ([]s
 		if strings.Count(pattern.Prefix, openBraces) > 0 || strings.Count(pattern.Prefix, closeBraces) > 0 {
 			return nil, ErrInvalidEllipsesFormatFn(arg)
 		}
+
 		if strings.Count(pattern.Suffix, openBraces) > 0 || strings.Count(pattern.Suffix, closeBraces) > 0 {
 			return nil, ErrInvalidEllipsesFormatFn(arg)
 		}
