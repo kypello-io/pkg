@@ -43,6 +43,7 @@ func TestPortString(t *testing.T) {
 
 func TestParsePort(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		s            string
 		expectedPort Port

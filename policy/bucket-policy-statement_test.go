@@ -384,6 +384,8 @@ func TestBPStatementIsValid(t *testing.T) {
 }
 
 func TestBPStatementUnmarshalJSONAndValidate(t *testing.T) {
+	t.Parallel()
+
 	case1Data := []byte(`{
     "Sid": "SomeId1",
     "Effect": "Allow",

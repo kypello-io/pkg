@@ -22,6 +22,8 @@ import (
 )
 
 func TestEffectIsAllowed(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		effect         Effect
 		check          bool
