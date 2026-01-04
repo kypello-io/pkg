@@ -61,6 +61,8 @@ func testNumericFuncEvaluate(t *testing.T, funcs ...Function) {
 }
 
 func TestNumericFuncEvaluate(t *testing.T) {
+	t.Parallel()
+
 	valueSet := NewValueSet(NewIntValue(16))
 
 	case1Function, err := newNumericEqualsFunc(S3MaxKeys.ToKey(), valueSet, "")
@@ -114,6 +116,8 @@ func TestNumericFuncEvaluate(t *testing.T) {
 }
 
 func TestNewNumericFuncEvaluate(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := NewNumericEqualsFunc(S3MaxKeys.ToKey(), 16)
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -153,6 +157,8 @@ func TestNewNumericFuncEvaluate(t *testing.T) {
 }
 
 func TestNumericFuncKey(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newNumericEqualsFunc(S3MaxKeys.ToKey(), NewValueSet(NewStringValue("16")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -175,6 +181,8 @@ func TestNumericFuncKey(t *testing.T) {
 }
 
 func TestNumericFuncName(t *testing.T) {
+	t.Parallel()
+
 	valueSet := NewValueSet(NewStringValue("16"))
 
 	case1Function, err := newNumericEqualsFunc(S3MaxKeys.ToKey(), valueSet, "")
@@ -229,6 +237,8 @@ func TestNumericFuncName(t *testing.T) {
 }
 
 func TestNumericFuncToMap(t *testing.T) {
+	t.Parallel()
+
 	valueSet := NewValueSet(NewIntValue(16))
 
 	case1Function, err := newNumericEqualsFunc(S3MaxKeys.ToKey(), valueSet, "")
@@ -255,6 +265,8 @@ func TestNumericFuncToMap(t *testing.T) {
 }
 
 func TestNumericFuncClone(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := NewNumericEqualsFunc(S3MaxKeys.ToKey(), 16)
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)

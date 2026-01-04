@@ -23,6 +23,7 @@ import (
 )
 
 func TestURLHostnameAndPort(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		in   string // URL.Host field
 		host string

@@ -28,6 +28,7 @@ import (
 )
 
 func TestReadVersion(t *testing.T) {
+	t.Parallel()
 	type myStruct struct {
 		Version string
 	}
@@ -55,6 +56,7 @@ func TestReadVersion(t *testing.T) {
 }
 
 func TestReadVersionErr(t *testing.T) {
+	t.Parallel()
 	type myStruct struct {
 		Version int
 	}

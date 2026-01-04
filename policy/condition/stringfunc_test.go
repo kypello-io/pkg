@@ -26,6 +26,8 @@ import (
 )
 
 func TestStringEqualsFuncEvaluate(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newStringEqualsFunc(S3XAmzCopySource.ToKey(), NewValueSet(NewStringValue("mybucket/myobject")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -99,6 +101,8 @@ func TestStringEqualsFuncEvaluate(t *testing.T) {
 }
 
 func TestStringNotEqualsFuncEvaluate(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newStringNotEqualsFunc(S3XAmzCopySource.ToKey(), NewValueSet(NewStringValue("mybucket/myobject")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -156,6 +160,8 @@ func TestStringNotEqualsFuncEvaluate(t *testing.T) {
 }
 
 func TestStringEqualsIgnoreCaseFuncEvaluate(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newStringEqualsIgnoreCaseFunc(S3XAmzCopySource.ToKey(), NewValueSet(NewStringValue("mybucket/MYOBJECT")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)

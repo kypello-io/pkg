@@ -39,6 +39,8 @@ func TestGroupWithNErrs(t *testing.T) {
 
 	for j, tc := range cases {
 		t.Run(fmt.Sprintf("Test%d", j+1), func(t *testing.T) {
+			t.Parallel()
+
 			g := WithNErrs(len(tc.errs))
 			for i, err := range tc.errs {
 				g.Go(func() error { return err }, i)

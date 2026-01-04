@@ -100,6 +100,7 @@ func TestWorkers(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("test-%d", i), func(t *testing.T) {
+			t.Parallel()
 			testFn(t, test.n, test.jobs, test.mustFail)
 		})
 	}
