@@ -58,7 +58,7 @@ func TestGetPoliciesFromClaims(t *testing.T) {
     "  readonly",
     ""
   ]}`
-	m := make(map[string]interface{})
+	m := make(map[string]any)
 	if err := json.Unmarshal([]byte(attributesArray), &m); err != nil {
 		t.Fatal(err)
 	}
@@ -860,7 +860,6 @@ func TestPolicyParseConfig(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		test := test
 		t.Run(test.args.AccountName, func(t *testing.T) {
 			ip, err := ParseConfig(strings.NewReader(test.p))
 			if err != nil {

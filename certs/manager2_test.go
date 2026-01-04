@@ -228,7 +228,7 @@ func TestManager2_ConcurrentGetCertificate(t *testing.T) {
 	hello := &tls.ClientHelloInfo{ServerName: "example.com"}
 
 	// Launch concurrent calls
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		go func() {
 			_, err := mgr.GetCertificate(hello)
 			done <- err
@@ -239,7 +239,7 @@ func TestManager2_ConcurrentGetCertificate(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		select {
 		case err := <-done:
 			if err != nil {

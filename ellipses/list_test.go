@@ -166,7 +166,7 @@ func TestFindListPatterns(t *testing.T) {
 				if gotCount != len(testCase.want) {
 					t.Errorf("Expected %d, got %d", len(testCase.want), gotCount)
 				}
-				repl := func(v interface{}) string {
+				repl := func(v any) string {
 					s := fmt.Sprintf("%#v", v)
 					// Clean up unneeded declarations
 					s = strings.ReplaceAll(s, `[]string{"`, `{"`)

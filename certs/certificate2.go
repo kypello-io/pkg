@@ -27,7 +27,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/rjeczalik/notify"
+	"github.com/syncthing/notify"
 )
 
 var symlinkReloadInterval = 10 * time.Second
@@ -218,9 +218,7 @@ func watchFile(ctx context.Context, path string, ch chan notify.EventInfo, wg *s
 		return notify.Watch(filepath.Dir(path), ch, eventWrite...)
 	}
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 
 		t := time.NewTicker(symlinkReloadInterval)
 		defer t.Stop()
@@ -232,7 +230,7 @@ func watchFile(ctx context.Context, path string, ch chan notify.EventInfo, wg *s
 				ch <- eventInfo{path, notify.Write}
 			}
 		}
-	}()
+	})
 	return nil
 }
 

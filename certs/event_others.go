@@ -19,7 +19,7 @@
 
 package certs
 
-import "github.com/rjeczalik/notify"
+import "github.com/syncthing/notify"
 
 // eventWrite contains the notify events that will cause a write
 var eventWrite = []notify.Event{notify.Create, notify.Write}

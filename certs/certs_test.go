@@ -18,7 +18,6 @@
 package certs_test
 
 import (
-	"context"
 	"crypto/tls"
 	"io"
 	"os"
@@ -45,8 +44,7 @@ func updateCerts(crt, key string) {
 }
 
 func TestNewManager(t *testing.T) {
-	ctx, cancelFn := context.WithCancel(context.Background())
-	defer cancelFn()
+	ctx := t.Context()
 	c, err := certs.NewManager(ctx, "public.crt", "private.key", tls.LoadX509KeyPair)
 	if err != nil {
 		t.Fatal(err)
@@ -87,8 +85,7 @@ func TestNewManager(t *testing.T) {
 }
 
 func TestValidPairAfterWrite(t *testing.T) {
-	ctx, cancelFn := context.WithCancel(context.Background())
-	defer cancelFn()
+	ctx := t.Context()
 	expectedCert, err := tls.LoadX509KeyPair("new-public.crt", "new-private.key")
 	if err != nil {
 		t.Fatal(err)
@@ -127,8 +124,7 @@ func TestValidPairAfterWrite(t *testing.T) {
 }
 
 func TestNonMatchingCertificate(t *testing.T) {
-	ctx, cancelFn := context.WithCancel(context.Background())
-	defer cancelFn()
+	ctx := t.Context()
 	c, err := certs.NewManager(ctx, "public.crt", "private.key", tls.LoadX509KeyPair)
 	if err != nil {
 		t.Fatal(err)

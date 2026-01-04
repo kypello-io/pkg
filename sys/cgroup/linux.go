@@ -92,7 +92,7 @@ func parseProcCGroup(r io.Reader) (CGEntries, error) {
 		}
 
 		name, path := tokens[1], tokens[2]
-		for _, token := range strings.Split(name, ",") {
+		for token := range strings.SplitSeq(name, ",") {
 			name = strings.TrimPrefix(token, "name=")
 			cgEntries[name] = path
 		}

@@ -336,7 +336,7 @@ func TestCertificate2_ConcurrentSubscriptions(t *testing.T) {
 	// Subscribe multiple subscribers concurrently
 	const numSubscribers = 10
 	done := make([]chan struct{}, numSubscribers)
-	for i := 0; i < numSubscribers; i++ {
+	for i := range numSubscribers {
 		done[i] = make(chan struct{})
 		idx := i
 		unsub := cert.Subscribe(func(c *Certificate2) {
@@ -358,7 +358,7 @@ func TestCertificate2_ConcurrentSubscriptions(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	for i := 0; i < numSubscribers; i++ {
+	for i := range numSubscribers {
 		select {
 		case <-done[i]:
 			// Expected

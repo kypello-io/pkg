@@ -27,7 +27,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rjeczalik/notify"
+	"github.com/syncthing/notify"
 )
 
 // LoadX509KeyPairFunc is a function that parses a private key and

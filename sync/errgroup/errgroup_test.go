@@ -40,7 +40,6 @@ func TestGroupWithNErrs(t *testing.T) {
 		t.Run(fmt.Sprintf("Test%d", j+1), func(t *testing.T) {
 			g := WithNErrs(len(tc.errs))
 			for i, err := range tc.errs {
-				err := err
 				g.Go(func() error { return err }, i)
 			}
 

@@ -156,7 +156,6 @@ func TestHostUnmarshalJSON(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run("", func(t *testing.T) {
 			var host Host
 			err := host.UnmarshalJSON(testCase.data)
@@ -209,7 +208,6 @@ func TestParseHost(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run("", func(t *testing.T) {
 			host, err := ParseHost(testCase.s)
 			expectErr := (err != nil)

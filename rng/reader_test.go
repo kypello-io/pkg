@@ -102,7 +102,7 @@ func TestReaderReadAt(t *testing.T) {
 		bufAt := make([]byte, size)
 		rng := rand.New(rand.NewSource(0))
 		offset := 0
-		for i := 0; i < 1000; i++ {
+		for range 1000 {
 			n := rng.Intn(size)
 			buf := buf[:n]
 			_, err := io.ReadFull(r, buf)
@@ -134,7 +134,7 @@ func TestReaderSeeker(t *testing.T) {
 		buf := make([]byte, size)
 		bufAt := make([]byte, size)
 		rng := rand.New(rand.NewSource(0))
-		for i := 0; i < 1000; i++ {
+		for range 1000 {
 			offset := rng.Int63()
 			_, err := r.Seek(offset, io.SeekStart)
 			if err != nil {
@@ -170,14 +170,14 @@ func TestXor(t *testing.T) {
 		for i := range keys {
 			keys[i] = rng.Uint64()
 		}
-		for i := 0; i < 1000; i++ {
+		for range 1000 {
 			bSize := (rand.Intn(size) / 32) * 32
 			bufOut := bufOut[:bSize]
-			for i := 0; i < len(bufOut); i++ {
+			for i := range bufOut {
 				bufOut[i] = 0
 			}
 			bufOut2 := bufOut2[:bSize]
-			for i := 0; i < len(bufOut2); i++ {
+			for i := range bufOut2 {
 				bufOut2[i] = 0
 			}
 			xorSlice(bufIn, bufOut, &keys)

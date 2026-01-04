@@ -72,7 +72,7 @@ func BenchmarkIsAllowed(b *testing.B) {
 			name: "MultipleStatements",
 			policy: setupPolicy(func() []Statement {
 				stmts := make([]Statement, 100)
-				for i := 0; i < 100; i++ {
+				for i := range 100 {
 					stmts[i] = setupStatement(
 						[]string{fmt.Sprintf("s3:Action%d", i)},
 						[]string{fmt.Sprintf("arn:aws:s3:::bucket%d/*", i)},
@@ -181,7 +181,7 @@ func BenchmarkMergePolicies(b *testing.B) {
 			// Prepare input policies
 			policies := make([]Policy, scenario.count)
 			uniqueCount := int(float64(scenario.count) * (1 - scenario.dupRatio))
-			for i := 0; i < uniqueCount; i++ {
+			for i := range uniqueCount {
 				policies[i] = setupPolicy([]Statement{
 					setupStatement(
 						[]string{fmt.Sprintf("s3:Action%d", i)},

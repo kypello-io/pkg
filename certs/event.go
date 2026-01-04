@@ -18,7 +18,7 @@
 package certs
 
 import (
-	"github.com/rjeczalik/notify"
+	"github.com/syncthing/notify"
 )
 
 // isWriteEvent checks if the event returned is a write event

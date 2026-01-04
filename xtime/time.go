@@ -124,6 +124,6 @@ func (d Duration) Msgsize() int {
 }
 
 // MarshalYAML implements yaml.Marshaler - Converts duration to human-readable format (e.g., "2h", "30m")
-func (d Duration) MarshalYAML() (interface{}, error) {
+func (d Duration) MarshalYAML() (any, error) {
 	return time.Duration(d).String(), nil
 }
