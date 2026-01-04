@@ -57,6 +57,8 @@ func TestWorkers(t *testing.T) {
 		},
 	}
 	testFn := func(t *testing.T, n, jobs int, mustFail bool) {
+		t.Helper()
+
 		var (
 			mu       sync.Mutex
 			jobsDone int
@@ -135,6 +137,7 @@ func TestWorkers(t *testing.T) {
 }
 
 func benchmarkWorkers(b *testing.B, n, jobs int) {
+	b.Helper()
 	b.ReportAllocs()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
