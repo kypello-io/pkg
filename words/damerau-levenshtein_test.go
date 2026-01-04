@@ -24,6 +24,7 @@ import (
 
 // Test minimum function which calculates the minimal value in a list of integers.
 func TestMinimum(t *testing.T) {
+	t.Parallel()
 	type testCase struct {
 		listval  []int
 		expected int
@@ -44,6 +45,7 @@ func TestMinimum(t *testing.T) {
 
 // Test DamerauLevenshtein which calculates the difference distance between two words.
 func TestDamerauLevenshtein(t *testing.T) {
+	t.Parallel()
 	type testCase struct {
 		word1    string
 		word2    string

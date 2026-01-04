@@ -74,6 +74,8 @@ func TestHasList(t *testing.T) {
 
 	for i, testCase := range testCases {
 		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			t.Parallel()
+
 			gotOk := HasList(testCase.args...)
 			if gotOk != testCase.expectedOk {
 				t.Errorf("Expected %t, got %t", testCase.expectedOk, gotOk)
@@ -154,6 +156,8 @@ func TestFindListPatterns(t *testing.T) {
 		}
 
 		t.Run(fmt.Sprintf("Test%d", i), func(t *testing.T) {
+			t.Parallel()
+
 			argP, err := FindListPatterns(testCase.pattern)
 			if err != nil && testCase.success {
 				t.Errorf("Expected success but failed instead %s", err)

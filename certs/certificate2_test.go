@@ -175,6 +175,7 @@ func TestCertificate2_AutoReloadWithRename(t *testing.T) {
 }
 
 func TestCertificate2_AutoReloadCertFileOnly(t *testing.T) {
+	t.Parallel()
 	testCertificate2AutoReloadCertFileOnly(t, false)
 }
 
@@ -219,6 +220,7 @@ func TestCertificate2_InvalidReloadIgnored(t *testing.T) {
 }
 
 func TestCertificate2_InvalidReloadIgnoredSymlink(t *testing.T) {
+	t.Parallel()
 	testCertificate2InvalidReloadIgnored(t, true)
 }
 
