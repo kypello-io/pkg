@@ -23,7 +23,7 @@ import (
 
 const defaultILMDateFormat string = "2006-01-02"
 
-// LifecycleOptions - options for ILM rule
+// LifecycleOptions - options for ILM rule.
 type LifecycleOptions struct {
 	ID string
 
@@ -49,7 +49,7 @@ type LifecycleOptions struct {
 	PurgeAllVersionsDeleteMarker            *bool
 }
 
-// Filter returns lifecycle.Filter appropriate for opts
+// Filter returns lifecycle.Filter appropriate for opts.
 func (opts LifecycleOptions) Filter() lifecycle.Filter {
 	var (
 		f         lifecycle.Filter
@@ -101,7 +101,7 @@ func (opts LifecycleOptions) Filter() lifecycle.Filter {
 	return f
 }
 
-// ToILMRule creates lifecycle.Configuration based on LifecycleOptions
+// ToILMRule creates lifecycle.Configuration based on LifecycleOptions.
 func (opts LifecycleOptions) ToILMRule() (lifecycle.Rule, error) {
 	var (
 		id, status string
@@ -182,7 +182,7 @@ func (opts LifecycleOptions) ToILMRule() (lifecycle.Rule, error) {
 	return newRule, nil
 }
 
-// ApplyRuleFields applies non nil fields of LifecycleOptions to the existing lifecycle rule
+// ApplyRuleFields applies non nil fields of LifecycleOptions to the existing lifecycle rule.
 func ApplyRuleFields(dest *lifecycle.Rule, opts LifecycleOptions) error {
 	// If src has tags, it should override the destination
 	if opts.Tags != nil {

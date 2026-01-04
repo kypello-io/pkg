@@ -39,7 +39,7 @@ func LockSetEnv() func() {
 }
 
 // SetEnvOff - turns off env lookup
-// A global lock above this MUST ensure that
+// A global lock above this MUST ensure that.
 func SetEnvOff() {
 	privateMutex.Lock()
 	defer privateMutex.Unlock()
@@ -47,7 +47,7 @@ func SetEnvOff() {
 	envOff = true
 }
 
-// SetEnvOn - turns on env lookup
+// SetEnvOn - turns on env lookup.
 func SetEnvOn() {
 	privateMutex.Lock()
 	defer privateMutex.Unlock()

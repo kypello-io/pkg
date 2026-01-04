@@ -30,7 +30,7 @@ import (
 
 type (
 	// LogType defined various types of logs and errors
-	// that can happen within the SFTP implementation
+	// that can happen within the SFTP implementation.
 	LogType string
 )
 
@@ -166,7 +166,7 @@ func NewServer(options *Options) (sftpServer *Server, err error) {
 	return sftpServer, err
 }
 
-// Listen starts the SFTP server
+// Listen starts the SFTP server.
 func (s *Server) Listen() (err error) {
 	s.logger.Info(ServerStarted,
 		"SFTP Server listening on "+

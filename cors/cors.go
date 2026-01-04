@@ -101,7 +101,7 @@ func (c *Config) Validate() error {
 	return nil
 }
 
-// HasAllowedOrigin returns true if the given origin is allowed by the CORS rule
+// HasAllowedOrigin returns true if the given origin is allowed by the CORS rule.
 func (c *Rule) HasAllowedOrigin(origin string) bool {
 	// See "AllowedOrigin element" in https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html
 	for _, allowedOrigin := range c.AllowedOrigin {

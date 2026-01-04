@@ -236,7 +236,7 @@ func (resourceSet ResourceSet) ToSlice() []Resource {
 	return resources
 }
 
-// Clone clones ResourceSet structure
+// Clone clones ResourceSet structure.
 func (resourceSet ResourceSet) Clone() ResourceSet {
 	return NewResourceSet(resourceSet.ToSlice()...)
 }
@@ -251,7 +251,7 @@ func NewResourceSet(resources ...Resource) ResourceSet {
 	return resourceSet
 }
 
-// NewResourceStrings - creates new resource set from strings
+// NewResourceStrings - creates new resource set from strings.
 func NewResourceStrings(resources ...string) ResourceSet {
 	resourceSet := make(ResourceSet)
 	for _, resource := range resources {

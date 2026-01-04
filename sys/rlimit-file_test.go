@@ -27,7 +27,7 @@ func TestGetMaxOpenFileLimit(t *testing.T) {
 	}
 }
 
-// Test set open file limit
+// Test set open file limit.
 func TestSetMaxOpenFileLimit(t *testing.T) {
 	curLimit, maxLimit, err := GetMaxOpenFileLimit()
 	if err != nil {

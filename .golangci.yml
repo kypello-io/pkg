@@ -17,6 +17,8 @@ linters:
     - nakedret
     - intrange
     - iface
+    - importas
+    - godot
   settings:
     misspell:
       locale: US

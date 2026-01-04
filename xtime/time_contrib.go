@@ -11,7 +11,7 @@ import (
 )
 
 // function borrowed from https://cs.opensource.google/go/go/+/refs/tags/go1.22.5:src/time/format.go;l=1589
-// supports days and weeks such as '1d1ms', '1w1ms'
+// supports days and weeks such as '1d1ms', '1w1ms'.
 func parseDuration(s string) (time.Duration, error) {
 	// [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
 	orig := s

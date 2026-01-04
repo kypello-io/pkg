@@ -29,7 +29,7 @@ import (
 const errorFmt = "%5d: %s  <<<<"
 
 // FormatJSONSyntaxError generates a pretty printed json syntax error since
-// golang doesn't provide an easy way to report the location of the error
+// golang doesn't provide an easy way to report the location of the error.
 func FormatJSONSyntaxError(data io.Reader, offset int64) (highlight string) {
 	var readLine bytes.Buffer
 

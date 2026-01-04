@@ -24,7 +24,7 @@ import (
 	"testing"
 )
 
-// Test tests if args has a list sequence
+// Test tests if args has a list sequence.
 func TestHasList(t *testing.T) {
 	testCases := []struct {
 		args       []string

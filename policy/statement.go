@@ -38,7 +38,7 @@ type Statement struct {
 	Conditions   condition.Functions `json:"Condition,omitempty"`
 }
 
-// smallBufPool should always return a non-nil *bytes.Buffer
+// smallBufPool should always return a non-nil *bytes.Buffer.
 var smallBufPool = sync.Pool{
 	New: func() any { return &bytes.Buffer{} },
 }
@@ -390,7 +390,7 @@ func (statement Statement) Validate() error {
 	return statement.isValid()
 }
 
-// Equals checks if two statements are equal
+// Equals checks if two statements are equal.
 func (statement Statement) Equals(st Statement) bool {
 	if statement.Effect != st.Effect {
 		return false
@@ -419,7 +419,7 @@ func (statement Statement) Equals(st Statement) bool {
 	return true
 }
 
-// Clone clones Statement structure
+// Clone clones Statement structure.
 func (statement Statement) Clone() Statement {
 	return Statement{
 		SID:          statement.SID,
@@ -465,7 +465,7 @@ func NewStatementWithNotAction(sid ID, effect Effect, notActions ActionSet, reso
 	}
 }
 
-// Equals checks if two statements are equal
+// Equals checks if two statements are equal.
 func (statement Statement) hash(seed uint64) [16]byte {
 	// Order independent xor.
 	xorTo := func(dst *xxh3.Uint128, v xxh3.Uint128) {

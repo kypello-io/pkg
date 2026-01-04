@@ -376,12 +376,12 @@ type Table struct {
 
 // NewTable - create a new Table instance. Takes per-row colors and
 // per-column right-align flags and table indentation width (i.e. left
-// margin width)
+// margin width).
 func NewTable(rowColors []*color.Color, alignRight []bool, indentWidth int) *Table {
 	return &Table{rowColors, alignRight, indentWidth, false}
 }
 
-// PopulateTable - writes to the custom output
+// PopulateTable - writes to the custom output.
 func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 	numRows := len(rows)
 
@@ -460,7 +460,7 @@ func (t *Table) PopulateTable(out io.Writer, rows [][]string) error {
 	return nil
 }
 
-// DisplayTable - prints the table
+// DisplayTable - prints the table.
 func (t *Table) DisplayTable(rows [][]string) error {
 	numRows := len(rows)
 

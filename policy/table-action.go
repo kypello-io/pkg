@@ -202,7 +202,7 @@ const (
 	// S3TablesUpdateNamespacePropertiesAction is a MinIO extension for updating namespace properties.
 	S3TablesUpdateNamespacePropertiesAction = "s3tables:UpdateNamespaceProperties"
 
-	// AllS3TablesActions - all Amazon S3 Tables actions
+	// AllS3TablesActions - all Amazon S3 Tables actions.
 	AllS3TablesActions = "s3tables:*"
 )
 

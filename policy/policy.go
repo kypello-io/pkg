@@ -34,7 +34,7 @@ import (
 // DefaultVersion - default policy version as per AWS S3 specification.
 const DefaultVersion = "2012-10-17"
 
-// Args - arguments to policy to check whether it is allowed
+// Args - arguments to policy to check whether it is allowed.
 type Args struct {
 	AccountName     string              `json:"account"`
 	Groups          []string            `json:"groups"`
@@ -52,7 +52,7 @@ type Args struct {
 // Supports values in following formats
 // - string
 // - comma separated values
-// - string array
+// - string array.
 func GetValuesFromClaims(claims map[string]any, claimName string) (set.StringSet, bool) {
 	s := set.NewStringSet()
 
@@ -140,7 +140,7 @@ func (iamp *Policy) HasDenyStatement() bool {
 	return iamp.hasDeny
 }
 
-// MatchResource matches resource with match resource patterns
+// MatchResource matches resource with match resource patterns.
 func (iamp Policy) MatchResource(resource string) bool {
 	for _, statement := range iamp.Statements {
 		if statement.Resources.MatchResource(resource) {
@@ -585,7 +585,7 @@ func ParseConfig(reader io.Reader) (*Policy, error) {
 	return &iamp, iamp.Validate()
 }
 
-// Equals returns true if the two policies are identical
+// Equals returns true if the two policies are identical.
 func (iamp *Policy) Equals(p Policy) bool {
 	if iamp.ID != p.ID || iamp.Version != p.Version {
 		return false

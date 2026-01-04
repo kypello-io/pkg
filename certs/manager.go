@@ -101,19 +101,19 @@ func NewManager(ctx context.Context, certFile, keyFile string, loadX509KeyPair L
 	return manager, nil
 }
 
-// WithDisableAutoReload disables automatic reloading
+// WithDisableAutoReload disables automatic reloading.
 func WithDisableAutoReload() func(*Manager) {
 	return func(m *Manager) {
 		m.disableAutoReload = true
 	}
 }
 
-// DisableAutoReload returns if automatic reloading is disabled
+// DisableAutoReload returns if automatic reloading is disabled.
 func (m *Manager) DisableAutoReload() bool {
 	return m.disableAutoReload
 }
 
-// UpdateReloadDuration set custom symlink reload duration
+// UpdateReloadDuration set custom symlink reload duration.
 func (m *Manager) UpdateReloadDuration(t time.Duration) {
 	if m == nil {
 		return
@@ -232,7 +232,7 @@ func (m *Manager) reloader() <-chan struct{} {
 }
 
 // ReloadOnSignal specifies one or more signals that will trigger certificates reloading.
-// If called multiple times with the same signal certificates
+// If called multiple times with the same signal certificates.
 func (m *Manager) ReloadOnSignal(sig ...os.Signal) {
 	if m == nil || m.DisableAutoReload() {
 		return
@@ -478,7 +478,7 @@ func isSymlink(file string) (bool, error) {
 	return st.Mode()&os.ModeSymlink == os.ModeSymlink, nil
 }
 
-// GetAllCertificates returns all the certificates loaded
+// GetAllCertificates returns all the certificates loaded.
 func (m *Manager) GetAllCertificates() []*x509.Certificate {
 	if m == nil {
 		return nil

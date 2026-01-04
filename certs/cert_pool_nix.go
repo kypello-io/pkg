@@ -29,7 +29,7 @@ import (
 
 // Possible directories with certificate files, this is an extended
 // list from https://golang.org/src/crypto/x509/root_unix.go?#L18
-// for k8s platform
+// for k8s platform.
 var certDirectories = []string{
 	"/var/run/secrets/kubernetes.io/serviceaccount",
 }

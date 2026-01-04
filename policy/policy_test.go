@@ -630,7 +630,7 @@ func TestPolicyIsValid(t *testing.T) {
 	}
 }
 
-// Parse config with location constraints
+// Parse config with location constraints.
 func TestPolicyParseConfig(t *testing.T) {
 	policy1LocationConstraint := `{
    "Version":"2012-10-17",

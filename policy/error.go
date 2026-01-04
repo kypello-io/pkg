@@ -28,7 +28,7 @@ type Error struct {
 }
 
 // Errorf - formats according to a format specifier and returns
-// the string as a value that satisfies error of type policy.Error
+// the string as a value that satisfies error of type policy.Error.
 func Errorf(format string, a ...any) error {
 	return Error{err: fmt.Errorf(format, a...)}
 }

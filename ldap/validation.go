@@ -110,7 +110,7 @@ func (l *Config) Validate() Validation {
 
 // ValidateOffline validates the LDAP configuration without connecting to the
 // LDAP server. It is used to validate the configuration when the server is not
-// reachable
+// reachable.
 func (l *Config) ValidateOffline() Validation {
 	return l.validate(true)
 }

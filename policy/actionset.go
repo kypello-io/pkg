@@ -28,7 +28,7 @@ import (
 // ActionSet - set of actions.
 type ActionSet map[Action]struct{}
 
-// Clone clones ActionSet structure
+// Clone clones ActionSet structure.
 func (actionSet ActionSet) Clone() ActionSet {
 	return NewActionSet(actionSet.ToSlice()...)
 }
@@ -45,7 +45,7 @@ func (actionSet ActionSet) Contains(action Action) bool {
 	return found
 }
 
-// IsEmpty - returns if the current action set is empty
+// IsEmpty - returns if the current action set is empty.
 func (actionSet ActionSet) IsEmpty() bool {
 	return len(actionSet) == 0
 }
@@ -252,7 +252,7 @@ func (actionSet *ActionSet) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// ValidateAdmin checks if all actions are valid Admin actions
+// ValidateAdmin checks if all actions are valid Admin actions.
 func (actionSet ActionSet) ValidateAdmin() error {
 	for _, action := range actionSet.ToAdminSlice() {
 		if !action.IsValid() {
@@ -263,7 +263,7 @@ func (actionSet ActionSet) ValidateAdmin() error {
 	return nil
 }
 
-// ValidateSTS checks if all actions are valid STS actions
+// ValidateSTS checks if all actions are valid STS actions.
 func (actionSet ActionSet) ValidateSTS() error {
 	for _, action := range actionSet.ToSTSSlice() {
 		if !action.IsValid() {
@@ -274,7 +274,7 @@ func (actionSet ActionSet) ValidateSTS() error {
 	return nil
 }
 
-// ValidateKMS checks if all actions are valid KMS actions
+// ValidateKMS checks if all actions are valid KMS actions.
 func (actionSet ActionSet) ValidateKMS() error {
 	for _, action := range actionSet.ToKMSSlice() {
 		if !action.IsValid() {
@@ -285,7 +285,7 @@ func (actionSet ActionSet) ValidateKMS() error {
 	return nil
 }
 
-// ValidateTable checks if all actions are valid Table actions
+// ValidateTable checks if all actions are valid Table actions.
 func (actionSet ActionSet) ValidateTable() error {
 	for _, action := range actionSet.ToTableSlice() {
 		if !action.IsValid() {
@@ -296,7 +296,7 @@ func (actionSet ActionSet) ValidateTable() error {
 	return nil
 }
 
-// ValidateVectors checks if all actions are valid Vectors actions
+// ValidateVectors checks if all actions are valid Vectors actions.
 func (actionSet ActionSet) ValidateVectors() error {
 	for _, action := range actionSet.ToVectorsSlice() {
 		if !action.IsValid() {
@@ -307,7 +307,7 @@ func (actionSet ActionSet) ValidateVectors() error {
 	return nil
 }
 
-// Validate checks if all actions are valid
+// Validate checks if all actions are valid.
 func (actionSet ActionSet) Validate() error {
 	for _, action := range actionSet.ToSlice() {
 		if !action.IsValid() {

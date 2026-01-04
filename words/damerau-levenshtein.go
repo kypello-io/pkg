@@ -19,7 +19,7 @@ package words
 
 import "math"
 
-// Returns the minimum value of a slice of integers
+// Returns the minimum value of a slice of integers.
 func minimum(integers []int) (minVal int) {
 	minVal = math.MaxInt32
 	for _, v := range integers {

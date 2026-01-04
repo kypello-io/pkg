@@ -21,7 +21,7 @@ import (
 	"github.com/syncthing/notify"
 )
 
-// isWriteEvent checks if the event returned is a write event
+// isWriteEvent checks if the event returned is a write event.
 func isWriteEvent(event notify.Event) bool {
 	for _, ev := range eventWrite {
 		if event&ev != 0 {

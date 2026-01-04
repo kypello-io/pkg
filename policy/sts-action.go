@@ -43,7 +43,7 @@ const (
 	// AssumeRoleWithClientCertificateAction - use to deny or allow sts:AssumeRoleWithClientCertificate action under specific conditions.
 	AssumeRoleWithClientCertificateAction = "sts:AssumeRoleWithClientCertificate"
 
-	// AllSTSActions - select all STS actions
+	// AllSTSActions - select all STS actions.
 	AllSTSActions = "sts:*"
 )
 

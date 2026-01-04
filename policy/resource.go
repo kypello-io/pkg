@@ -38,11 +38,11 @@ const (
 	ResourceARNKMSPrefix = "arn:minio:kms:::"
 )
 
-// ResourceARNType - ARN prefix type
+// ResourceARNType - ARN prefix type.
 type ResourceARNType uint32
 
 const (
-	// Zero value for detecting errors
+	// Zero value for detecting errors.
 	unknownARN ResourceARNType = iota
 
 	// ResourceARNS3 is the ARN prefix type for S3 resources.
@@ -54,11 +54,11 @@ const (
 	// ResourceARNKMS is the ARN prefix type for MinIO KMS resources.
 	ResourceARNKMS
 
-	// ResourceARNAll is the ARN '*'
+	// ResourceARNAll is the ARN '*'.
 	ResourceARNAll
 )
 
-// ARNTypeToPrefix maps the type to prefix string
+// ARNTypeToPrefix maps the type to prefix string.
 var ARNTypeToPrefix = map[ResourceARNType]string{
 	ResourceARNS3:       ResourceARNPrefix,
 	ResourceARNS3Tables: ResourceARNS3TablesPrefix,
@@ -307,7 +307,7 @@ func NewResource(pattern string) Resource {
 	}
 }
 
-// NewKMSResource - creates new resource with type KMS
+// NewKMSResource - creates new resource with type KMS.
 func NewKMSResource(pattern string) Resource {
 	return Resource{
 		Pattern: pattern,
@@ -340,7 +340,7 @@ func isTableResourceString(s string) bool {
 	return true
 }
 
-// NewS3TablesResource - creates new resource with type S3 Tables
+// NewS3TablesResource - creates new resource with type S3 Tables.
 func NewS3TablesResource(pattern string) Resource {
 	return Resource{
 		Pattern: pattern,

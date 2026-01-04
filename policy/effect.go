@@ -37,7 +37,7 @@ func (effect Effect) IsAllowed(b bool) bool {
 	return !b
 }
 
-// IsValid - checks if Effect is valid or not
+// IsValid - checks if Effect is valid or not.
 func (effect Effect) IsValid() bool {
 	switch effect {
 	case Allow, Deny:

@@ -26,48 +26,48 @@ import (
 type AdminAction string
 
 const (
-	// HealAdminAction - allows heal command
+	// HealAdminAction - allows heal command.
 	HealAdminAction = "admin:Heal"
 
-	// DecommissionAdminAction - allows decomissioning of pools
+	// DecommissionAdminAction - allows decomissioning of pools.
 	DecommissionAdminAction = "admin:Decommission"
 
-	// RebalanceAdminAction - allows rebalancing of pools
+	// RebalanceAdminAction - allows rebalancing of pools.
 	RebalanceAdminAction = "admin:Rebalance"
-	// Service Actions
+	// Service Actions.
 
-	// StorageInfoAdminAction - allow listing server info
+	// StorageInfoAdminAction - allow listing server info.
 	StorageInfoAdminAction = "admin:StorageInfo"
-	// PrometheusAdminAction - prometheus info action
+	// PrometheusAdminAction - prometheus info action.
 	PrometheusAdminAction = "admin:Prometheus"
-	// DataUsageInfoAdminAction - allow listing data usage info
+	// DataUsageInfoAdminAction - allow listing data usage info.
 	DataUsageInfoAdminAction = "admin:DataUsageInfo"
-	// ForceUnlockAdminAction - allow force unlocking locks
+	// ForceUnlockAdminAction - allow force unlocking locks.
 	ForceUnlockAdminAction = "admin:ForceUnlock"
-	// TopLocksAdminAction - allow listing top locks
+	// TopLocksAdminAction - allow listing top locks.
 	TopLocksAdminAction = "admin:TopLocksInfo"
-	// ProfilingAdminAction - allow profiling
+	// ProfilingAdminAction - allow profiling.
 	ProfilingAdminAction = "admin:Profiling"
-	// TraceAdminAction - allow listing server trace
+	// TraceAdminAction - allow listing server trace.
 	TraceAdminAction = "admin:ServerTrace"
-	// ConsoleLogAdminAction - allow listing console logs on terminal
+	// ConsoleLogAdminAction - allow listing console logs on terminal.
 	ConsoleLogAdminAction = "admin:ConsoleLog"
-	// KMSCreateKeyAdminAction - allow creating a new KMS master key
+	// KMSCreateKeyAdminAction - allow creating a new KMS master key.
 	KMSCreateKeyAdminAction = "admin:KMSCreateKey"
-	// KMSKeyStatusAdminAction - allow getting KMS key status
+	// KMSKeyStatusAdminAction - allow getting KMS key status.
 	KMSKeyStatusAdminAction = "admin:KMSKeyStatus"
-	// ServerInfoAdminAction - allow listing server info
+	// ServerInfoAdminAction - allow listing server info.
 	ServerInfoAdminAction = "admin:ServerInfo"
-	// HealthInfoAdminAction - allow obtaining cluster health information
+	// HealthInfoAdminAction - allow obtaining cluster health information.
 	HealthInfoAdminAction = "admin:OBDInfo"
-	// LicenseInfoAdminAction - allow obtaining license information
+	// LicenseInfoAdminAction - allow obtaining license information.
 	LicenseInfoAdminAction = "admin:LicenseInfo"
-	// BandwidthMonitorAction - allow monitoring bandwidth usage
+	// BandwidthMonitorAction - allow monitoring bandwidth usage.
 	BandwidthMonitorAction = "admin:BandwidthMonitor"
-	// InspectDataAction - allows downloading raw files from backend
+	// InspectDataAction - allows downloading raw files from backend.
 	InspectDataAction = "admin:InspectData"
 
-	// ServerUpdateAdminAction - allow MinIO binary update
+	// ServerUpdateAdminAction - allow MinIO binary update.
 	ServerUpdateAdminAction = "admin:ServerUpdate"
 	// ServiceRestartAdminAction - allow restart of MinIO service.
 	ServiceRestartAdminAction = "admin:ServiceRestart"
@@ -78,191 +78,191 @@ const (
 	// ServiceCordonAdminAction - allow cordon/uncordon MinIO service.
 	ServiceCordonAdminAction = "admin:ServiceCordon"
 
-	// ConfigUpdateAdminAction - allow MinIO config management
+	// ConfigUpdateAdminAction - allow MinIO config management.
 	ConfigUpdateAdminAction = "admin:ConfigUpdate"
 
-	// CreateUserAdminAction - allow creating MinIO user
+	// CreateUserAdminAction - allow creating MinIO user.
 	CreateUserAdminAction = "admin:CreateUser"
-	// DeleteUserAdminAction - allow deleting MinIO user
+	// DeleteUserAdminAction - allow deleting MinIO user.
 	DeleteUserAdminAction = "admin:DeleteUser"
-	// ListUsersAdminAction - allow list users permission
+	// ListUsersAdminAction - allow list users permission.
 	ListUsersAdminAction = "admin:ListUsers"
-	// EnableUserAdminAction - allow enable user permission
+	// EnableUserAdminAction - allow enable user permission.
 	EnableUserAdminAction = "admin:EnableUser"
-	// DisableUserAdminAction - allow disable user permission
+	// DisableUserAdminAction - allow disable user permission.
 	DisableUserAdminAction = "admin:DisableUser"
-	// GetUserAdminAction - allows GET permission on user info
+	// GetUserAdminAction - allows GET permission on user info.
 	GetUserAdminAction = "admin:GetUser"
 
-	// Cluster Replicate Actions
+	// Cluster Replicate Actions.
 
-	// SiteReplicationAddAction - allow adding clusters for site-level replication
+	// SiteReplicationAddAction - allow adding clusters for site-level replication.
 	SiteReplicationAddAction = "admin:SiteReplicationAdd"
-	// SiteReplicationDisableAction - allow disabling a cluster from replication
+	// SiteReplicationDisableAction - allow disabling a cluster from replication.
 	SiteReplicationDisableAction = "admin:SiteReplicationDisable"
-	// SiteReplicationRemoveAction - allow removing a cluster from replication
+	// SiteReplicationRemoveAction - allow removing a cluster from replication.
 	SiteReplicationRemoveAction = "admin:SiteReplicationRemove"
-	// SiteReplicationResyncAction - allow resyncing cluster data to another site
+	// SiteReplicationResyncAction - allow resyncing cluster data to another site.
 	SiteReplicationResyncAction = "admin:SiteReplicationResync"
-	// SiteReplicationInfoAction - allow getting site replication info
+	// SiteReplicationInfoAction - allow getting site replication info.
 	SiteReplicationInfoAction = "admin:SiteReplicationInfo"
 	// SiteReplicationOperationAction - allow performing site replication
-	// create/update/delete operations to peers
+	// create/update/delete operations to peers.
 	SiteReplicationOperationAction = "admin:SiteReplicationOperation"
 
-	// Service account Actions
+	// Service account Actions.
 
-	// CreateServiceAccountAdminAction - allow create a service account for a user
+	// CreateServiceAccountAdminAction - allow create a service account for a user.
 	CreateServiceAccountAdminAction = "admin:CreateServiceAccount"
-	// UpdateServiceAccountAdminAction - allow updating a service account
+	// UpdateServiceAccountAdminAction - allow updating a service account.
 	UpdateServiceAccountAdminAction = "admin:UpdateServiceAccount"
-	// RemoveServiceAccountAdminAction - allow removing a service account
+	// RemoveServiceAccountAdminAction - allow removing a service account.
 	RemoveServiceAccountAdminAction = "admin:RemoveServiceAccount"
-	// ListServiceAccountsAdminAction - allow listing service accounts
+	// ListServiceAccountsAdminAction - allow listing service accounts.
 	ListServiceAccountsAdminAction = "admin:ListServiceAccounts"
 
-	// ListTemporaryAccountsAdminAction - allow listing of temporary accounts
+	// ListTemporaryAccountsAdminAction - allow listing of temporary accounts.
 	ListTemporaryAccountsAdminAction = "admin:ListTemporaryAccounts"
 
-	// Group Actions
+	// Group Actions.
 
-	// AddUserToGroupAdminAction - allow adding user to group permission
+	// AddUserToGroupAdminAction - allow adding user to group permission.
 	AddUserToGroupAdminAction = "admin:AddUserToGroup"
-	// RemoveUserFromGroupAdminAction - allow removing user to group permission
+	// RemoveUserFromGroupAdminAction - allow removing user to group permission.
 	RemoveUserFromGroupAdminAction = "admin:RemoveUserFromGroup"
-	// GetGroupAdminAction - allow getting group info
+	// GetGroupAdminAction - allow getting group info.
 	GetGroupAdminAction = "admin:GetGroup"
-	// ListGroupsAdminAction - allow list groups permission
+	// ListGroupsAdminAction - allow list groups permission.
 	ListGroupsAdminAction = "admin:ListGroups"
-	// EnableGroupAdminAction - allow enable group permission
+	// EnableGroupAdminAction - allow enable group permission.
 	EnableGroupAdminAction = "admin:EnableGroup"
-	// DisableGroupAdminAction - allow disable group permission
+	// DisableGroupAdminAction - allow disable group permission.
 	DisableGroupAdminAction = "admin:DisableGroup"
 
-	// Policy Actions
+	// Policy Actions.
 
-	// CreatePolicyAdminAction - allow create policy permission
+	// CreatePolicyAdminAction - allow create policy permission.
 	CreatePolicyAdminAction = "admin:CreatePolicy"
-	// DeletePolicyAdminAction - allow delete policy permission
+	// DeletePolicyAdminAction - allow delete policy permission.
 	DeletePolicyAdminAction = "admin:DeletePolicy"
-	// GetPolicyAdminAction - allow get policy permission
+	// GetPolicyAdminAction - allow get policy permission.
 	GetPolicyAdminAction = "admin:GetPolicy"
-	// AttachPolicyAdminAction - allows attaching a policy to a user/group
+	// AttachPolicyAdminAction - allows attaching a policy to a user/group.
 	AttachPolicyAdminAction = "admin:AttachUserOrGroupPolicy"
 	// UpdatePolicyAssociationAction - allows to add/remove policy association
 	// on a user or group.
 	UpdatePolicyAssociationAction = "admin:UpdatePolicyAssociation"
-	// ListUserPoliciesAdminAction - allows listing user policies
+	// ListUserPoliciesAdminAction - allows listing user policies.
 	ListUserPoliciesAdminAction = "admin:ListUserPolicies"
 
-	// Bucket quota Actions
+	// Bucket quota Actions.
 
-	// SetBucketQuotaAdminAction - allow setting bucket quota
+	// SetBucketQuotaAdminAction - allow setting bucket quota.
 	SetBucketQuotaAdminAction = "admin:SetBucketQuota"
-	// GetBucketQuotaAdminAction - allow getting bucket quota
+	// GetBucketQuotaAdminAction - allow getting bucket quota.
 	GetBucketQuotaAdminAction = "admin:GetBucketQuota"
 
-	// Bucket Target admin Actions
+	// Bucket Target admin Actions.
 
-	// SetBucketTargetAction - allow setting bucket target
+	// SetBucketTargetAction - allow setting bucket target.
 	SetBucketTargetAction = "admin:SetBucketTarget"
-	// GetBucketTargetAction - allow getting bucket targets
+	// GetBucketTargetAction - allow getting bucket targets.
 	GetBucketTargetAction = "admin:GetBucketTarget"
 
-	// ReplicationDiff - allow computing the unreplicated objects in a bucket
+	// ReplicationDiff - allow computing the unreplicated objects in a bucket.
 	ReplicationDiff = "admin:ReplicationDiff"
 
-	// Bucket import/export admin Actions
+	// Bucket import/export admin Actions.
 
-	// ImportBucketMetadataAction - allow importing bucket metadata
+	// ImportBucketMetadataAction - allow importing bucket metadata.
 	ImportBucketMetadataAction = "admin:ImportBucketMetadata"
-	// ExportBucketMetadataAction - allow exporting bucket metadata
+	// ExportBucketMetadataAction - allow exporting bucket metadata.
 	ExportBucketMetadataAction = "admin:ExportBucketMetadata"
 
-	// Remote Tier admin Actions
+	// Remote Tier admin Actions.
 
-	// SetTierAction - allow adding/editing a remote tier
+	// SetTierAction - allow adding/editing a remote tier.
 	SetTierAction = "admin:SetTier"
-	// ListTierAction - allow listing remote tiers
+	// ListTierAction - allow listing remote tiers.
 	ListTierAction = "admin:ListTier"
 
-	// Migrate IAM admin Actions
+	// Migrate IAM admin Actions.
 
-	// ExportIAMAction - allow exporting of all IAM info
+	// ExportIAMAction - allow exporting of all IAM info.
 	ExportIAMAction = "admin:ExportIAM"
-	// ImportIAMAction - allow importing IAM info to MinIO
+	// ImportIAMAction - allow importing IAM info to MinIO.
 	ImportIAMAction = "admin:ImportIAM"
 
-	// Batch Job APIs
+	// Batch Job APIs.
 
-	// ListBatchJobsAction allow listing current active jobs
+	// ListBatchJobsAction allow listing current active jobs.
 	ListBatchJobsAction = "admin:ListBatchJobs"
 
-	// DescribeBatchJobAction allow getting batch job YAML
+	// DescribeBatchJobAction allow getting batch job YAML.
 	DescribeBatchJobAction = "admin:DescribeBatchJob"
 
-	// StartBatchJobAction allow submitting a batch job
+	// StartBatchJobAction allow submitting a batch job.
 	StartBatchJobAction = "admin:StartBatchJob"
 
-	// CancelBatchJobAction allow canceling a batch job
+	// CancelBatchJobAction allow canceling a batch job.
 	CancelBatchJobAction = "admin:CancelBatchJob"
 
-	// GenerateBatchJobAction allow requesting batch job templates
+	// GenerateBatchJobAction allow requesting batch job templates.
 	GenerateBatchJobAction = "admin:GenerateBatchJob"
 
-	// Inventory Control Actions
+	// Inventory Control Actions.
 
-	// InventoryControlAction - allows control of inventory jobs
+	// InventoryControlAction - allows control of inventory jobs.
 	InventoryControlAction = "admin:InventoryControl"
 
-	// All new v4 APIs
+	// All new v4 APIs.
 
-	// ClusterInfoAction - allow cluster summary
+	// ClusterInfoAction - allow cluster summary.
 	ClusterInfoAction = "admin:ClusterInfo"
 
-	// PoolListAction - allow list how many pools and summary per pool
+	// PoolListAction - allow list how many pools and summary per pool.
 	PoolListAction = "admin:PoolList"
 
-	// PoolInfoAction - allow pool specific summary and detail information
+	// PoolInfoAction - allow pool specific summary and detail information.
 	PoolInfoAction = "admin:PoolInfo"
 
-	// NodeListAction - allow listing of nodes
+	// NodeListAction - allow listing of nodes.
 	NodeListAction = "admin:NodeList"
 
-	// NodeInfoAction - allow node specific summary and detailed information
+	// NodeInfoAction - allow node specific summary and detailed information.
 	NodeInfoAction = "admin:NodeInfo"
 
-	// SetInfoAction - allow set specific summary and detail
+	// SetInfoAction - allow set specific summary and detail.
 	SetInfoAction = "admin:SetInfo"
 
-	// DriveListAction - allow listing of drives
+	// DriveListAction - allow listing of drives.
 	DriveListAction = "admin:DriveList"
 
-	// DriveInfoAction - allow drive specific summary and detail
+	// DriveInfoAction - allow drive specific summary and detail.
 	DriveInfoAction = "admin:DriveInfo"
 
-	// Delta Sharing Actions
+	// Delta Sharing Actions.
 
-	// DeltaSharingAdminAction - allow managing Delta Sharing shares and tokens
+	// DeltaSharingAdminAction - allow managing Delta Sharing shares and tokens.
 	DeltaSharingAdminAction = "admin:DeltaSharing"
-	// DeltaSharingCreateShareAction - allow creating Delta Sharing shares
+	// DeltaSharingCreateShareAction - allow creating Delta Sharing shares.
 	DeltaSharingCreateShareAction = "admin:DeltaSharingCreateShare"
-	// DeltaSharingDeleteShareAction - allow deleting Delta Sharing shares
+	// DeltaSharingDeleteShareAction - allow deleting Delta Sharing shares.
 	DeltaSharingDeleteShareAction = "admin:DeltaSharingDeleteShare"
-	// DeltaSharingListSharesAction - allow listing Delta Sharing shares
+	// DeltaSharingListSharesAction - allow listing Delta Sharing shares.
 	DeltaSharingListSharesAction = "admin:DeltaSharingListShares"
-	// DeltaSharingGetShareAction - allow getting Delta Sharing share details
+	// DeltaSharingGetShareAction - allow getting Delta Sharing share details.
 	DeltaSharingGetShareAction = "admin:DeltaSharingGetShare"
-	// DeltaSharingUpdateShareAction - allow updating Delta Sharing shares
+	// DeltaSharingUpdateShareAction - allow updating Delta Sharing shares.
 	DeltaSharingUpdateShareAction = "admin:DeltaSharingUpdateShare"
-	// DeltaSharingCreateTokenAction - allow creating Delta Sharing tokens
+	// DeltaSharingCreateTokenAction - allow creating Delta Sharing tokens.
 	DeltaSharingCreateTokenAction = "admin:DeltaSharingCreateToken"
-	// DeltaSharingDeleteTokenAction - allow deleting Delta Sharing tokens
+	// DeltaSharingDeleteTokenAction - allow deleting Delta Sharing tokens.
 	DeltaSharingDeleteTokenAction = "admin:DeltaSharingDeleteToken"
-	// DeltaSharingListTokensAction - allow listing Delta Sharing tokens
+	// DeltaSharingListTokensAction - allow listing Delta Sharing tokens.
 	DeltaSharingListTokensAction = "admin:DeltaSharingListTokens"
 
-	// AllAdminActions - provides all admin permissions
+	// AllAdminActions - provides all admin permissions.
 	AllAdminActions = "admin:*"
 )
 

@@ -28,11 +28,11 @@ var (
 	// Regex to extract ellipses syntax inputs.
 	regexpList = regexp.MustCompile(`(.*)({[0-9a-z]+[,[0-9a-z]+]?})(.*)`)
 
-	// Ellipses constants
+	// Ellipses constants.
 	comma = ","
 )
 
-// HasList - returns true if input arg has list type pattern {1,3,5}
+// HasList - returns true if input arg has list type pattern {1,3,5}.
 func HasList(args ...string) bool {
 	ok := len(args) > 0
 	for _, arg := range args {
@@ -61,7 +61,7 @@ func FindListPatterns(arg string) (ArgPattern, error) {
 	return v, err
 }
 
-// Parses a list pattern of following style `{1,3,4}`
+// Parses a list pattern of following style `{1,3,4}`.
 func parseListRange(pattern string) (seq []string, err error) {
 	if !strings.HasPrefix(pattern, openBraces) {
 		return nil, errors.New("invalid argument")
