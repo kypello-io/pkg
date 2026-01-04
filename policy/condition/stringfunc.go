@@ -186,8 +186,7 @@ func valuesToStringSlice(n string, values ValueSet) ([]string, error) {
 
 func validateStringValues(n string, key Key, values set.StringSet) error {
 	for _, s := range values.ToSlice() {
-		switch {
-		case key.Is(S3XAmzCopySource):
+		if key.Is(S3XAmzCopySource) {
 			bucket, object := path2BucketAndObject(s)
 			if object == "" {
 				return fmt.Errorf("invalid value '%v' for '%v' for %v condition", s, S3XAmzCopySource, n)

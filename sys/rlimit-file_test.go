@@ -21,6 +21,8 @@ import "testing"
 
 // Test get max open file limit.
 func TestGetMaxOpenFileLimit(t *testing.T) {
+	t.Parallel()
+
 	_, _, err := GetMaxOpenFileLimit()
 	if err != nil {
 		t.Errorf("expected: nil, got: %v", err)
@@ -29,6 +31,8 @@ func TestGetMaxOpenFileLimit(t *testing.T) {
 
 // Test set open file limit.
 func TestSetMaxOpenFileLimit(t *testing.T) {
+	t.Parallel()
+
 	curLimit, maxLimit, err := GetMaxOpenFileLimit()
 	if err != nil {
 		t.Fatalf("Unable to get max open file limit. %v", err)

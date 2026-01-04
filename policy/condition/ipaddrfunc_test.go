@@ -26,6 +26,8 @@ import (
 )
 
 func TestIPAddrFuncEvaluate(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newIPAddressFunc(AWSSourceIP.ToKey(), NewValueSet(NewStringValue("192.168.1.0/24")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -65,6 +67,8 @@ func TestIPAddrFuncEvaluate(t *testing.T) {
 }
 
 func TestIPAddrFuncKey(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newIPAddressFunc(AWSSourceIP.ToKey(), NewValueSet(NewStringValue("192.168.1.0/24")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -87,6 +91,8 @@ func TestIPAddrFuncKey(t *testing.T) {
 }
 
 func TestIPAddrFuncName(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newIPAddressFunc(AWSSourceIP.ToKey(), NewValueSet(NewStringValue("192.168.1.0/24")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -115,6 +121,8 @@ func TestIPAddrFuncName(t *testing.T) {
 }
 
 func TestIPAddrFuncToMap(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newIPAddressFunc(AWSSourceIP.ToKey(), NewValueSet(NewStringValue("192.168.1.0/24")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -152,6 +160,8 @@ func TestIPAddrFuncToMap(t *testing.T) {
 }
 
 func TestIPAddrFuncClone(t *testing.T) {
+	t.Parallel()
+
 	_, IPNet1, err := net.ParseCIDR("192.168.1.0/24")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)
@@ -220,6 +230,8 @@ func TestIPAddrFuncClone(t *testing.T) {
 }
 
 func TestNewIPAddressFunc(t *testing.T) {
+	t.Parallel()
+
 	case1Function, err := newIPAddressFunc(AWSSourceIP.ToKey(), NewValueSet(NewStringValue("192.168.1.0/24")), "")
 	if err != nil {
 		t.Fatalf("unexpected error. %v\n", err)

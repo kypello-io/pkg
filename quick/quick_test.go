@@ -522,6 +522,8 @@ func TestDiff(t *testing.T) {
 }
 
 func TestDeepDiff(t *testing.T) {
+	t.Parallel()
+
 	type myStruct struct {
 		Version     string
 		User        string

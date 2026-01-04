@@ -42,6 +42,8 @@ func (s *MySuite) TearDownSuite(t *testing.T) {
 }
 
 func TestSafeAbort(t *testing.T) {
+	t.Parallel()
+
 	s := &MySuite{}
 
 	s.SetUpSuite(t)
@@ -71,6 +73,8 @@ func TestSafeAbort(t *testing.T) {
 }
 
 func TestSafeClose(t *testing.T) {
+	t.Parallel()
+
 	s := &MySuite{}
 
 	s.SetUpSuite(t)
@@ -110,6 +114,8 @@ func TestSafeClose(t *testing.T) {
 }
 
 func TestSafe(t *testing.T) {
+	t.Parallel()
+
 	s := &MySuite{}
 
 	s.SetUpSuite(t)
@@ -156,6 +162,8 @@ func TestSafe(t *testing.T) {
 }
 
 func TestSafeAbortWrite(t *testing.T) {
+	t.Parallel()
+
 	s := &MySuite{}
 
 	s.SetUpSuite(t)

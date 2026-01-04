@@ -52,6 +52,7 @@ func FormatJSONSyntaxError(data io.Reader, offset int64) (highlight string) {
 		termWidth = width
 	}
 
+readLoop:
 	for {
 		b, err := bio.ReadByte()
 		if err != nil {
@@ -63,16 +64,17 @@ func FormatJSONSyntaxError(data io.Reader, offset int64) (highlight string) {
 			break
 		}
 
-		if b == '\n' {
+		switch b {
+		case '\n':
 			readLine.Reset()
 
 			errLine++
 
 			continue
-		} else if b == '\t' {
+		case '\t':
 			readLine.WriteByte(' ')
-		} else if b == '\r' {
-			break
+		case '\r':
+			break readLoop
 		}
 
 		readLine.WriteByte(b)
