@@ -144,7 +144,6 @@ func (l *Config) Connect() (ldapConn *ldap.Conn, err error) {
 	case "":
 	default:
 		return nil, errors.New("invalid SRV Record Name parameter")
-
 	}
 
 	if srvName == "" {

@@ -28,12 +28,7 @@ type MySuite struct {
 }
 
 func (s *MySuite) SetUpSuite(t *testing.T) {
-	root, err := os.MkdirTemp(os.TempDir(), "safe_test.go.")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	s.root = root
+	s.root = t.TempDir()
 }
 
 func (s *MySuite) TearDownSuite(t *testing.T) {

@@ -24,29 +24,22 @@ import (
 )
 
 func TestGetRootCAs(t *testing.T) {
-	emptydir, err := os.MkdirTemp("", "test-get-root-cas")
-	if err != nil {
-		t.Fatalf("Unable create temp directory. %v", emptydir)
-	}
+	emptydir := t.TempDir()
+
 	defer os.RemoveAll(emptydir)
 
-	dir1, err := os.MkdirTemp("", "test-get-root-cas")
-	if err != nil {
-		t.Fatalf("Unable create temp directory. %v", dir1)
-	}
+	dir1 := t.TempDir()
 	defer os.RemoveAll(dir1)
 
-	if err = os.Mkdir(filepath.Join(dir1, "empty-dir"), 0o755); err != nil {
+	if err := os.Mkdir(filepath.Join(dir1, "empty-dir"), 0o755); err != nil {
 		t.Fatalf("Unable create empty dir. %v", err)
 	}
 
-	dir2, err := os.MkdirTemp("", "test-get-root-cas")
-	if err != nil {
-		t.Fatalf("Unable create temp directory. %v", dir2)
-	}
+	dir2 := t.TempDir()
+
 	defer os.RemoveAll(dir2)
 
-	if err = os.WriteFile(filepath.Join(dir2, "empty-file"), []byte{}, 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir2, "empty-file"), []byte{}, 0o644); err != nil {
 		t.Fatalf("Unable create test file. %v", err)
 	}
 
