@@ -95,9 +95,9 @@ func parseEllipsesRange(pattern string) (seq []string, err error) {
 			}
 		} else {
 			if hexadecimal {
-				seq = append(seq, fmt.Sprintf("%x", i))
+				seq = append(seq, strconv.FormatUint(i, 16))
 			} else {
-				seq = append(seq, fmt.Sprintf("%d", i))
+				seq = append(seq, strconv.FormatUint(i, 10))
 			}
 		}
 	}

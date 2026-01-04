@@ -149,7 +149,7 @@ func (cs *CallbackServer) WaitForCredentials(ctx context.Context) (credentials.V
 		return credentials.Value{}, fmt.Errorf("callback server error: %w", err)
 	case <-ctx.Done():
 		if errors.Is(ctx.Err(), context.DeadlineExceeded) {
-			return credentials.Value{}, fmt.Errorf("timeout waiting for authentication callback")
+			return credentials.Value{}, errors.New("timeout waiting for authentication callback")
 		}
 
 		return credentials.Value{}, fmt.Errorf("authentication canceled: %w", ctx.Err())

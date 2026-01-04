@@ -51,7 +51,7 @@ type ErrInvalidMethod struct {
 }
 
 func (e ErrInvalidMethod) Error() string {
-	return fmt.Sprintf("Found unsupported HTTP method in CORS config. Unsupported method is %s", e.Method)
+	return "Found unsupported HTTP method in CORS config. Unsupported method is " + e.Method
 }
 
 // ErrAllowedHeaderWildcards is returned when more than one wildcard is found in an AllowedHeader.

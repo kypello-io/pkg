@@ -19,6 +19,7 @@ package condition
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -70,7 +71,7 @@ func (set *ValueSet) UnmarshalJSON(data []byte) error {
 	}
 
 	if len(values) < 1 {
-		return fmt.Errorf("invalid value")
+		return errors.New("invalid value")
 	}
 
 	*set = make(ValueSet)

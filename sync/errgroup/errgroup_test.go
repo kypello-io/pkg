@@ -18,14 +18,15 @@
 package errgroup
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"testing"
 )
 
 func TestGroupWithNErrs(t *testing.T) {
-	err1 := fmt.Errorf("errgroup_test: 1")
-	err2 := fmt.Errorf("errgroup_test: 2")
+	err1 := errors.New("errgroup_test: 1")
+	err2 := errors.New("errgroup_test: 2")
 
 	cases := []struct {
 		errs []error

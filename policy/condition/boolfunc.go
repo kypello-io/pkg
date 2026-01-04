@@ -18,6 +18,7 @@
 package condition
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -79,7 +80,7 @@ func newBooleanFunc(key Key, values ValueSet, _ string) (Function, error) {
 	}
 
 	if len(values) != 1 {
-		return nil, fmt.Errorf("only one value is allowed for boolean condition")
+		return nil, errors.New("only one value is allowed for boolean condition")
 	}
 
 	var value Value
@@ -97,10 +98,10 @@ func newBooleanFunc(key Key, values ValueSet, _ string) (Function, error) {
 			}
 
 			if _, err = strconv.ParseBool(s); err != nil {
-				return nil, fmt.Errorf("value must be a boolean string for boolean condition")
+				return nil, errors.New("value must be a boolean string for boolean condition")
 			}
 		default:
-			return nil, fmt.Errorf("value must be a boolean for boolean condition")
+			return nil, errors.New("value must be a boolean for boolean condition")
 		}
 	}
 
