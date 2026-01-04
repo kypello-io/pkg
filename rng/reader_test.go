@@ -39,7 +39,7 @@ func BenchmarkReader(b *testing.B) {
 			b.SetBytes(int64(len(buf)))
 			b.ResetTimer()
 
-			for n := 0; n < b.N; n++ {
+			for range b.N {
 				_, err := io.ReadFull(r, buf)
 				if err != nil {
 					b.Fatal(err)
@@ -63,7 +63,7 @@ func BenchmarkReaderReset(b *testing.B) {
 			b.SetBytes(int64(len(buf)))
 			b.ResetTimer()
 
-			for n := 0; n < b.N; n++ {
+			for range b.N {
 				r.Reset()
 
 				_, err := io.ReadFull(r, buf)
@@ -89,7 +89,7 @@ func BenchmarkReaderReadAt(b *testing.B) {
 			b.SetBytes(int64(len(buf)))
 			b.ResetTimer()
 
-			for n := 0; n < b.N; n++ {
+			for n := range b.N {
 				nr, err := r.ReadAt(buf, int64(n*size))
 				if err != nil {
 					b.Fatal(err)
