@@ -28,6 +28,8 @@ import (
 )
 
 func TestOptionFilter(t *testing.T) {
+	t.Parallel()
+
 	emptyFilter := lifecycle.Filter{}
 	emptyOpts := LifecycleOptions{}
 
@@ -156,6 +158,8 @@ func TestOptionFilter(t *testing.T) {
 
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("Test %d", i+1), func(t *testing.T) {
+			t.Parallel()
+
 			if got := test.opts.Filter(); !filterEq(got, test.want) {
 				t.Fatalf("Expected %#v but got %#v", test.want, got)
 			}
@@ -164,6 +168,8 @@ func TestOptionFilter(t *testing.T) {
 }
 
 func TestToILMRule(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name    string
 		opts    LifecycleOptions
@@ -281,6 +287,8 @@ func TestToILMRule(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			rule, err := tt.opts.ToILMRule()
 
 			if tt.wantErr {

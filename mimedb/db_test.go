@@ -33,6 +33,7 @@ func TestMimeLookup(t *testing.T) {
 }
 
 func TestTypeByExtension(t *testing.T) {
+	t.Parallel()
 	// Test TypeByExtension.
 	contentType := TypeByExtension(".txt")
 	if contentType != "text/plain" {
