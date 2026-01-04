@@ -81,7 +81,7 @@ func BenchmarkIsAllowed(b *testing.B) {
 					)
 				}
 				// Add one matching statement at the end
-				stmts = append(stmts, setupStatement(
+				stmts = append(stmts, setupStatement( //nolint:makezero
 					[]string{"s3:GetObject"},
 					[]string{"arn:aws:s3:::test-bucket/*"},
 					"Allow",

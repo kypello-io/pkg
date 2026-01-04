@@ -41,7 +41,7 @@ func getMemoryLimit() (sysLimit uint64, err error) {
 	cGroupLimit, gerr := cgroup.GetMemoryLimit(os.Getpid())
 	if gerr != nil {
 		// Upon error just return system limit.
-		return sysLimit, nil
+		return sysLimit, nil //nolint:nilerr
 	}
 
 	// cgroup limit is lesser than system limit means

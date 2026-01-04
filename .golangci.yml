@@ -41,6 +41,9 @@ linters:
     - fatcontext
     - exptostd
     - dupword
+    - nilerr
+    - nilnesserr
+    - makezero
     #- paralleltest
     #- recvcheck
   settings:

@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -142,7 +143,7 @@ func saveFileConfigEtcd(filename string, clnt *etcd.Client, v any) error {
 	defer cancel()
 
 	_, err = clnt.Put(ctx, filename, string(dataBytes))
-	if err == context.DeadlineExceeded {
+	if errors.Is(err, context.DeadlineExceeded) {
 		return fmt.Errorf("etcd setup is unreachable, please check your endpoints %s", clnt.Endpoints())
 	} else if err != nil {
 		return fmt.Errorf("unexpected error %w returned by etcd setup, please check your endpoints %s", err, clnt.Endpoints())
@@ -157,7 +158,7 @@ func loadFileConfigEtcd(filename string, clnt *etcd.Client, v any) error {
 
 	resp, err := clnt.Get(ctx, filename)
 	if err != nil {
-		if err == context.DeadlineExceeded {
+		if errors.Is(err, context.DeadlineExceeded) {
 			return fmt.Errorf("etcd setup is unreachable, please check your endpoints %s", clnt.Endpoints())
 		}
 

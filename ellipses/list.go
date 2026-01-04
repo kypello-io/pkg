@@ -54,7 +54,7 @@ var ErrInvalidListFormatFn = func(arg string) error {
 // FindListPatterns - finds all list patterns, recursively and parses the ranges numerically.
 func FindListPatterns(arg string) (ArgPattern, error) {
 	v, err := findPatterns(arg, regexpList, parseListRange)
-	if err == errFormat {
+	if errors.Is(err, errFormat) {
 		err = ErrInvalidListFormatFn(arg)
 	}
 
