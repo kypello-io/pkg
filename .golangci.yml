@@ -19,6 +19,8 @@ linters:
     - iface
     - importas
     - godot
+    - whitespace
+    - usetesting
   settings:
     misspell:
       locale: US

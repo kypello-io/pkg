@@ -28,7 +28,7 @@ import (
 
 // Testing parsing correctness for various process cgroup files.
 func TestProcCGroup(t *testing.T) {
-	tmpPath, err := os.CreateTemp("", "cgroup")
+	tmpPath, err := os.CreateTemp(t.TempDir(), "cgroup")
 	if err != nil {
 		t.Fatal(err)
 	}
