@@ -68,7 +68,7 @@ func GetEntries(pid int) (CGEntries, error) {
 
 // parseProcCGroup - cgroups are always in the following
 // format once enabled you need to know the pid of the
-// application you are looking for so that the the
+// application you are looking for so that the
 // following parsing logic only parses the file located
 // at /proc/<pid>/cgroup.
 //
@@ -166,7 +166,7 @@ func GetMemoryLimit(pid int) (limit uint64, err error) {
 	limit, err = getManagerKernValue("memory", path, memoryLimitKernelParam)
 	if err != nil {
 		// Upon any failure returned from `cgm`, on some systems cgm
-		// might not be installed. We fallback to using the the sysfs
+		// might not be installed. We fallback to using the sysfs
 		// path instead to lookup memory limits.
 		var b []byte
 

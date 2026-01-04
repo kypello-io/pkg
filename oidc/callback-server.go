@@ -120,7 +120,7 @@ func NewCallbackServer(ctx context.Context) (*CallbackServer, error) {
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
-		_ = cs.server.Shutdown(shutdownCtx)
+		_ = cs.server.Shutdown(shutdownCtx) //nolint:contextcheck
 	}()
 
 	return cs, nil
