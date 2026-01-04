@@ -26,6 +26,7 @@ import (
 )
 
 func TestPrincipalIsValid(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		principal      Principal
 		expectedResult bool
@@ -45,6 +46,7 @@ func TestPrincipalIsValid(t *testing.T) {
 }
 
 func TestPrincipalIntersection(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		principal            Principal
 		principalToIntersect Principal
@@ -65,6 +67,7 @@ func TestPrincipalIntersection(t *testing.T) {
 }
 
 func TestPrincipalMarshalJSON(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		principal      Principal
 		expectedResult []byte
@@ -92,6 +95,7 @@ func TestPrincipalMarshalJSON(t *testing.T) {
 }
 
 func TestPrincipalMatch(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		principals     Principal
 		principal      string
@@ -112,6 +116,7 @@ func TestPrincipalMatch(t *testing.T) {
 }
 
 func TestPrincipalUnmarshalJSON(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		data           []byte
 		expectedResult Principal

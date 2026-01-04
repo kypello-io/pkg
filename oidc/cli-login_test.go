@@ -298,6 +298,8 @@ func TestRoundTrip_CLILoginClaims(t *testing.T) {
 }
 
 func TestRoundTrip_CredentialsClaims(t *testing.T) {
+	t.Parallel()
+
 	cliClaims := NewCLILoginClaims(8080, "credentials-round-trip-req-id")
 	originalCreds := credentials.Value{
 		AccessKeyID:     "round-trip-access-key",

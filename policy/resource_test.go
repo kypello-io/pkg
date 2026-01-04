@@ -24,6 +24,7 @@ import (
 )
 
 func TestResourceIsBucketPattern(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		resource       Resource
 		expectedResult bool
@@ -53,6 +54,7 @@ func TestResourceIsBucketPattern(t *testing.T) {
 }
 
 func TestResourceIsObjectPattern(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		resource       Resource
 		expectedResult bool
@@ -77,6 +79,7 @@ func TestResourceIsObjectPattern(t *testing.T) {
 }
 
 func TestResourceIsValid(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		resource       Resource
 		expectedResult bool

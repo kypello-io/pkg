@@ -29,6 +29,7 @@ import (
 // Testing parsing correctness for various process cgroup files.
 func TestProcCGroup(t *testing.T) {
 	t.Parallel()
+
 	tmpPath, err := os.CreateTemp(t.TempDir(), "cgroup")
 	if err != nil {
 		t.Fatal(err)
@@ -121,6 +122,7 @@ func TestProcCGroup(t *testing.T) {
 // Tests cgroup memory limit path construction.
 func TestMemoryLimitPath(t *testing.T) {
 	t.Parallel()
+
 	testCases := []struct {
 		cgroupPath   string
 		expectedPath string
