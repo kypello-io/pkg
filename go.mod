@@ -19,7 +19,7 @@ require (
 	github.com/minio/mux v1.9.2
 	github.com/syncthing/notify v0.0.0-20250528144937-c7027d4f7465
 	github.com/tinylib/msgp v1.6.3
-	github.com/zeebo/xxh3 v1.0.2
+	github.com/zeebo/xxh3 v1.1.0
 	go.etcd.io/etcd/client/v3 v3.6.7
 	go.yaml.in/yaml/v3 v3.0.4
 	golang.org/x/crypto v0.46.0
